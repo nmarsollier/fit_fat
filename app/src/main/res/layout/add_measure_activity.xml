@@ -1,0 +1,543 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android = "http://schemas.android.com/apk/res/android"
+            xmlns:tools = "http://schemas.android.com/tools"
+            android:layout_width = "match_parent"
+            android:layout_height = "match_parent"
+            android:padding = "@dimen/screen_margin">
+
+    <LinearLayout android:orientation = "vertical"
+                  android:layout_width = "match_parent"
+                  android:layout_height = "wrap_content">
+
+        <LinearLayout
+                android:orientation = "horizontal"
+                android:layout_width = "match_parent"
+                android:layout_height = "wrap_content">
+
+            <Spinner
+                    android:id = "@+id/vMeasureMethod"
+                    android:layout_width = "wrap_content"
+                    android:layout_height = "wrap_content" />
+
+            <LinearLayout
+                    android:orientation = "horizontal"
+                    android:layout_width = "0dp"
+                    android:layout_weight = "1"
+                    android:layout_height = "wrap_content"
+                    android:gravity = "end">
+
+                <TextView
+                        android:id = "@+id/vFat"
+                        android:layout_width = "wrap_content"
+                        android:layout_height = "wrap_content"
+                        style = "@style/TextAppearance.AppCompat.Medium"
+                        android:textColor = "@color/colorPrimary"
+                        tools:text = "35" />
+                <TextView
+                        android:layout_width = "wrap_content"
+                        android:layout_height = "wrap_content"
+                        android:layout_marginStart = "2dp"
+                        style = "@style/TextAppearance.AppCompat.Small"
+                        android:text = "@string/measure_fat" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <RelativeLayout
+                android:id = "@+id/vAbdominalView"
+                android:layout_width = "match_parent"
+                android:layout_height = "wrap_content"
+                android:layout_marginTop = "@dimen/view_margin">
+
+            <TextView
+                    android:id = "@+id/vTitleLabel"
+                    android:layout_width = "wrap_content"
+                    android:layout_height = "wrap_content"
+                    style = "@style/TextAppearance.AppCompat.Body1"
+                    android:text = "@string/measure_abdominal"
+                    android:layout_alignParentStart = "true"
+                    android:layout_alignParentTop = "true" />
+
+            <TextView
+                    android:id = "@+id/vAbdominalText"
+                    android:layout_width = "wrap_content"
+                    android:gravity = "end"
+                    android:layout_marginStart = "@dimen/view_margin"
+                    android:layout_height = "wrap_content"
+                    style = "@style/TextAppearance.AppCompat.Small"
+                    android:textColor = "@color/colorPrimary"
+                    tools:text = "35"
+                    android:layout_toRightOf = "@id/vTitleLabel" />
+
+            <TextView
+                    android:layout_width = "wrap_content"
+                    android:layout_height = "wrap_content"
+                    android:layout_marginStart = "2dp"
+                    style = "@style/TextAppearance.AppCompat.Small"
+                    android:text = "@string/unit_mm"
+                    android:layout_toRightOf = "@id/vAbdominalText" />
+
+            <SeekBar
+                    android:id = "@+id/vAbdominal"
+                    android:layout_width = "match_parent"
+                    android:layout_height = "wrap_content"
+                    android:layout_marginTop = "4dp"
+                    android:max = "60"
+                    android:layout_below = "@id/vTitleLabel"
+                    android:layout_alignParentStart = "true" />
+        </RelativeLayout>
+
+        <RelativeLayout
+                android:id = "@+id/vBicepView"
+                android:layout_width = "match_parent"
+                android:layout_height = "wrap_content"
+                android:layout_marginTop = "@dimen/view_margin">
+
+            <TextView
+                    android:id = "@+id/vBicepLabel"
+                    android:layout_width = "wrap_content"
+                    android:layout_height = "wrap_content"
+                    style = "@style/TextAppearance.AppCompat.Body1"
+                    android:text = "@string/measure_bicep"
+                    android:layout_alignParentStart = "true"
+                    android:layout_alignParentTop = "true" />
+
+            <TextView
+                    android:id = "@+id/vBicepText"
+                    android:layout_width = "wrap_content"
+                    android:gravity = "end"
+                    android:layout_marginStart = "@dimen/view_margin"
+                    android:layout_height = "wrap_content"
+                    style = "@style/TextAppearance.AppCompat.Small"
+                    android:textColor = "@color/colorPrimary"
+                    tools:text = "35"
+                    android:layout_toRightOf = "@id/vBicepLabel" />
+
+            <TextView
+                    android:layout_width = "wrap_content"
+                    android:layout_height = "wrap_content"
+                    android:layout_marginStart = "2dp"
+                    style = "@style/TextAppearance.AppCompat.Small"
+                    android:text = "@string/unit_mm"
+                    android:layout_toRightOf = "@id/vBicepText" />
+
+            <SeekBar
+                    android:id = "@+id/vBicep"
+                    android:layout_width = "match_parent"
+                    android:layout_height = "wrap_content"
+                    android:layout_marginTop = "4dp"
+                    android:max = "60"
+                    android:layout_below = "@id/vBicepLabel"
+                    android:layout_alignParentStart = "true" />
+        </RelativeLayout>
+
+        <RelativeLayout
+                android:id = "@+id/vCalfView"
+                android:layout_width = "match_parent"
+                android:layout_height = "wrap_content"
+                android:layout_marginTop = "@dimen/view_margin">
+
+            <TextView
+                    android:id = "@+id/vCalfLabel"
+                    android:layout_width = "wrap_content"
+                    android:layout_height = "wrap_content"
+                    style = "@style/TextAppearance.AppCompat.Body1"
+                    android:text = "@string/measure_calf"
+                    android:layout_alignParentStart = "true"
+                    android:layout_alignParentTop = "true" />
+
+            <TextView
+                    android:id = "@+id/vCalfText"
+                    android:layout_width = "wrap_content"
+                    android:gravity = "end"
+                    android:layout_marginStart = "@dimen/view_margin"
+                    android:layout_height = "wrap_content"
+                    style = "@style/TextAppearance.AppCompat.Small"
+                    android:textColor = "@color/colorPrimary"
+                    tools:text = "35"
+                    android:layout_toRightOf = "@id/vCalfLabel" />
+
+            <TextView
+                    android:layout_width = "wrap_content"
+                    android:layout_height = "wrap_content"
+                    android:layout_marginStart = "2dp"
+                    style = "@style/TextAppearance.AppCompat.Small"
+                    android:text = "@string/unit_mm"
+                    android:layout_toRightOf = "@id/vCalfText" />
+
+            <SeekBar
+                    android:id = "@+id/vCalf"
+                    android:layout_width = "match_parent"
+                    android:layout_height = "wrap_content"
+                    android:layout_marginTop = "4dp"
+                    android:max = "60"
+                    android:layout_below = "@id/vCalfLabel"
+                    android:layout_alignParentStart = "true" />
+        </RelativeLayout>
+
+        <RelativeLayout
+                android:id = "@+id/vChestView"
+                android:layout_width = "match_parent"
+                android:layout_height = "wrap_content"
+                android:layout_marginTop = "@dimen/view_margin">
+
+            <TextView
+                    android:id = "@+id/vChestLabel"
+                    android:layout_width = "wrap_content"
+                    android:layout_height = "wrap_content"
+                    style = "@style/TextAppearance.AppCompat.Body1"
+                    android:text = "@string/measure_chest"
+                    android:layout_alignParentStart = "true"
+                    android:layout_alignParentTop = "true" />
+
+            <TextView
+                    android:id = "@+id/vChestText"
+                    android:layout_width = "wrap_content"
+                    android:gravity = "end"
+                    android:layout_marginStart = "@dimen/view_margin"
+                    android:layout_height = "wrap_content"
+                    style = "@style/TextAppearance.AppCompat.Small"
+                    android:textColor = "@color/colorPrimary"
+                    tools:text = "35"
+                    android:layout_toRightOf = "@id/vChestLabel" />
+
+            <TextView
+                    android:layout_width = "wrap_content"
+                    android:layout_height = "wrap_content"
+                    android:layout_marginStart = "2dp"
+                    style = "@style/TextAppearance.AppCompat.Small"
+                    android:text = "@string/unit_mm"
+                    android:layout_toRightOf = "@id/vChestText" />
+
+            <SeekBar
+                    android:id = "@+id/vChest"
+                    android:layout_width = "match_parent"
+                    android:layout_height = "wrap_content"
+                    android:layout_marginTop = "4dp"
+                    android:max = "60"
+                    android:layout_below = "@id/vChestLabel"
+                    android:layout_alignParentStart = "true" />
+        </RelativeLayout>
+
+        <RelativeLayout
+                android:id = "@+id/vLowerBackView"
+                android:layout_width = "match_parent"
+                android:layout_height = "wrap_content"
+                android:layout_marginTop = "@dimen/view_margin">
+
+            <TextView
+                    android:id = "@+id/vLowerBackLabel"
+                    android:layout_width = "wrap_content"
+                    android:layout_height = "wrap_content"
+                    style = "@style/TextAppearance.AppCompat.Body1"
+                    android:text = "@string/measure_lower_back"
+                    android:layout_alignParentStart = "true"
+                    android:layout_alignParentTop = "true" />
+
+            <TextView
+                    android:id = "@+id/vLowerBackText"
+                    android:layout_width = "wrap_content"
+                    android:gravity = "end"
+                    android:layout_marginStart = "@dimen/view_margin"
+                    android:layout_height = "wrap_content"
+                    style = "@style/TextAppearance.AppCompat.Small"
+                    android:textColor = "@color/colorPrimary"
+                    tools:text = "35"
+                    android:layout_toRightOf = "@id/vLowerBackLabel" />
+
+            <TextView
+                    android:layout_width = "wrap_content"
+                    android:layout_height = "wrap_content"
+                    android:layout_marginStart = "2dp"
+                    style = "@style/TextAppearance.AppCompat.Small"
+                    android:text = "@string/unit_mm"
+                    android:layout_toRightOf = "@id/vLowerBackText" />
+
+            <SeekBar
+                    android:id = "@+id/vLowerBack"
+                    android:layout_width = "match_parent"
+                    android:layout_height = "wrap_content"
+                    android:layout_marginTop = "4dp"
+                    android:max = "60"
+                    android:layout_below = "@id/vLowerBackLabel"
+                    android:layout_alignParentStart = "true" />
+        </RelativeLayout>
+
+        <RelativeLayout
+                android:id = "@+id/vMidaxillaryView"
+                android:layout_width = "match_parent"
+                android:layout_height = "wrap_content"
+                android:layout_marginTop = "@dimen/view_margin">
+
+            <TextView
+                    android:id = "@+id/vMidaxillaryLabel"
+                    android:layout_width = "wrap_content"
+                    android:layout_height = "wrap_content"
+                    style = "@style/TextAppearance.AppCompat.Body1"
+                    android:text = "@string/measure_midaxillary"
+                    android:layout_alignParentStart = "true"
+                    android:layout_alignParentTop = "true" />
+
+            <TextView
+                    android:id = "@+id/vMidaxillaryText"
+                    android:layout_width = "wrap_content"
+                    android:gravity = "end"
+                    android:layout_marginStart = "@dimen/view_margin"
+                    android:layout_height = "wrap_content"
+                    style = "@style/TextAppearance.AppCompat.Small"
+                    android:textColor = "@color/colorPrimary"
+                    tools:text = "35"
+                    android:layout_toRightOf = "@id/vMidaxillaryLabel" />
+
+            <TextView
+                    android:layout_width = "wrap_content"
+                    android:layout_height = "wrap_content"
+                    android:layout_marginStart = "2dp"
+                    style = "@style/TextAppearance.AppCompat.Small"
+                    android:text = "@string/unit_mm"
+                    android:layout_toRightOf = "@id/vMidaxillaryText" />
+
+            <SeekBar
+                    android:id = "@+id/vMidaxillary"
+                    android:layout_width = "match_parent"
+                    android:layout_height = "wrap_content"
+                    android:layout_marginTop = "4dp"
+                    android:max = "60"
+                    android:layout_below = "@id/vMidaxillaryLabel"
+                    android:layout_alignParentStart = "true" />
+        </RelativeLayout>
+
+
+        <RelativeLayout
+                android:id = "@+id/vSubscapularView"
+                android:layout_width = "match_parent"
+                android:layout_height = "wrap_content"
+                android:layout_marginTop = "@dimen/view_margin">
+
+            <TextView
+                    android:id = "@+id/vSubscapularLabel"
+                    android:layout_width = "wrap_content"
+                    android:layout_height = "wrap_content"
+                    style = "@style/TextAppearance.AppCompat.Body1"
+                    android:text = "@string/measure_subscapular"
+                    android:layout_alignParentStart = "true"
+                    android:layout_alignParentTop = "true" />
+
+            <TextView
+                    android:id = "@+id/vSubscapularText"
+                    android:layout_width = "wrap_content"
+                    android:gravity = "end"
+                    android:layout_marginStart = "@dimen/view_margin"
+                    android:layout_height = "wrap_content"
+                    style = "@style/TextAppearance.AppCompat.Small"
+                    android:textColor = "@color/colorPrimary"
+                    tools:text = "35"
+                    android:layout_toRightOf = "@id/vSubscapularLabel" />
+
+            <TextView
+                    android:layout_width = "wrap_content"
+                    android:layout_height = "wrap_content"
+                    android:layout_marginStart = "2dp"
+                    style = "@style/TextAppearance.AppCompat.Small"
+                    android:text = "@string/unit_mm"
+                    android:layout_toRightOf = "@id/vSubscapularText" />
+
+            <SeekBar
+                    android:id = "@+id/vSubscapular"
+                    android:layout_width = "match_parent"
+                    android:layout_height = "wrap_content"
+                    android:layout_marginTop = "4dp"
+                    android:max = "60"
+                    android:layout_below = "@id/vSubscapularLabel"
+                    android:layout_alignParentStart = "true" />
+        </RelativeLayout>
+
+        <RelativeLayout
+                android:id = "@+id/vSuprailiacView"
+                android:layout_width = "match_parent"
+                android:layout_height = "wrap_content"
+                android:layout_marginTop = "@dimen/view_margin">
+
+            <TextView
+                    android:id = "@+id/vSuprailiacLabel"
+                    android:layout_width = "wrap_content"
+                    android:layout_height = "wrap_content"
+                    style = "@style/TextAppearance.AppCompat.Body1"
+                    android:text = "@string/measure_suprailiac"
+                    android:layout_alignParentStart = "true"
+                    android:layout_alignParentTop = "true" />
+
+            <TextView
+                    android:id = "@+id/vSuprailiacText"
+                    android:layout_width = "wrap_content"
+                    android:gravity = "end"
+                    android:layout_marginStart = "@dimen/view_margin"
+                    android:layout_height = "wrap_content"
+                    style = "@style/TextAppearance.AppCompat.Small"
+                    android:textColor = "@color/colorPrimary"
+                    tools:text = "35"
+                    android:layout_toRightOf = "@id/vSuprailiacLabel" />
+
+            <TextView
+                    android:layout_width = "wrap_content"
+                    android:layout_height = "wrap_content"
+                    android:layout_marginStart = "2dp"
+                    style = "@style/TextAppearance.AppCompat.Small"
+                    android:text = "@string/unit_mm"
+                    android:layout_toRightOf = "@id/vSuprailiacText" />
+
+            <SeekBar
+                    android:id = "@+id/vSuprailiac"
+                    android:layout_width = "match_parent"
+                    android:layout_height = "wrap_content"
+                    android:layout_marginTop = "4dp"
+                    android:max = "60"
+                    android:layout_below = "@id/vSuprailiacLabel"
+                    android:layout_alignParentStart = "true" />
+        </RelativeLayout>
+
+        <RelativeLayout
+                android:id = "@+id/vThighView"
+                android:layout_width = "match_parent"
+                android:layout_height = "wrap_content"
+                android:layout_marginTop = "@dimen/view_margin">
+
+            <TextView
+                    android:id = "@+id/vThighLabel"
+                    android:layout_width = "wrap_content"
+                    android:layout_height = "wrap_content"
+                    style = "@style/TextAppearance.AppCompat.Body1"
+                    android:text = "@string/measure_thigh"
+                    android:layout_alignParentStart = "true"
+                    android:layout_alignParentTop = "true" />
+
+            <TextView
+                    android:id = "@+id/vThighText"
+                    android:layout_width = "wrap_content"
+                    android:gravity = "end"
+                    android:layout_marginStart = "@dimen/view_margin"
+                    android:layout_height = "wrap_content"
+                    style = "@style/TextAppearance.AppCompat.Small"
+                    android:textColor = "@color/colorPrimary"
+                    tools:text = "35"
+                    android:layout_toRightOf = "@id/vThighLabel" />
+
+            <TextView
+                    android:layout_width = "wrap_content"
+                    android:layout_height = "wrap_content"
+                    android:layout_marginStart = "2dp"
+                    style = "@style/TextAppearance.AppCompat.Small"
+                    android:text = "@string/unit_mm"
+                    android:layout_toRightOf = "@id/vThighText" />
+
+            <SeekBar
+                    android:id = "@+id/vThigh"
+                    android:layout_width = "match_parent"
+                    android:layout_height = "wrap_content"
+                    android:layout_marginTop = "4dp"
+                    android:max = "60"
+                    android:layout_below = "@id/vThighLabel"
+                    android:layout_alignParentStart = "true" />
+        </RelativeLayout>
+
+        <RelativeLayout
+                android:id = "@+id/vTricepView"
+                android:layout_width = "match_parent"
+                android:layout_height = "wrap_content"
+                android:layout_marginTop = "@dimen/view_margin">
+
+            <TextView
+                    android:id = "@+id/vTricepLabel"
+                    android:layout_width = "wrap_content"
+                    android:layout_height = "wrap_content"
+                    style = "@style/TextAppearance.AppCompat.Body1"
+                    android:text = "@string/measure_tricep"
+                    android:layout_alignParentStart = "true"
+                    android:layout_alignParentTop = "true" />
+
+            <TextView
+                    android:id = "@+id/vTricepText"
+                    android:layout_width = "wrap_content"
+                    android:gravity = "end"
+                    android:layout_marginStart = "@dimen/view_margin"
+                    android:layout_height = "wrap_content"
+                    style = "@style/TextAppearance.AppCompat.Small"
+                    android:textColor = "@color/colorPrimary"
+                    tools:text = "35"
+                    android:layout_toRightOf = "@id/vTricepLabel" />
+
+            <TextView
+                    android:layout_width = "wrap_content"
+                    android:layout_height = "wrap_content"
+                    android:layout_marginStart = "2dp"
+                    style = "@style/TextAppearance.AppCompat.Small"
+                    android:text = "@string/unit_mm"
+                    android:layout_toRightOf = "@id/vTricepText" />
+
+            <SeekBar
+                    android:id = "@+id/vTricep"
+                    android:layout_width = "match_parent"
+                    android:layout_height = "wrap_content"
+                    android:layout_marginTop = "4dp"
+                    android:max = "60"
+                    android:layout_below = "@id/vTricepLabel"
+                    android:layout_alignParentStart = "true" />
+        </RelativeLayout>
+
+
+        <RelativeLayout
+                android:id = "@+id/vBodyFatView"
+                android:layout_width = "match_parent"
+                android:layout_height = "wrap_content"
+                android:layout_marginTop = "@dimen/view_margin">
+
+            <TextView
+                    android:id = "@+id/vBodyFatLabel"
+                    android:layout_width = "wrap_content"
+                    android:layout_height = "wrap_content"
+                    style = "@style/TextAppearance.AppCompat.Body1"
+                    android:text = "@string/measure_fat"
+                    android:layout_alignParentStart = "true"
+                    android:layout_alignParentTop = "true" />
+
+            <TextView
+                    android:id = "@+id/vBodyFatText"
+                    android:layout_width = "wrap_content"
+                    android:gravity = "end"
+                    android:layout_marginStart = "@dimen/view_margin"
+                    android:layout_height = "wrap_content"
+                    style = "@style/TextAppearance.AppCompat.Small"
+                    android:textColor = "@color/colorPrimary"
+                    tools:text = "35"
+                    android:layout_toRightOf = "@id/vBodyFatLabel" />
+
+            <TextView
+                    android:layout_width = "wrap_content"
+                    android:layout_height = "wrap_content"
+                    android:layout_marginStart = "2dp"
+                    style = "@style/TextAppearance.AppCompat.Small"
+                    android:text = "@string/unit_percent"
+                    android:layout_toRightOf = "@id/vBodyFatText" />
+
+            <SeekBar
+                    android:id = "@+id/vBodyFat"
+                    android:layout_width = "match_parent"
+                    android:layout_height = "wrap_content"
+                    android:layout_marginTop = "4dp"
+                    android:max = "100"
+                    android:layout_below = "@id/vBodyFatLabel"
+                    android:layout_alignParentStart = "true" />
+
+            <SeekBar
+                    android:id = "@+id/vBodyFatDecimal"
+                    android:layout_width = "match_parent"
+                    android:layout_height = "wrap_content"
+                    android:layout_marginTop = "4dp"
+                    android:max = "100"
+                    android:layout_below = "@id/vBodyFat"
+                    android:layout_alignParentStart = "true" />
+        </RelativeLayout>
+
+
+    </LinearLayout>
+</ScrollView>
