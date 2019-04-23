@@ -1,0 +1,61 @@
+<resources>
+    <string name="app_name">Body Fat Tracker</string>
+    <string name="home_menu_options">Options</string>
+    <string name="home_menu_progress">Progress</string>
+    <string name="home_menu_main">Measure</string>
+    <string name="options_system_of_measurement">Metric System</string>
+    <string name="options_system_of_measurement_metric">Metric</string>
+    <string name="options_system_of_measurement_imperial">Imperial</string>
+    <string name="options_sex">Sex</string>
+    <string name="options_sex_male">Male</string>
+    <string name="options_sex_female">Female</string>
+    <string name="options_weight">Weight</string>
+    <string name="options_height">Height</string>
+
+    <string name="options_display_name">Display Name</string>
+    <string name="options_birth_date">Birth Date</string>
+    <string name="measure_chest">Chest</string>
+    <string name="measure_abdominal">Abdominal</string>
+    <string name="measure_thigh">Thigh</string>
+    <string name="measure_tricep">Tricep</string>
+    <string name="measure_subscapular">Subscapular</string>
+    <string name="measure_suprailiac">Suprailiac</string>
+    <string name="measure_midaxillary">Midaxillary</string>
+    <string name="measure_bicep">Bicep</string>
+    <string name="measure_lower_back">Lower Back</string>
+    <string name="measure_calf">Calf</string>
+    <string name="unit_kg" translatable="false">kg</string>
+    <string name="unit_cm" translatable="false">cm</string>
+    <string name="unit_mm" translatable="false">mm</string>
+    <string name="unit_lb" translatable="false">lb</string>
+    <string name="unit_in" translatable="false">in</string>
+    <string name="new_measure_title">Your Measure</string>
+    <string name="save_dialog_title">Save</string>
+    <string name="save_dialog_message">Do you want to save changes ?</string>
+    <string name="measure_fat">Body Fat</string>
+    <string name="unit_percent" translatable="false">%</string>
+    <string name="measure_weight">Weight</string>
+
+    <string name="home_options_title">Preferences</string>
+    <string name="home_measure_title">Measures</string>
+    <string name="home_progress_title">Your Progress</string>
+    <string name="measure_delete_title">Delete Measure</string>
+    <string name="measure_delete_message">Do you want to delete this measure ?</string>
+    <string name="new_measure_error">Fill all values</string>
+    <string name="new_measure_method_title">Measure Method</string>
+    <string name="measure_method_jackson_pollock_7" translatable="false">Jackson/Pollock 7</string>
+    <string name="measure_method_jackson_pollock_3" translatable="false">Jackson/Pollock 3</string>
+    <string name="measure_method_jackson_pollock_4" translatable="false">Jackson/Pollock 4</string>
+    <string name="measure_method_parrillo" translatable="false">Parrillo</string>
+    <string name="measure_method_durnin_womersley" translatable="false">Durnin/Womersley</string>
+    <string name="measure_method_manual_scale">Manual / Scale</string>
+    <string name="new_measure_date">Measure Date</string>
+    <string name="measure_method_weight">Weight</string>
+    <string name="main_setup_app_text">Don\'t forget to setup the app first.</string>
+    <string name="save_my_data_in_cloud">Save my data in cloud</string>
+    <string name="loading">Loading. Please wait...</string>
+    <string name="fmmi" translatable="false">FFMI</string>
+    <string name="free_fat_mass">Free Fat Mass</string>
+    <string name="dash" translatable="false">/</string>
+    <string name="google_error">Could not connect.</string>
+</resources>

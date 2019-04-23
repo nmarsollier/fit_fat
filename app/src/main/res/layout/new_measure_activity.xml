@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/measure_method"
+        style="@style/TextAppearance.AppCompat.Body1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="@dimen/screen_margin"
+        android:layout_marginTop="@dimen/screen_margin"
+        android:drawableEnd="@drawable/ic_arrow_drop_down_black_24dp"
+        android:drawablePadding="4dp"
+        android:drawableTint="@color/menuItemColorDisabled"
+        android:text="@string/new_measure_method_title"
+        android:textColor="@color/editPrimary" />
+
+    <TextView
+        android:id="@+id/vDateLabel"
+        style="@style/Label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/measure_method"
+        android:layout_marginStart="@dimen/screen_margin"
+        android:layout_marginTop="@dimen/view_margin"
+        android:labelFor="@id/birth_date"
+        android:text="@string/new_measure_date" />
+
+    <EditText
+        android:id="@+id/measure_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/vDateLabel"
+        android:layout_marginStart="@dimen/screen_margin"
+        android:editable="false"
+        android:focusable="false"
+        android:importantForAutofill="no"
+        android:inputType="date"
+        android:textColor="@color/editPrimary"
+        tools:text="Dec 1. 2018 19:00 AM" />
+
+    <TextView
+        android:id="@+id/fat_measure_label"
+        style="@style/Label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/measure_date"
+        android:layout_toStartOf="@+id/fat"
+        android:text="@string/measure_fat" />
+
+    <TextView
+        android:id="@+id/fat"
+        style="@style/NumericLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/fat_measure_label"
+        android:layout_marginStart="4dp"
+        android:layout_toStartOf="@id/vFatPercentLabel"
+        android:textSize="18sp"
+        tools:text="35" />
+
+    <TextView
+        android:id="@+id/vFatPercentLabel"
+        style="@style/Label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/fat_measure_label"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="2dp"
+        android:layout_marginEnd="@dimen/screen_margin"
+        android:text="@string/unit_percent" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/measure_date"
+        android:layout_alignParentBottom="true"
+        android:clipToPadding="false"
+        android:paddingStart="@dimen/screen_margin"
+        android:paddingEnd="@dimen/screen_margin"
+        android:paddingBottom="@dimen/screen_margin"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+</RelativeLayout>
+

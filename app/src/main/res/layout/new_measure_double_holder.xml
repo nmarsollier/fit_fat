@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/view_margin">
+
+    <TextView
+        android:id="@+id/vFatTextLabel"
+        style="@style/Label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/fat_percent_text"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:gravity="bottom"
+        android:text="@string/measure_fat" />
+
+    <TextView
+        android:id="@+id/fat_percent_text"
+        style="@style/NumericLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_toRightOf="@id/vFatTextLabel"
+        android:gravity="end"
+        tools:text="35" />
+
+    <TextView
+        android:id="@+id/vMeasureUnit"
+        style="@style/Label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/fat_percent_text"
+        android:layout_marginStart="2dp"
+        android:layout_toRightOf="@id/fat_percent_text"
+        android:gravity="bottom"
+        android:text="@string/unit_percent" />
+
+    <SeekBar
+        android:id="@+id/int_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/vFatTextLabel"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="4dp"
+        android:max="99" />
+
+    <SeekBar
+        android:id="@+id/decimal_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/int_bar"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="4dp"
+        android:max="9" />
+</RelativeLayout>
