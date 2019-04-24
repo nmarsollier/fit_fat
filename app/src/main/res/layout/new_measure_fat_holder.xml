@@ -22,7 +22,7 @@
             android:id="@+id/vFatValueText"
             android:layout_width="wrap_content"
             android:gravity="end"
-            android:layout_marginStart="@dimen/view_margin"
+            android:layout_marginStart="4dp"
             android:layout_height="wrap_content"
             style="@style/NumericLabel"
             tools:text="35"

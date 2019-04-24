@@ -2,6 +2,7 @@ package com.nmarsollier.fitfat.model
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
+import com.nmarsollier.fitfat.R
 import com.nmarsollier.fitfat.utils.toPounds
 import java.util.*
 
@@ -84,17 +85,17 @@ data class Measure(
     }
 
     fun isValid(): Boolean {
-        return (!measureMethod.calfRequired() || calf > 0)
-                && (!measureMethod.chestRequired() || chest > 0)
-                && (!measureMethod.abdominalRequired() || abdominal > 0)
-                && (!measureMethod.thighRequired() || thigh > 0)
-                && (!measureMethod.tricepRequired() || tricep > 0)
-                && (!measureMethod.subscapularRequired() || subscapular > 0)
-                && (!measureMethod.suprailiacRequired() || suprailiac > 0)
-                && (!measureMethod.midaxillaryRequired() || midaxillary > 0)
-                && (!measureMethod.bicepRequired() || bicep > 0)
-                && (!measureMethod.lowerBackRequired() || lowerBack > 0)
-                && (!measureMethod.fatPercentRequired() || fatPercent > 0)
+        return (!MeasureValue.CALF.isRequired(measureMethod) || calf > 0)
+                && (!MeasureValue.CHEST.isRequired(measureMethod) || chest > 0)
+                && (!MeasureValue.ABDOMINAL.isRequired(measureMethod) || abdominal > 0)
+                && (!MeasureValue.THIGH.isRequired(measureMethod) || thigh > 0)
+                && (!MeasureValue.TRICEP.isRequired(measureMethod) || tricep > 0)
+                && (!MeasureValue.SUBSCAPULAR.isRequired(measureMethod) || subscapular > 0)
+                && (!MeasureValue.SUPRAILIAC.isRequired(measureMethod) || suprailiac > 0)
+                && (!MeasureValue.MIDAXILARITY.isRequired(measureMethod) || midaxillary > 0)
+                && (!MeasureValue.BICEP.isRequired(measureMethod) || bicep > 0)
+                && (!MeasureValue.LOWER_BACK.isRequired(measureMethod) || lowerBack > 0)
+                && (!MeasureValue.BODY_FAT.isRequired(measureMethod) || fatPercent > 0)
     }
 
     fun calculateFatPercent() {
@@ -180,27 +181,65 @@ enum class MeasureMethod(private val label: String) {
     override fun toString(): String {
         return label
     }
-
-    fun chestRequired() = this == JACKSON_POLLOCK_7 || this == JACKSON_POLLOCK_3 || this == PARRILLO
-
-    fun abdominalRequired() = this != DURNIN_WOMERSLEY && this != FROM_SCALE
-
-    fun thighRequired() = this != DURNIN_WOMERSLEY && this != FROM_SCALE
-
-    fun tricepRequired() = this != JACKSON_POLLOCK_3 && this != FROM_SCALE
-
-    fun subscapularRequired() = this == JACKSON_POLLOCK_7 || this == PARRILLO || this == DURNIN_WOMERSLEY
-
-    fun suprailiacRequired() = this != JACKSON_POLLOCK_3 && this != FROM_SCALE
-
-    fun midaxillaryRequired() = this == JACKSON_POLLOCK_7
-
-    fun bicepRequired() = this == PARRILLO || this == DURNIN_WOMERSLEY
-
-    fun lowerBackRequired() = this == PARRILLO
-
-    fun calfRequired() = this == PARRILLO
-
-    fun fatPercentRequired() = this == FROM_SCALE
 }
 
+
+enum class MeasureValue(val titleRes: Int, val requiredFor: List<MeasureMethod>) {
+    CHEST(
+        R.string.measure_chest,
+        listOf(MeasureMethod.JACKSON_POLLOCK_7, MeasureMethod.JACKSON_POLLOCK_3, MeasureMethod.PARRILLO)
+    ),
+    ABDOMINAL(
+        R.string.measure_abdominal,
+        listOf(
+            MeasureMethod.JACKSON_POLLOCK_7,
+            MeasureMethod.JACKSON_POLLOCK_3,
+            MeasureMethod.JACKSON_POLLOCK_4,
+            MeasureMethod.PARRILLO
+        )
+    ),
+    THIGH(
+        R.string.measure_thigh,
+        listOf(
+            MeasureMethod.JACKSON_POLLOCK_7,
+            MeasureMethod.JACKSON_POLLOCK_3,
+            MeasureMethod.JACKSON_POLLOCK_4,
+            MeasureMethod.PARRILLO
+        )
+    ),
+    TRICEP(
+        R.string.measure_tricep,
+        listOf(
+            MeasureMethod.JACKSON_POLLOCK_7,
+            MeasureMethod.DURNIN_WOMERSLEY,
+            MeasureMethod.JACKSON_POLLOCK_4,
+            MeasureMethod.PARRILLO
+        )
+    ),
+    SUBSCAPULAR(
+        R.string.measure_subscapular,
+        listOf(MeasureMethod.JACKSON_POLLOCK_7, MeasureMethod.DURNIN_WOMERSLEY, MeasureMethod.PARRILLO)
+    ),
+    SUPRAILIAC(
+        R.string.measure_suprailiac,
+        listOf(
+            MeasureMethod.JACKSON_POLLOCK_7,
+            MeasureMethod.DURNIN_WOMERSLEY,
+            MeasureMethod.JACKSON_POLLOCK_4,
+            MeasureMethod.PARRILLO
+        )
+    ),
+    MIDAXILARITY(R.string.measure_midaxillary, listOf(MeasureMethod.JACKSON_POLLOCK_7)),
+    BICEP(R.string.measure_bicep, listOf(MeasureMethod.DURNIN_WOMERSLEY, MeasureMethod.PARRILLO)),
+    LOWER_BACK(R.string.measure_lower_back, listOf(MeasureMethod.PARRILLO)),
+    CALF(R.string.measure_calf, listOf(MeasureMethod.PARRILLO)),
+    BODY_FAT(R.string.measure_fat, listOf(MeasureMethod.FROM_SCALE));
+
+    fun getHolderType(): Int {
+        return if (this == BODY_FAT) 2 else 1
+    }
+
+    fun isRequired(method: MeasureMethod): Boolean {
+        return requiredFor.contains(method)
+    }
+}

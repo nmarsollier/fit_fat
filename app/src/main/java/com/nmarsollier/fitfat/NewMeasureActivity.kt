@@ -155,56 +155,6 @@ class NewMeasureActivity : AppCompatActivity() {
             .create().show()
     }
 
-    enum class MeasureValue {
-        CHEST,
-        ABDOMINAL,
-        THIGH,
-        TRICEP,
-        SUBSCAPULAR,
-        SUPRAILIAC,
-        MIDAXILARITY,
-        BICEP,
-        LOWER_BACK,
-        CALF,
-        BODY_FAT;
-
-        fun getHolderType(): Int {
-            return if (this == BODY_FAT) 2 else 1
-        }
-
-        fun isRequired(method: MeasureMethod): Boolean {
-            return when (this) {
-                CHEST -> method.chestRequired()
-                ABDOMINAL -> method.abdominalRequired()
-                THIGH -> method.thighRequired()
-                TRICEP -> method.tricepRequired()
-                SUBSCAPULAR -> method.subscapularRequired()
-                SUPRAILIAC -> method.suprailiacRequired()
-                MIDAXILARITY -> method.midaxillaryRequired()
-                BICEP -> method.bicepRequired()
-                LOWER_BACK -> method.lowerBackRequired()
-                CALF -> method.calfRequired()
-                BODY_FAT -> method.fatPercentRequired()
-            }
-        }
-
-        fun getTitleRes(): Int {
-            return when (this) {
-                CHEST -> R.string.measure_chest
-                ABDOMINAL -> R.string.measure_abdominal
-                THIGH -> R.string.measure_thigh
-                TRICEP -> R.string.measure_tricep
-                SUBSCAPULAR -> R.string.measure_subscapular
-                SUPRAILIAC -> R.string.measure_suprailiac
-                MIDAXILARITY -> R.string.measure_midaxillary
-                BICEP -> R.string.measure_bicep
-                LOWER_BACK -> R.string.measure_lower_back
-                CALF -> R.string.measure_calf
-                BODY_FAT -> R.string.measure_fat
-            }
-        }
-    }
-
     class MeasuresAdapter internal constructor(
         private val context: Context,
         private var measure: Measure,
@@ -293,7 +243,7 @@ class NewMeasureActivity : AppCompatActivity() {
                 }
             })
 
-            itemView.vTitleLabel.text = itemView.context.getString(measureValue.getTitleRes())
+            itemView.vTitleLabel.text = itemView.context.getString(measureValue.titleRes)
         }
 
         fun setValue(value: Int) {
