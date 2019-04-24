@@ -19,7 +19,7 @@ import com.nmarsollier.fitfat.utils.formatDateTime
 import com.nmarsollier.fitfat.utils.formatString
 import com.nmarsollier.fitfat.utils.toPounds
 import kotlinx.android.synthetic.main.main_home_fragment.*
-import kotlinx.android.synthetic.main.measure_holder.view.*
+import kotlinx.android.synthetic.main.main_home_measure_holder.view.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -40,7 +40,7 @@ class MainHome : Fragment() {
 
         loadSettings()
 
-        vRecyvlerView.addItemDecoration(DividerItemDecoration(activity!!, DividerItemDecoration.VERTICAL))
+        vRecyclerView.addItemDecoration(DividerItemDecoration(activity!!, DividerItemDecoration.VERTICAL))
 
         vFab.setOnClickListener {
             startActivity(Intent(context, NewMeasureActivity::class.java))
@@ -59,7 +59,7 @@ class MainHome : Fragment() {
 
     private fun initAdapter() {
         userSettings?.let {
-            vRecyvlerView.adapter = MeasureAdapter(it, this)
+            vRecyclerView.adapter = MeasureAdapter(it, this)
         }
     }
 
@@ -142,7 +142,7 @@ internal class MeasureHolder private constructor(itemView: View) : RecyclerView.
 
     companion object {
         fun newInstance(parent: ViewGroup, context: Context): MeasureHolder {
-            return MeasureHolder(LayoutInflater.from(context).inflate(R.layout.measure_holder, parent, false))
+            return MeasureHolder(LayoutInflater.from(context).inflate(R.layout.main_home_measure_holder, parent, false))
         }
     }
 }

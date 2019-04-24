@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/view_margin">
+
+    <TextView
+            android:id="@+id/vFatTextLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/TextAppearance.AppCompat.Body1"
+            android:text="@string/measure_fat"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"/>
+
+    <TextView
+            android:id="@+id/vFatValueText"
+            android:layout_width="wrap_content"
+            android:gravity="end"
+            android:layout_marginStart="@dimen/view_margin"
+            android:layout_height="wrap_content"
+            style="@style/TextAppearance.AppCompat.Small"
+            android:textColor="@color/colorPrimary"
+            tools:text="35"
+            android:layout_toRightOf="@id/vFatTextLabel"/>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="2dp"
+            style="@style/TextAppearance.AppCompat.Small"
+            android:text="@string/unit_percent"
+            android:layout_toRightOf="@id/vFatValueText"/>
+
+    <SeekBar
+            android:id="@+id/vFatValueBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:max="99"
+            android:layout_below="@id/vFatTextLabel"
+            android:layout_alignParentStart="true"/>
+
+    <SeekBar
+            android:id="@+id/vFatValueDecimalBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:max="99"
+            android:layout_below="@id/vFatValueBar"
+            android:layout_alignParentStart="true"/>
+</RelativeLayout>
