@@ -3,8 +3,6 @@ package com.nmarsollier.fitfat
 import android.content.Context
 import android.os.Bundle
 import android.view.*
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import android.widget.SeekBar
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -23,6 +21,7 @@ import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import java.util.*
 
+
 class NewMeasureActivity : AppCompatActivity() {
     private var userSettings: UserSettings? = null
     private var measure = Measure(UUID.randomUUID().toString(), 0.0, 0, SexType.MALE)
@@ -35,17 +34,8 @@ class NewMeasureActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowHomeEnabled(true)
         title = getString(R.string.new_measure_title)
 
-        vMeasureMethod.adapter =
-            ArrayAdapter<MeasureMethod>(this, android.R.layout.simple_spinner_item, MeasureMethod.values())
-
-        vMeasureMethod.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-            }
-
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                measure.measureMethod = MeasureMethod.values()[position]
-                refreshUI()
-            }
+        vMeasureMethod.setOnClickListener {
+            showMeasureTypeSelectionDialog()
         }
 
         adapter = MeasuresAdapter(baseContext, measure) { updateFatPercent() }
@@ -81,7 +71,7 @@ class NewMeasureActivity : AppCompatActivity() {
     }
 
     private fun refreshUI() {
-        vMeasureMethod.setSelection(measure.measureMethod.ordinal)
+        vMeasureMethod.text = measure.measureMethod.toString()
         adapter.setData(measure)
         updateFatPercent()
     }
@@ -144,6 +134,25 @@ class NewMeasureActivity : AppCompatActivity() {
         } else {
             Toast.makeText(context, R.string.new_measure_error, Toast.LENGTH_LONG).show()
         }
+    }
+
+
+    private fun showMeasureTypeSelectionDialog() {
+        val measureMethods = MeasureMethod.values().map { it.toString() }.toTypedArray()
+        val selected = measure.measureMethod.ordinal
+
+        var newSelection = selected
+        AlertDialog.Builder(this)
+            .setTitle(R.string.new_measure_method_title)
+            .setSingleChoiceItems(measureMethods, selected) { _, which ->
+                newSelection = which
+            }
+            .setPositiveButton(android.R.string.ok) { _, _ ->
+                measure.measureMethod = MeasureMethod.values()[newSelection]
+                refreshUI()
+            }
+            .setNegativeButton(android.R.string.cancel, null)
+            .create().show()
     }
 
     enum class MeasureValue {

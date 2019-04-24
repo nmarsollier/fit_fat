@@ -13,8 +13,13 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/screen_margin">
 
-        <Spinner
+        <TextView
                 android:id="@+id/vMeasureMethod"
+                android:text="@string/new_measure_method_title"
+                style="@style/TextAppearance.AppCompat.Body2"
+                android:drawableEnd="@drawable/ic_arrow_drop_down_black_24dp"
+                android:drawablePadding="4dp"
+                android:drawableTint="@color/menuItemColorDisabled"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
