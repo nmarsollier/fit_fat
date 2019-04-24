@@ -16,10 +16,11 @@
         <TextView
                 android:id="@+id/vMeasureMethod"
                 android:text="@string/new_measure_method_title"
-                style="@style/TextAppearance.AppCompat.Body2"
+                style="@style/TextAppearance.AppCompat.Body1"
                 android:drawableEnd="@drawable/ic_arrow_drop_down_black_24dp"
                 android:drawablePadding="4dp"
                 android:drawableTint="@color/menuItemColorDisabled"
+                android:textColor="@color/editPrimary"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
@@ -31,18 +32,25 @@
                 android:gravity="end">
 
             <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="2dp"
+                    style="@style/Label"
+                    android:text="@string/measure_fat"/>
+            <TextView
                     android:id="@+id/vFat"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@style/TextAppearance.AppCompat.Medium"
-                    android:textColor="@color/colorPrimary"
+                    android:layout_marginStart="4dp"
+                    style="@style/NumericLabel"
+                    android:textSize="14dp"
                     tools:text="35"/>
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="2dp"
-                    style="@style/TextAppearance.AppCompat.Small"
-                    android:text="@string/measure_fat"/>
+                    style="@style/Label"
+                    android:text="@string/unit_percent"/>
         </LinearLayout>
     </LinearLayout>
 
