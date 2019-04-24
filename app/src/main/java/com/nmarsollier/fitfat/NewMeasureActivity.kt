@@ -71,7 +71,7 @@ class NewMeasureActivity : AppCompatActivity() {
     }
 
     private fun refreshUI() {
-        vMeasureMethod.text = measure.measureMethod.toString()
+        vMeasureMethod.setText(measure.measureMethod.labelRes)
         adapter.setData(measure)
         updateFatPercent()
     }
@@ -136,23 +136,21 @@ class NewMeasureActivity : AppCompatActivity() {
         }
     }
 
-
     private fun showMeasureTypeSelectionDialog() {
-        val measureMethods = MeasureMethod.values().map { it.toString() }.toTypedArray()
+        val measureMethods = MeasureMethod.values().map { getString(it.labelRes) }.toTypedArray()
         val selected = measure.measureMethod.ordinal
 
-        var newSelection = selected
-        AlertDialog.Builder(this)
+        var dialog: AlertDialog? = null
+        dialog = AlertDialog.Builder(this)
             .setTitle(R.string.new_measure_method_title)
             .setSingleChoiceItems(measureMethods, selected) { _, which ->
-                newSelection = which
-            }
-            .setPositiveButton(android.R.string.ok) { _, _ ->
-                measure.measureMethod = MeasureMethod.values()[newSelection]
+                measure.measureMethod = MeasureMethod.values()[which]
                 refreshUI()
+                dialog?.dismiss()
             }
             .setNegativeButton(android.R.string.cancel, null)
-            .create().show()
+            .create()
+        dialog.show()
     }
 
     class MeasuresAdapter internal constructor(

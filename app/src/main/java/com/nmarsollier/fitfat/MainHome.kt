@@ -105,7 +105,7 @@ class MainHome : Fragment() {
     class MeasureHolder private constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(userSettings: UserSettings, measure: Measure) {
             itemView.vDate.text = measure.date.formatDateTime()
-            itemView.vMethod.text = measure.measureMethod.toString()
+            itemView.vMethod.setText(measure.measureMethod.labelRes)
             itemView.vFat.text = measure.fatPercent.formatString()
 
             if (userSettings.measureSystem == MeasureType.METRIC) {

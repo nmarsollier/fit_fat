@@ -170,17 +170,13 @@ data class Measure(
     }
 }
 
-enum class MeasureMethod(private val label: String) {
-    JACKSON_POLLOCK_7("Jackson/Pollock 7"),
-    JACKSON_POLLOCK_3("Jackson/Pollock 3"),
-    JACKSON_POLLOCK_4("Jackson/Pollock 4"),
-    PARRILLO("Parrillo"),
-    DURNIN_WOMERSLEY("Durnin/Womersley"),
-    FROM_SCALE("Manual/Scale");
-
-    override fun toString(): String {
-        return label
-    }
+enum class MeasureMethod(val labelRes: Int) {
+    JACKSON_POLLOCK_7(R.string.measure_method_jackson_pollock_7),
+    JACKSON_POLLOCK_3(R.string.measure_method_jackson_pollock_3),
+    JACKSON_POLLOCK_4(R.string.measure_method_jackson_pollock_4),
+    PARRILLO(R.string.measure_method_parrillo),
+    DURNIN_WOMERSLEY(R.string.measure_method_durnin_womersley),
+    FROM_SCALE(R.string.measure_method_manual_scale);
 }
 
 
