@@ -26,7 +26,7 @@ import java.util.*
 class NewMeasureActivity : AppCompatActivity() {
     private var userSettings: UserSettings? = null
     private var measure = Measure(UUID.randomUUID().toString(), 0.0, 0, SexType.MALE)
-    private var adapter = MeasuresAdapter()
+    private lateinit var adapter: MeasuresAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,6 +48,7 @@ class NewMeasureActivity : AppCompatActivity() {
             }
         }
 
+        adapter = MeasuresAdapter(baseContext, measure) { updateFatPercent() }
         vRecyclerView.adapter = adapter
 
         reloadSettings()
@@ -81,7 +82,7 @@ class NewMeasureActivity : AppCompatActivity() {
 
     private fun refreshUI() {
         vMeasureMethod.setSelection(measure.measureMethod.ordinal)
-        adapter.notifyDataSetChanged()
+        adapter.setData(measure)
         updateFatPercent()
     }
 
@@ -195,29 +196,31 @@ class NewMeasureActivity : AppCompatActivity() {
         }
     }
 
-    inner class MeasuresAdapter internal constructor() : RecyclerView.Adapter<MeasureHolder>() {
+    class MeasuresAdapter internal constructor(
+        private val context: Context,
+        private var measure: Measure,
+        private var callback: () -> Unit
+    ) : RecyclerView.Adapter<MeasureHolder>() {
+
         private var measures = mutableListOf<MeasureValue>()
 
-        init {
-            registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
-                override fun onChanged() {
-                    val method = measure.measureMethod
-                    measures = MeasureValue.values().filter { it.isRequired(method) }.toMutableList()
-                    super.onChanged()
-                }
-            })
+        fun setData(measure: Measure) {
+            this.measure = measure
+            val method = measure.measureMethod
+            measures = MeasureValue.values().filter { it.isRequired(method) }.toMutableList()
+            notifyDataSetChanged()
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MeasureHolder {
             return if (viewType == 2) {
-                newMeasureFatHolder(parent, baseContext)
+                newMeasureFatHolder(parent, context)
             } else {
-                newMeasureValueHolder(parent, baseContext)
+                newMeasureValueHolder(parent, context)
             }
         }
 
         override fun onBindViewHolder(holder: MeasureHolder, position: Int) {
-            holder.bind(measures[position], measure)
+            holder.bind(measures[position], measure, callback)
         }
 
         override fun getItemCount(): Int {
@@ -249,15 +252,23 @@ class NewMeasureActivity : AppCompatActivity() {
         }
     }
 
-    abstract inner class MeasureHolder constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        abstract fun bind(measureValue: MeasureValue, measure: Measure)
+    abstract class MeasureHolder constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        abstract fun bind(
+            measureValue: MeasureValue,
+            measure: Measure,
+            callback: () -> Unit
+        )
     }
 
-    inner class MeasureValueHolder constructor(itemView: View) : MeasureHolder(itemView) {
-        var measureValue: MeasureValue? = null
-        var measure: Measure? = null
+    class MeasureValueHolder constructor(itemView: View) : MeasureHolder(itemView) {
+        private var measureValue: MeasureValue? = null
+        private var measure: Measure? = null
 
-        override fun bind(measureValue: MeasureValue, measure: Measure) {
+        override fun bind(
+            measureValue: MeasureValue,
+            measure: Measure,
+            callback: () -> Unit
+        ) {
             this.measureValue = measureValue
             this.measure = measure
 
@@ -269,11 +280,11 @@ class NewMeasureActivity : AppCompatActivity() {
                 override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                     setValue(progress)
                     itemView.vValueText.text = getValue().formatString()
-                    updateFatPercent()
+                    callback.invoke()
                 }
             })
 
-            itemView.vTitleLabel.text = getString(measureValue.getTitleRes())
+            itemView.vTitleLabel.text = itemView.context.getString(measureValue.getTitleRes())
         }
 
         fun setValue(value: Int) {
@@ -308,35 +319,44 @@ class NewMeasureActivity : AppCompatActivity() {
                 else -> 0
             } ?: 0
         }
-
     }
 
-    inner class MeasureFatHolder constructor(itemView: View) : MeasureHolder(itemView) {
-        override fun bind(measureValue: MeasureValue, measure: Measure) {
+    class MeasureFatHolder constructor(itemView: View) : MeasureHolder(itemView) {
+        private var measureValue: MeasureValue? = null
+        private var measure: Measure? = null
+
+        override fun bind(
+            measureValue: MeasureValue,
+            measure: Measure,
+            callback: () -> Unit
+        ) {
+            this.measureValue = measureValue
+            this.measure = measure
+
             itemView.vFatValueBar.progress = measure.fatPercent.toInt()
             itemView.vFatValueDecimalBar.progress = ((measure.fatPercent + measure.fatPercent.toInt()) * 100).toInt()
-            updateUnits()
+            updateUnits(callback)
 
             itemView.vFatValueBar.setOnSeekBarChangeListener(object : SeekBarChange() {
                 override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                     val decimal = measure.fatPercent - measure.fatPercent.toInt()
 
                     measure.fatPercent = progress.toDouble() + decimal
-                    updateUnits()
+                    updateUnits(callback)
                 }
             })
 
             itemView.vFatValueDecimalBar.setOnSeekBarChangeListener(object : SeekBarChange() {
                 override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                     measure.fatPercent = measure.fatPercent.toInt().toDouble() + (progress.toDouble() / 100)
-                    updateUnits()
+                    updateUnits(callback)
                 }
             })
         }
 
-        fun updateUnits() {
-            itemView.vFatValueText.text = measure.fatPercent.formatString()
-            updateFatPercent()
+        fun updateUnits(callback: () -> Unit) {
+            itemView.vFatValueText.text = measure?.fatPercent?.formatString() ?: ""
+            callback.invoke()
         }
     }
 }
