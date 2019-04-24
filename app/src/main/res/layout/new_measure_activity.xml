@@ -7,22 +7,50 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
+    <TextView
+            android:id="@+id/vMeasureMethod"
+            android:text="@string/new_measure_method_title"
+            style="@style/TextAppearance.AppCompat.Body1"
+            android:drawableEnd="@drawable/ic_arrow_drop_down_black_24dp"
+            android:drawablePadding="4dp"
+            android:drawableTint="@color/menuItemColorDisabled"
+            android:layout_marginTop="@dimen/screen_margin"
+            android:layout_marginStart="@dimen/screen_margin"
+            android:textColor="@color/editPrimary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+
     <LinearLayout
-            android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/screen_margin">
+            android:orientation="horizontal"
+            android:layout_marginStart="@dimen/screen_margin"
+            android:layout_marginEnd="@dimen/screen_margin"
+            android:layout_marginTop="@dimen/view_margin"
+            android:gravity="center_vertical">
 
-        <TextView
-                android:id="@+id/vMeasureMethod"
-                android:text="@string/new_measure_method_title"
-                style="@style/TextAppearance.AppCompat.Body1"
-                android:drawableEnd="@drawable/ic_arrow_drop_down_black_24dp"
-                android:drawablePadding="4dp"
-                android:drawableTint="@color/menuItemColorDisabled"
-                android:textColor="@color/editPrimary"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+        <LinearLayout android:orientation="vertical"
+                      android:layout_width="wrap_content"
+                      android:layout_height="wrap_content">
+
+            <TextView android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:labelFor="@id/vBirthDate"
+                      android:text="@string/new_measure_date"
+                      style="@style/Label"/>
+
+            <EditText
+                    android:id="@+id/vMeasureDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:inputType="date"
+                    android:editable="false"
+                    android:focusable="false"
+                    tools:text="Dec 1. 2018 19:00 AM"
+                    android:textColor="@color/editPrimary"
+                    android:importantForAutofill="no"/>
+        </LinearLayout>
 
         <LinearLayout
                 android:orientation="horizontal"
@@ -43,7 +71,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="4dp"
                     style="@style/NumericLabel"
-                    android:textSize="14dp"
+                    android:textSize="18dp"
                     tools:text="35"/>
             <TextView
                     android:layout_width="wrap_content"

@@ -1,5 +1,6 @@
 package com.nmarsollier.fitfat
 
+import android.app.DatePickerDialog
 import android.content.Context
 import android.os.Bundle
 import android.view.*
@@ -10,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.nmarsollier.fitfat.components.SeekBarChange
 import com.nmarsollier.fitfat.model.*
+import com.nmarsollier.fitfat.utils.formatDateTime
 import com.nmarsollier.fitfat.utils.formatString
 import com.nmarsollier.fitfat.utils.getAge
 import com.nmarsollier.fitfat.utils.updateMenuItemColor
@@ -36,6 +38,25 @@ class NewMeasureActivity : AppCompatActivity() {
 
         vMeasureMethod.setOnClickListener {
             showMeasureTypeSelectionDialog()
+        }
+
+        vMeasureDate.setOnClickListener {
+            val measureDate = Calendar.getInstance()
+            measureDate.time = measure.date
+
+            val datePickerDialog = DatePickerDialog(
+                this,
+                DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
+                    val newDate = Calendar.getInstance()
+                    newDate.set(year, monthOfYear, dayOfMonth, 0, 0, 0)
+                    measure.date = newDate.time
+                    refreshUI()
+                },
+                measureDate.get(Calendar.YEAR),
+                measureDate.get(Calendar.MONTH),
+                measureDate.get(Calendar.DAY_OF_MONTH)
+            )
+            datePickerDialog.show()
         }
 
         adapter = MeasuresAdapter(baseContext, measure) { updateFatPercent() }
@@ -73,6 +94,7 @@ class NewMeasureActivity : AppCompatActivity() {
     private fun refreshUI() {
         vMeasureMethod.setText(measure.measureMethod.labelRes)
         adapter.setData(measure)
+        vMeasureDate.setText(measure.date.formatDateTime())
         updateFatPercent()
     }
 

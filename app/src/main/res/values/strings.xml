@@ -48,4 +48,5 @@
     <string name="measure_method_parrillo">Parrillo</string>
     <string name="measure_method_durnin_womersley">Durnin/Womersley</string>
     <string name="measure_method_manual_scale">Manual/Scale</string>
+    <string name="new_measure_date">Measure Date</string>
 </resources>
