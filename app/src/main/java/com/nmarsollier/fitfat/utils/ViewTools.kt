@@ -14,10 +14,12 @@ import java.util.logging.Logger
 
 fun updateMenuItemColor(menu: Menu?, resources: Resources) {
     menu?.forEach { menuItem ->
+        val color = if (menuItem.isEnabled) R.color.menuItemColor else R.color.menuItemColorDisabled
+
         val drawable = menuItem.icon
         if (drawable != null) {
             drawable.mutate()
-            drawable.setColorFilter(resources.getColor(R.color.menuItemColor), PorterDuff.Mode.SRC_ATOP)
+            drawable.setColorFilter(resources.getColor(color), PorterDuff.Mode.SRC_ATOP)
         }
     }
 }

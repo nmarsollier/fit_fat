@@ -2,9 +2,7 @@ package com.nmarsollier.fitfat
 
 import android.app.DatePickerDialog
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import com.nmarsollier.fitfat.model.MeasureType
@@ -22,9 +20,17 @@ import java.util.*
 class MainOptions : Fragment() {
     private var userSettings: UserSettings? = null
     private var dataChanged = false
+        set(value) {
+            if (value != field) {
+                field = value
+                activity?.invalidateOptionsMenu()
+            }
+        }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.main_options_fragment, container, false)
+        val result = inflater.inflate(R.layout.main_options_fragment, container, false)
+        setHasOptionsMenu(true)
+        return result
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -107,10 +113,28 @@ class MainOptions : Fragment() {
         val context = context ?: return
         GlobalScope.launch {
             userSettings = getRoomDatabase(context).userDao().getUserSettings()
-            dataChanged = false
             MainScope().launch {
                 refreshUI()
+                dataChanged = false
             }
+        }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_save, menu)
+        menu.findItem(R.id.menu_save).isEnabled = dataChanged
+
+        updateMenuItemColor(menu, resources)
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.menu_save -> {
+                saveSettings()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
     }
 
@@ -123,6 +147,7 @@ class MainOptions : Fragment() {
         vSexMale.isChecked = userSettings.sex == SexType.MALE
         vDisplayName.setText(userSettings.displayName)
         vBirthDate.setText(userSettings.birthDate.formatDate())
+
         refreshNumbers()
     }
 

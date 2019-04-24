@@ -214,7 +214,7 @@ class NewMeasureActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.add_measure_menu, menu)
+        menuInflater.inflate(R.menu.menu_save, menu)
         updateMenuItemColor(menu, resources)
 
         return super.onCreateOptionsMenu(menu)
