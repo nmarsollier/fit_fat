@@ -1,9 +1,11 @@
 package com.nmarsollier.fitfat.model
 
+import android.os.Parcelable
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.nmarsollier.fitfat.R
 import com.nmarsollier.fitfat.utils.toPounds
+import kotlinx.android.parcel.Parcelize
 import java.util.*
 
 @Dao
@@ -26,6 +28,7 @@ abstract class MeasureDao {
     }
 }
 
+@Parcelize
 @Entity(tableName = "measures")
 data class Measure(
     @PrimaryKey
@@ -38,48 +41,47 @@ data class Measure(
     var age: Int,
 
     @ColumnInfo(name = "sex")
-    var sex: SexType
+    var sex: SexType,
 
-) {
     @ColumnInfo(name = "date")
-    var date: Date = Date()
+    var date: Date = Date(),
 
     @ColumnInfo(name = "measure_method")
-    var measureMethod: MeasureMethod = MeasureMethod.DURNIN_WOMERSLEY
+    var measureMethod: MeasureMethod = MeasureMethod.DURNIN_WOMERSLEY,
 
     @ColumnInfo(name = "chest")
-    var chest: Int = 0
+    var chest: Int = 0,
 
     @ColumnInfo(name = "abdominal")
-    var abdominal: Int = 0
+    var abdominal: Int = 0,
 
     @ColumnInfo(name = "thigh")
-    var thigh: Int = 0
+    var thigh: Int = 0,
 
     @ColumnInfo(name = "tricep")
-    var tricep: Int = 0
+    var tricep: Int = 0,
 
     @ColumnInfo(name = "subscapular")
-    var subscapular: Int = 0
+    var subscapular: Int = 0,
 
     @ColumnInfo(name = "suprailiac")
-    var suprailiac: Int = 0
+    var suprailiac: Int = 0,
 
     @ColumnInfo(name = "midaxillary")
-    var midaxillary: Int = 0
+    var midaxillary: Int = 0,
 
     @ColumnInfo(name = "bicep")
-    var bicep: Int = 0
+    var bicep: Int = 0,
 
     @ColumnInfo(name = "lower_back")
-    var lowerBack: Int = 0
+    var lowerBack: Int = 0,
 
     @ColumnInfo(name = "calf")
-    var calf: Int = 0
+    var calf: Int = 0,
 
     @ColumnInfo(name = "fat_percent")
     var fatPercent: Double = 0.0
-
+) : Parcelable {
     fun isEmpty(): Boolean {
         return (chest + abdominal + thigh + tricep + subscapular + suprailiac + midaxillary + bicep + lowerBack + calf) == 0
     }

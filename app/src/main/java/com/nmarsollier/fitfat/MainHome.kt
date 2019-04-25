@@ -2,7 +2,6 @@ package com.nmarsollier.fitfat
 
 import android.app.AlertDialog
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -43,7 +42,8 @@ class MainHome : Fragment() {
         vRecyclerView.addItemDecoration(DividerItemDecoration(activity!!, DividerItemDecoration.VERTICAL))
 
         vFab.setOnClickListener {
-            startActivity(Intent(context, NewMeasureActivity::class.java))
+            val context = context ?: return@setOnClickListener
+            NewMeasureActivity.startActivity(context)
         }
     }
 
@@ -92,7 +92,7 @@ class MainHome : Fragment() {
             holder.bind(userSettings, measures[position])
         }
 
-        internal fun setData(data: List<Measure>) {
+        private fun setData(data: List<Measure>) {
             measures = data
             notifyDataSetChanged()
         }
@@ -131,6 +131,10 @@ class MainHome : Fragment() {
                     }
                     .show()
                 true
+            }
+
+            itemView.setOnClickListener {
+                ViewMeasureActivity.startActivity(itemView.context, measure)
             }
         }
 

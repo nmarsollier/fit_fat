@@ -39,10 +39,17 @@ dependencies {
     implementation "androidx.room:room-runtime:2.0.0"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.2.0"
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.2.0'
+    implementation 'com.evernote:android-state:1.4.1'
+    annotationProcessor 'com.evernote:android-state-processor:1.4.1'
     kapt 'android.arch.persistence.room:compiler:1.1.1'
+    kapt 'com.evernote:android-state-processor:1.4.1'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0-alpha04'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0-alpha04'
+}
+
+androidExtensions {
+    experimental = true
 }
 
 repositories {

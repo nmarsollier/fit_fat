@@ -1,6 +1,8 @@
 package com.nmarsollier.fitfat.model
 
+import android.os.Parcelable
 import androidx.room.*
+import kotlinx.android.parcel.Parcelize
 import java.util.*
 
 @Dao
@@ -28,30 +30,30 @@ abstract class UserSettingsDao {
     }
 }
 
+@Parcelize
 @Entity(tableName = "user_settings")
 data class UserSettings(
     @PrimaryKey
-    val uid: Int
-) {
+    val uid: Int,
 
     @ColumnInfo(name = "display_name")
-    var displayName: String = ""
+    var displayName: String = "",
 
     @ColumnInfo(name = "birth_date")
-    var birthDate: Date = Date()
+    var birthDate: Date = Date(),
 
     @ColumnInfo(name = "weight")
-    var weight: Double = 50.0
+    var weight: Double = 50.0,
 
     @ColumnInfo(name = "height")
-    var height: Double = 160.0
+    var height: Double = 160.0,
 
     @ColumnInfo(name = "sex_type")
-    var sex: SexType = SexType.MALE
+    var sex: SexType = SexType.MALE,
 
     @ColumnInfo(name = "measure_system")
     var measureSystem: MeasureType = MeasureType.METRIC
-}
+) : Parcelable
 
 enum class SexType {
     MALE, FEMALE
