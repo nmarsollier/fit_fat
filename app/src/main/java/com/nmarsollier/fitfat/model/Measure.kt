@@ -185,14 +185,16 @@ enum class MeasureMethod(val labelRes: Int) {
 }
 
 
-enum class MeasureValue(val titleRes: Int, private val requiredFor: List<MeasureMethod>) {
-    BODY_WEIGHT(R.string.measure_weight, listOf(MeasureMethod.FROM_SCALE, MeasureMethod.WEIGHT_ONLY)),
+enum class MeasureValue(val titleRes: Int, val helpRes: Int?, private val requiredFor: List<MeasureMethod>) {
+    BODY_WEIGHT(R.string.measure_weight, null, listOf(MeasureMethod.FROM_SCALE, MeasureMethod.WEIGHT_ONLY)),
     CHEST(
         R.string.measure_chest,
+        R.drawable.img_chest,
         listOf(MeasureMethod.JACKSON_POLLOCK_7, MeasureMethod.JACKSON_POLLOCK_3, MeasureMethod.PARRILLO)
     ),
     ABDOMINAL(
         R.string.measure_abdominal,
+        R.drawable.img_abdominal,
         listOf(
             MeasureMethod.JACKSON_POLLOCK_7,
             MeasureMethod.JACKSON_POLLOCK_3,
@@ -202,6 +204,7 @@ enum class MeasureValue(val titleRes: Int, private val requiredFor: List<Measure
     ),
     THIGH(
         R.string.measure_thigh,
+        R.drawable.img_thigh,
         listOf(
             MeasureMethod.JACKSON_POLLOCK_7,
             MeasureMethod.JACKSON_POLLOCK_3,
@@ -211,6 +214,7 @@ enum class MeasureValue(val titleRes: Int, private val requiredFor: List<Measure
     ),
     TRICEP(
         R.string.measure_tricep,
+        R.drawable.img_tricep,
         listOf(
             MeasureMethod.JACKSON_POLLOCK_7,
             MeasureMethod.DURNIN_WOMERSLEY,
@@ -220,10 +224,12 @@ enum class MeasureValue(val titleRes: Int, private val requiredFor: List<Measure
     ),
     SUBSCAPULAR(
         R.string.measure_subscapular,
+        R.drawable.img_subscapular,
         listOf(MeasureMethod.JACKSON_POLLOCK_7, MeasureMethod.DURNIN_WOMERSLEY, MeasureMethod.PARRILLO)
     ),
     SUPRAILIAC(
         R.string.measure_suprailiac,
+        R.drawable.img_suprailiac,
         listOf(
             MeasureMethod.JACKSON_POLLOCK_7,
             MeasureMethod.DURNIN_WOMERSLEY,
@@ -231,11 +237,31 @@ enum class MeasureValue(val titleRes: Int, private val requiredFor: List<Measure
             MeasureMethod.PARRILLO
         )
     ),
-    MIDAXILARITY(R.string.measure_midaxillary, listOf(MeasureMethod.JACKSON_POLLOCK_7)),
-    BICEP(R.string.measure_bicep, listOf(MeasureMethod.DURNIN_WOMERSLEY, MeasureMethod.PARRILLO)),
-    LOWER_BACK(R.string.measure_lower_back, listOf(MeasureMethod.PARRILLO)),
-    CALF(R.string.measure_calf, listOf(MeasureMethod.PARRILLO)),
-    BODY_FAT(R.string.measure_fat, listOf(MeasureMethod.FROM_SCALE));
+    MIDAXILARITY(
+        R.string.measure_midaxillary,
+        R.drawable.img_midaxilarity,
+        listOf(MeasureMethod.JACKSON_POLLOCK_7)
+    ),
+    BICEP(
+        R.string.measure_bicep,
+        R.drawable.img_bicep,
+        listOf(MeasureMethod.DURNIN_WOMERSLEY, MeasureMethod.PARRILLO)
+    ),
+    LOWER_BACK(
+        R.string.measure_lower_back,
+        R.drawable.img_lower_back,
+        listOf(MeasureMethod.PARRILLO)
+    ),
+    CALF(
+        R.string.measure_calf,
+        R.drawable.img_calf,
+        listOf(MeasureMethod.PARRILLO)
+    ),
+    BODY_FAT(
+        R.string.measure_fat,
+        null,
+        listOf(MeasureMethod.FROM_SCALE)
+    );
 
     fun getHolderType(): Int {
         return if (this == BODY_FAT) 2 else 1

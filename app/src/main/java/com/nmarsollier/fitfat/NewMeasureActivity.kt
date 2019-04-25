@@ -10,6 +10,7 @@ import android.widget.SeekBar
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.nmarsollier.fitfat.components.SeekBarChange
 import com.nmarsollier.fitfat.model.*
@@ -38,11 +39,28 @@ class NewMeasureActivity : AppCompatActivity() {
 
         vMeasureDate.setOnClickListener { changeDateTime() }
 
-        adapter = MeasuresAdapter(baseContext, measure, userSettings) { updateFatPercent() }
+        adapter = MeasuresAdapter(baseContext, measure, userSettings) { resId ->
+            if (resId != null) {
+                showHelp(resId)
+            } else {
+                updateFatPercent()
+            }
+        }
+
         vRecyclerView.adapter = adapter
 
         reloadSettings()
         loadLastMeasure()
+    }
+
+    private fun showHelp(resId: Int) {
+        vHelpView.isVisible = false
+        vHelpView.setOnClickListener {
+            vHelpView.isVisible = false
+        }
+
+        vHelpView.setImageResource(resId)
+        vHelpView.isVisible = true
     }
 
     private fun changeDateTime() {
@@ -192,7 +210,7 @@ class NewMeasureActivity : AppCompatActivity() {
         private val context: Context,
         private var measure: Measure,
         var userSettings: UserSettings?,
-        private var callback: () -> Unit
+        private var callback: (helpId: Int?) -> Unit
     ) : RecyclerView.Adapter<MeasureHolder>() {
 
         private var measures = mutableListOf<MeasureValue>()
@@ -213,7 +231,7 @@ class NewMeasureActivity : AppCompatActivity() {
         }
 
         override fun onBindViewHolder(holder: MeasureHolder, position: Int) {
-            holder.bind(measures[position], measure, callback, userSettings)
+            holder.bind(measures[position], measure, userSettings, callback)
         }
 
         override fun getItemCount(): Int {
@@ -249,8 +267,8 @@ class NewMeasureActivity : AppCompatActivity() {
         abstract fun bind(
             measureValue: MeasureValue,
             measure: Measure,
-            callback: () -> Unit,
-            userSettings: UserSettings?
+            userSettings: UserSettings?,
+            callback: (helpId: Int?) -> Unit
         )
     }
 
@@ -261,8 +279,8 @@ class NewMeasureActivity : AppCompatActivity() {
         override fun bind(
             measureValue: MeasureValue,
             measure: Measure,
-            callback: () -> Unit,
-            userSettings: UserSettings?
+            userSettings: UserSettings?,
+            callback: (helpId: Int?) -> Unit
         ) {
             this.measureValue = measureValue
             this.measure = measure
@@ -288,11 +306,20 @@ class NewMeasureActivity : AppCompatActivity() {
                 override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                     setValue(progress, measureValue)
                     itemView.vValueText.text = getValue().formatString()
-                    callback.invoke()
+                    callback.invoke(null)
                 }
             })
 
             itemView.vTitleLabel.text = itemView.context.getString(measureValue.titleRes)
+
+            if (measureValue.helpRes != null) {
+                itemView.vHelpIcon.isVisible = true
+                itemView.vHelpIcon.setOnClickListener {
+                    callback.invoke(measureValue.helpRes)
+                }
+            } else {
+                itemView.vHelpIcon.isVisible = false
+            }
         }
 
         fun setValue(value: Int, fromMeasureValue: MeasureValue) {
@@ -342,8 +369,8 @@ class NewMeasureActivity : AppCompatActivity() {
         override fun bind(
             measureValue: MeasureValue,
             measure: Measure,
-            callback: () -> Unit,
-            userSettings: UserSettings?
+            userSettings: UserSettings?,
+            callback: (helpId: Int?) -> Unit
         ) {
             this.measureValue = measureValue
             this.measure = measure
@@ -369,9 +396,9 @@ class NewMeasureActivity : AppCompatActivity() {
             })
         }
 
-        fun updateUnits(callback: () -> Unit) {
+        fun updateUnits(callback: (helpId: Int?) -> Unit) {
             itemView.vFatValueText.text = measure?.fatPercent?.formatString() ?: ""
-            callback.invoke()
+            callback.invoke(null)
         }
     }
 }
