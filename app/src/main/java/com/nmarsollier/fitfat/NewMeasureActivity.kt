@@ -59,7 +59,7 @@ class NewMeasureActivity : AppCompatActivity() {
             vHelpView.isVisible = false
         }
 
-        vHelpView.setImageResource(resId)
+        vHelpPicture.setImageResource(resId)
         vHelpView.isVisible = true
     }
 
