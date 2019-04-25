@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Fit Fat</string>
+    <string name="app_name">Body Fat Tracker</string>
     <string name="home_menu_options">Options</string>
     <string name="home_menu_progress">Progress</string>
     <string name="home_menu_main">Measure</string>
@@ -29,16 +29,16 @@
     <string name="unit_mm">mm</string>
     <string name="unit_lb">lb</string>
     <string name="unit_in">in</string>
-    <string name="new_measure_title">New Measure</string>
+    <string name="new_measure_title">Your Measure</string>
     <string name="save_dialog_title">Save</string>
     <string name="save_dialog_message">Do you want to save changes ?</string>
     <string name="measure_fat">Body Fat</string>
     <string name="unit_percent">%</string>
     <string name="measure_weight">Weight</string>
 
-    <string name="home_options_title">User Preferences</string>
-    <string name="home_measure_title">Measure History</string>
-    <string name="home_progress_title">Progress Charts</string>
+    <string name="home_options_title">Preferences</string>
+    <string name="home_measure_title">Measures</string>
+    <string name="home_progress_title">Your Progress</string>
     <string name="measure_delete_title">Delete Measure</string>
     <string name="measure_delete_message">Do you want to delete this measure ?</string>
     <string name="new_measure_error">Fill all values</string>
