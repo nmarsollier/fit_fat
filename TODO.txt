@@ -1,11 +1,6 @@
-- Icono de arranque
-- Limpieza General
-- Hacer Recycler View para el Home
-- Poner boton guardar en opciones
 - Mostrar mas datos en los cards del home
 	Fat en Kg
 	Lean Body Mass
-- Ver si se puede dejar el %Fat Flotante (FAB) en la carga, poner un margen para que no se tape nada
 - Poner la fecha y hora de la medicion 
 - Poner un historial de pesaje
 - Guardar el progreso en la nube

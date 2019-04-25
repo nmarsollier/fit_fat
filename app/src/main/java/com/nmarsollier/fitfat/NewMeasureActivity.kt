@@ -11,10 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.nmarsollier.fitfat.components.SeekBarChange
 import com.nmarsollier.fitfat.model.*
-import com.nmarsollier.fitfat.utils.formatDateTime
-import com.nmarsollier.fitfat.utils.formatString
-import com.nmarsollier.fitfat.utils.getAge
-import com.nmarsollier.fitfat.utils.updateMenuItemColor
+import com.nmarsollier.fitfat.utils.*
 import kotlinx.android.synthetic.main.new_measure_activity.*
 import kotlinx.android.synthetic.main.new_measure_fat_holder.view.*
 import kotlinx.android.synthetic.main.new_measure_holder.view.*
@@ -22,7 +19,6 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import java.util.*
-
 
 class NewMeasureActivity : AppCompatActivity() {
     private var userSettings: UserSettings? = null
@@ -59,7 +55,7 @@ class NewMeasureActivity : AppCompatActivity() {
             datePickerDialog.show()
         }
 
-        adapter = MeasuresAdapter(baseContext, measure) { updateFatPercent() }
+        adapter = MeasuresAdapter(baseContext, measure, userSettings) { updateFatPercent() }
         vRecyclerView.adapter = adapter
 
         reloadSettings()
@@ -71,6 +67,7 @@ class NewMeasureActivity : AppCompatActivity() {
         GlobalScope.launch {
             userSettings = getRoomDatabase(context).userDao().getUserSettings().also {
                 measure = Measure(UUID.randomUUID().toString(), it.weight, it.birthDate.getAge(), it.sex)
+                adapter.userSettings = it
             }
             MainScope().launch {
                 loadLastMeasure()
@@ -148,6 +145,10 @@ class NewMeasureActivity : AppCompatActivity() {
         if (measure.isValid()) {
             GlobalScope.launch {
                 getRoomDatabase(context).measureDao().insert(measure)
+                getRoomDatabase(context).userDao().getUserSettings().let { settings ->
+                    settings.weight = measure.bodyWeight
+                    getRoomDatabase(context).userDao().update(settings)
+                }
 
                 MainScope().launch {
                     finish()
@@ -178,6 +179,7 @@ class NewMeasureActivity : AppCompatActivity() {
     class MeasuresAdapter internal constructor(
         private val context: Context,
         private var measure: Measure,
+        var userSettings: UserSettings?,
         private var callback: () -> Unit
     ) : RecyclerView.Adapter<MeasureHolder>() {
 
@@ -199,7 +201,7 @@ class NewMeasureActivity : AppCompatActivity() {
         }
 
         override fun onBindViewHolder(holder: MeasureHolder, position: Int) {
-            holder.bind(measures[position], measure, callback)
+            holder.bind(measures[position], measure, callback, userSettings)
         }
 
         override fun getItemCount(): Int {
@@ -235,7 +237,8 @@ class NewMeasureActivity : AppCompatActivity() {
         abstract fun bind(
             measureValue: MeasureValue,
             measure: Measure,
-            callback: () -> Unit
+            callback: () -> Unit,
+            userSettings: UserSettings?
         )
     }
 
@@ -246,10 +249,24 @@ class NewMeasureActivity : AppCompatActivity() {
         override fun bind(
             measureValue: MeasureValue,
             measure: Measure,
-            callback: () -> Unit
+            callback: () -> Unit,
+            userSettings: UserSettings?
         ) {
             this.measureValue = measureValue
             this.measure = measure
+
+            if (measureValue == MeasureValue.BODY_WEIGHT) {
+                if (userSettings?.measureSystem == MeasureType.IMPERIAL) {
+                    itemView.vValueUnit.setText(R.string.unit_lb)
+                    itemView.vValueBar.max = (200.0).toPounds().toInt()
+                } else {
+                    itemView.vValueUnit.setText(R.string.unit_kg)
+                    itemView.vValueBar.max = 200
+                }
+            } else {
+                itemView.vValueBar.max = 60
+                itemView.vValueUnit.setText(R.string.unit_mm)
+            }
 
             val value = getValue()
             itemView.vValueBar.progress = value
@@ -257,7 +274,7 @@ class NewMeasureActivity : AppCompatActivity() {
 
             itemView.vValueBar.setOnSeekBarChangeListener(object : SeekBarChange() {
                 override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                    setValue(progress)
+                    setValue(progress, measureValue)
                     itemView.vValueText.text = getValue().formatString()
                     callback.invoke()
                 }
@@ -266,7 +283,11 @@ class NewMeasureActivity : AppCompatActivity() {
             itemView.vTitleLabel.text = itemView.context.getString(measureValue.titleRes)
         }
 
-        fun setValue(value: Int) {
+        fun setValue(value: Int, fromMeasureValue: MeasureValue) {
+            if (fromMeasureValue != measureValue) {
+                return
+            }
+
             when (measureValue) {
                 MeasureValue.CHEST -> measure?.chest = value
                 MeasureValue.ABDOMINAL -> measure?.abdominal = value
@@ -278,6 +299,7 @@ class NewMeasureActivity : AppCompatActivity() {
                 MeasureValue.BICEP -> measure?.bicep = value
                 MeasureValue.LOWER_BACK -> measure?.lowerBack = value
                 MeasureValue.CALF -> measure?.calf = value
+                MeasureValue.BODY_WEIGHT -> measure?.bodyWeight = value.toDouble()
                 else -> {
                 }
             }
@@ -295,6 +317,7 @@ class NewMeasureActivity : AppCompatActivity() {
                 MeasureValue.BICEP -> measure?.bicep
                 MeasureValue.LOWER_BACK -> measure?.lowerBack
                 MeasureValue.CALF -> measure?.calf
+                MeasureValue.BODY_WEIGHT -> measure?.bodyWeight?.toInt() ?: 0
                 else -> 0
             } ?: 0
         }
@@ -307,7 +330,8 @@ class NewMeasureActivity : AppCompatActivity() {
         override fun bind(
             measureValue: MeasureValue,
             measure: Measure,
-            callback: () -> Unit
+            callback: () -> Unit,
+            userSettings: UserSettings?
         ) {
             this.measureValue = measureValue
             this.measure = measure

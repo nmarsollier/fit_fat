@@ -34,6 +34,7 @@
     <string name="save_dialog_message">Do you want to save changes ?</string>
     <string name="measure_fat">Body Fat</string>
     <string name="unit_percent">%</string>
+    <string name="measure_weight">Weight</string>
 
     <string name="home_options_title">User Preferences</string>
     <string name="home_measure_title">Measure History</string>
@@ -49,4 +50,5 @@
     <string name="measure_method_durnin_womersley">Durnin/Womersley</string>
     <string name="measure_method_manual_scale">Manual/Scale</string>
     <string name="new_measure_date">Measure Date</string>
+    <string name="measure_method_weight">Weight</string>
 </resources>

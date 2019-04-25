@@ -35,27 +35,27 @@ class Converters {
 
         @TypeConverter
         @JvmStatic
-        fun toSexType(value: Int?) = if (value == null) null else SexType.values()[value]
+        fun toSexType(value: String?) = if (value == null) null else SexType.valueOf(value)
 
         @TypeConverter
         @JvmStatic
-        fun toSexType(value: SexType?) = value?.ordinal
+        fun toSexType(value: SexType?) = value.toString()
 
         @TypeConverter
         @JvmStatic
-        fun toMeasureType(value: Int?) = if (value == null) null else MeasureType.values()[value]
+        fun toMeasureType(value: String?) = if (value == null) null else MeasureType.valueOf(value)
 
         @TypeConverter
         @JvmStatic
-        fun toMeasureType(value: MeasureType?) = value?.ordinal
+        fun toMeasureType(value: MeasureType?) = value.toString()
 
         @TypeConverter
         @JvmStatic
-        fun toMeasureMethod(value: Int?) = if (value == null) null else MeasureMethod.values()[value]
+        fun toMeasureMethod(value: String?) = if (value == null) null else MeasureMethod.valueOf(value)
 
         @TypeConverter
         @JvmStatic
-        fun toMeasureMethod(value: MeasureMethod?) = value?.ordinal
+        fun toMeasureMethod(value: MeasureMethod?) = value.toString()
     }
 }
 

@@ -96,6 +96,7 @@ data class Measure(
                 && (!MeasureValue.BICEP.isRequired(measureMethod) || bicep > 0)
                 && (!MeasureValue.LOWER_BACK.isRequired(measureMethod) || lowerBack > 0)
                 && (!MeasureValue.BODY_FAT.isRequired(measureMethod) || fatPercent > 0)
+                && (!MeasureValue.BODY_WEIGHT.isRequired(measureMethod) || bodyWeight > 0)
     }
 
     fun calculateFatPercent() {
@@ -166,6 +167,9 @@ data class Measure(
             MeasureMethod.FROM_SCALE -> {
                 fatPercent
             }
+            MeasureMethod.WEIGHT_ONLY -> {
+                0.0
+            }
         }
     }
 }
@@ -176,11 +180,13 @@ enum class MeasureMethod(val labelRes: Int) {
     JACKSON_POLLOCK_4(R.string.measure_method_jackson_pollock_4),
     PARRILLO(R.string.measure_method_parrillo),
     DURNIN_WOMERSLEY(R.string.measure_method_durnin_womersley),
-    FROM_SCALE(R.string.measure_method_manual_scale);
+    FROM_SCALE(R.string.measure_method_manual_scale),
+    WEIGHT_ONLY(R.string.measure_method_weight);
 }
 
 
-enum class MeasureValue(val titleRes: Int, val requiredFor: List<MeasureMethod>) {
+enum class MeasureValue(val titleRes: Int, private val requiredFor: List<MeasureMethod>) {
+    BODY_WEIGHT(R.string.measure_weight, listOf(MeasureMethod.FROM_SCALE, MeasureMethod.WEIGHT_ONLY)),
     CHEST(
         R.string.measure_chest,
         listOf(MeasureMethod.JACKSON_POLLOCK_7, MeasureMethod.JACKSON_POLLOCK_3, MeasureMethod.PARRILLO)
