@@ -10,11 +10,14 @@
             android:supportsRtl="true"
             android:name=".App"
             android:theme="@style/AppTheme">
-        <activity android:name=".NewMeasureActivity"/>
-        <activity android:name=".ViewMeasureActivity"/>
+        <activity android:name=".NewMeasureActivity"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".ViewMeasureActivity"
+                  android:screenOrientation="portrait"/>
         <activity
                 android:name=".MainActivity"
-                android:label="@string/app_name">
+                android:label="@string/app_name"
+                android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
