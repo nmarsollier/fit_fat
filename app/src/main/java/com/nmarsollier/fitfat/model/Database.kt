@@ -18,7 +18,9 @@ fun getRoomDatabase(context: Context): FitFatDatabase {
         INSTANCE = Room.databaseBuilder(
             context,
             FitFatDatabase::class.java, "fitfat"
-        ).build()
+        )
+            .fallbackToDestructiveMigration()
+            .build()
     }
     return INSTANCE!!
 }

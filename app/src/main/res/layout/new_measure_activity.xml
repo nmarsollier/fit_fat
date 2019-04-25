@@ -87,22 +87,5 @@
             android:layout_alignParentBottom="true"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
-    <FrameLayout
-            android:id="@+id/vHelpView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="invisible">
-
-        <ImageView
-                android:id="@+id/vHelpPicture"
-                android:layout_width="match_parent"
-                android:layout_margin="50dp"
-                android:layout_height="match_parent"
-                android:src="@drawable/img_bicep"
-                android:background="@android:color/white"
-                android:clickable="false"
-                android:elevation="1dp"
-                android:contentDescription="@null"/>
-    </FrameLayout>
 </RelativeLayout>
 

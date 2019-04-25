@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.nmarsollier.fitfat.components.SeekBarChange
+import com.nmarsollier.fitfat.components.showHelpDialog
 import com.nmarsollier.fitfat.model.*
 import com.nmarsollier.fitfat.utils.*
 import kotlinx.android.synthetic.main.new_measure_activity.*
@@ -39,28 +40,12 @@ class NewMeasureActivity : AppCompatActivity() {
 
         vMeasureDate.setOnClickListener { changeDateTime() }
 
-        adapter = MeasuresAdapter(baseContext, measure, userSettings) { resId ->
-            if (resId != null) {
-                showHelp(resId)
-            } else {
-                updateFatPercent()
-            }
-        }
+        adapter = MeasuresAdapter(baseContext, measure, userSettings) { updateFatPercent() }
 
         vRecyclerView.adapter = adapter
 
         reloadSettings()
         loadLastMeasure()
-    }
-
-    private fun showHelp(resId: Int) {
-        vHelpView.isVisible = false
-        vHelpView.setOnClickListener {
-            vHelpView.isVisible = false
-        }
-
-        vHelpPicture.setImageResource(resId)
-        vHelpView.isVisible = true
     }
 
     private fun changeDateTime() {
@@ -210,7 +195,7 @@ class NewMeasureActivity : AppCompatActivity() {
         private val context: Context,
         private var measure: Measure,
         var userSettings: UserSettings?,
-        private var callback: (helpId: Int?) -> Unit
+        private var callback: () -> Unit
     ) : RecyclerView.Adapter<MeasureHolder>() {
 
         private var measures = mutableListOf<MeasureValue>()
@@ -268,7 +253,7 @@ class NewMeasureActivity : AppCompatActivity() {
             measureValue: MeasureValue,
             measure: Measure,
             userSettings: UserSettings?,
-            callback: (helpId: Int?) -> Unit
+            callback: () -> Unit
         )
     }
 
@@ -280,7 +265,7 @@ class NewMeasureActivity : AppCompatActivity() {
             measureValue: MeasureValue,
             measure: Measure,
             userSettings: UserSettings?,
-            callback: (helpId: Int?) -> Unit
+            callback: () -> Unit
         ) {
             this.measureValue = measureValue
             this.measure = measure
@@ -306,18 +291,18 @@ class NewMeasureActivity : AppCompatActivity() {
                 override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                     setValue(progress, measureValue)
                     itemView.vValueText.text = getValue().formatString()
-                    callback.invoke(null)
+                    callback.invoke()
                 }
             })
 
             itemView.vTitleLabel.text = itemView.context.getString(measureValue.titleRes)
 
-            if (measureValue.helpRes != null) {
+            measureValue.helpRes?.let { helpRes ->
                 itemView.vHelpIcon.isVisible = true
                 itemView.vHelpIcon.setOnClickListener {
-                    callback.invoke(measureValue.helpRes)
+                    showHelpDialog(itemView.context, helpRes)
                 }
-            } else {
+            } ?: run {
                 itemView.vHelpIcon.isVisible = false
             }
         }
@@ -370,35 +355,64 @@ class NewMeasureActivity : AppCompatActivity() {
             measureValue: MeasureValue,
             measure: Measure,
             userSettings: UserSettings?,
-            callback: (helpId: Int?) -> Unit
+            callback: () -> Unit
         ) {
             this.measureValue = measureValue
             this.measure = measure
 
             itemView.vFatValueBar.progress = measure.fatPercent.toInt()
-            itemView.vFatValueDecimalBar.progress = ((measure.fatPercent + measure.fatPercent.toInt()) * 100).toInt()
+            itemView.vFatValueDecimalBar.progress = ((measure.fatPercent - measure.fatPercent.toInt()) * 100).toInt()
             updateUnits(callback)
 
             itemView.vFatValueBar.setOnSeekBarChangeListener(object : SeekBarChange() {
                 override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                    val decimal = measure.fatPercent - measure.fatPercent.toInt()
-
-                    measure.fatPercent = progress.toDouble() + decimal
-                    updateUnits(callback)
+                    setFatValue(progress, measureValue, callback)
                 }
             })
 
             itemView.vFatValueDecimalBar.setOnSeekBarChangeListener(object : SeekBarChange() {
                 override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                    measure.fatPercent = measure.fatPercent.toInt().toDouble() + (progress.toDouble() / 100)
-                    updateUnits(callback)
+                    setFatDecimalValue(progress, measureValue, callback)
                 }
             })
         }
 
-        fun updateUnits(callback: (helpId: Int?) -> Unit) {
+        private fun setFatValue(
+            progress: Int,
+            fromMeasureValue: MeasureValue,
+            callback: () -> Unit
+        ) {
+            if (fromMeasureValue != measureValue) {
+                return
+            }
+
+            val measure = measure ?: return
+
+            val decimal = measure.fatPercent - measure.fatPercent.toInt()
+
+            measure.fatPercent = progress.toDouble() + decimal
+            updateUnits(callback)
+        }
+
+        private fun setFatDecimalValue(
+            progress: Int,
+            fromMeasureValue: MeasureValue,
+            callback: () -> Unit
+        ) {
+            if (fromMeasureValue != measureValue) {
+                return
+            }
+
+            val measure = measure ?: return
+
+            measure.fatPercent = measure.fatPercent.toInt().toDouble() + (progress.toDouble() / 100)
+            updateUnits(callback)
+        }
+
+
+        fun updateUnits(callback: () -> Unit) {
             itemView.vFatValueText.text = measure?.fatPercent?.formatString() ?: ""
-            callback.invoke(null)
+            callback.invoke()
         }
     }
 }
