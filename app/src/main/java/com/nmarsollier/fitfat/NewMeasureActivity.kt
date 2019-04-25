@@ -1,8 +1,10 @@
 package com.nmarsollier.fitfat
 
 import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.content.Context
 import android.os.Bundle
+import android.text.format.DateFormat
 import android.view.*
 import android.widget.SeekBar
 import android.widget.Toast
@@ -32,34 +34,44 @@ class NewMeasureActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowHomeEnabled(true)
         title = getString(R.string.new_measure_title)
 
-        vMeasureMethod.setOnClickListener {
-            showMeasureTypeSelectionDialog()
-        }
+        vMeasureMethod.setOnClickListener { showMeasureTypeSelectionDialog() }
 
-        vMeasureDate.setOnClickListener {
-            val measureDate = Calendar.getInstance()
-            measureDate.time = measure.date
-
-            val datePickerDialog = DatePickerDialog(
-                this,
-                DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
-                    val newDate = Calendar.getInstance()
-                    newDate.set(year, monthOfYear, dayOfMonth, 0, 0, 0)
-                    measure.date = newDate.time
-                    refreshUI()
-                },
-                measureDate.get(Calendar.YEAR),
-                measureDate.get(Calendar.MONTH),
-                measureDate.get(Calendar.DAY_OF_MONTH)
-            )
-            datePickerDialog.show()
-        }
+        vMeasureDate.setOnClickListener { changeDateTime() }
 
         adapter = MeasuresAdapter(baseContext, measure, userSettings) { updateFatPercent() }
         vRecyclerView.adapter = adapter
 
         reloadSettings()
         loadLastMeasure()
+    }
+
+    private fun changeDateTime() {
+        val measureDate = Calendar.getInstance()
+        measureDate.time = measure.date
+
+        DatePickerDialog(
+            this,
+            DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
+                measureDate.set(year, monthOfYear, dayOfMonth, 0, 0, 0)
+
+                TimePickerDialog(
+                    this,
+                    TimePickerDialog.OnTimeSetListener { _, hourOfDay, minute ->
+                        measureDate.set(Calendar.HOUR_OF_DAY, hourOfDay)
+                        measureDate.set(Calendar.MINUTE, minute)
+
+                        measure.date = measureDate.time
+                        refreshUI()
+                    },
+                    measureDate.get(Calendar.HOUR_OF_DAY),
+                    measureDate.get(Calendar.MINUTE),
+                    DateFormat.is24HourFormat(this)
+                ).show()
+            },
+            measureDate.get(Calendar.YEAR),
+            measureDate.get(Calendar.MONTH),
+            measureDate.get(Calendar.DAY_OF_MONTH)
+        ).show()
     }
 
     private fun reloadSettings() {
