@@ -5,28 +5,30 @@ import androidx.room.*
 import kotlinx.android.parcel.Parcelize
 import java.util.*
 
+private var USER_SETTINGS: UserSettings? = null
+
 @Dao
 abstract class UserSettingsDao {
     @Query("SELECT * FROM user_settings LIMIT 1")
-    abstract fun findUserSettings(): UserSettings?
+    protected abstract fun findUserSettings(): UserSettings?
 
     @Insert
-    abstract fun insert(user: UserSettings)
+    protected abstract fun insertUserSettings(user: UserSettings)
 
     @Update
-    abstract fun update(user: UserSettings)
-
-    @Delete
-    abstract fun delete(user: UserSettings)
+    protected abstract fun updateUserSettings(user: UserSettings)
 
     fun getUserSettings(): UserSettings {
-        var result = findUserSettings()
-        if (result == null) {
-            result = UserSettings(1).also {
-                insert(it)
-            }
+        return USER_SETTINGS ?: (findUserSettings() ?: UserSettings(1).also {
+            insertUserSettings(it)
+        }).also {
+            USER_SETTINGS = it
         }
-        return result
+    }
+
+    fun update(user: UserSettings) {
+        USER_SETTINGS = null
+        updateUserSettings(user)
     }
 }
 
@@ -43,17 +45,19 @@ data class UserSettings(
     var birthDate: Date = Date(),
 
     @ColumnInfo(name = "weight")
-    var weight: Double = 50.0,
+    var weight: Double = 0.0,
 
     @ColumnInfo(name = "height")
-    var height: Double = 160.0,
+    var height: Double = 0.0,
 
     @ColumnInfo(name = "sex_type")
     var sex: SexType = SexType.MALE,
 
     @ColumnInfo(name = "measure_system")
     var measureSystem: MeasureType = MeasureType.METRIC
-) : Parcelable
+) : Parcelable {
+    fun isNew() = weight == 0.0 || height == 0.0
+}
 
 enum class SexType {
     MALE, FEMALE

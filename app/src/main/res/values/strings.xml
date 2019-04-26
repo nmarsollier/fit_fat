@@ -51,4 +51,5 @@
     <string name="measure_method_manual_scale">Manual/Scale</string>
     <string name="new_measure_date">Measure Date</string>
     <string name="measure_method_weight">Weight</string>
+    <string name="main_setup_app_text">Don\'t forget to setup the app first.</string>
 </resources>

@@ -14,14 +14,9 @@ import com.nmarsollier.fitfat.model.Measure
 import com.nmarsollier.fitfat.model.MeasureType
 import com.nmarsollier.fitfat.model.UserSettings
 import com.nmarsollier.fitfat.model.getRoomDatabase
-import com.nmarsollier.fitfat.utils.formatDateTime
-import com.nmarsollier.fitfat.utils.formatString
-import com.nmarsollier.fitfat.utils.toPounds
+import com.nmarsollier.fitfat.utils.*
 import kotlinx.android.synthetic.main.main_home_fragment.*
 import kotlinx.android.synthetic.main.main_home_measure_holder.view.*
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.launch
 
 
 class MainHome : Fragment() {
@@ -49,9 +44,10 @@ class MainHome : Fragment() {
 
     private fun loadSettings() {
         val context = context ?: return
-        GlobalScope.launch {
+        runInBackground {
             userSettings = getRoomDatabase(context).userDao().getUserSettings()
-            MainScope().launch {
+
+            runInForeground {
                 initAdapter()
             }
         }
@@ -139,7 +135,7 @@ class MainHome : Fragment() {
         }
 
         private fun deleteMeasure(context: Context, measure: Measure) {
-            GlobalScope.launch {
+            runInBackground {
                 getRoomDatabase(context).measureDao().delete(measure)
             }
         }

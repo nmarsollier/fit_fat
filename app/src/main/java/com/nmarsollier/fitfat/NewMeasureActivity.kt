@@ -15,14 +15,8 @@ import androidx.core.content.ContextCompat
 import com.evernote.android.state.State
 import com.nmarsollier.fitfat.components.MeasuresAdapter
 import com.nmarsollier.fitfat.model.*
-import com.nmarsollier.fitfat.utils.formatDateTime
-import com.nmarsollier.fitfat.utils.formatString
-import com.nmarsollier.fitfat.utils.getAge
-import com.nmarsollier.fitfat.utils.updateMenuItemColor
+import com.nmarsollier.fitfat.utils.*
 import kotlinx.android.synthetic.main.new_measure_activity.*
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.launch
 import java.util.*
 
 class NewMeasureActivity : AppCompatActivity() {
@@ -88,12 +82,12 @@ class NewMeasureActivity : AppCompatActivity() {
             return
         }
 
-        GlobalScope.launch {
+        runInBackground {
             userSettings = getRoomDatabase(context).userDao().getUserSettings().also {
                 measure = Measure(UUID.randomUUID().toString(), it.weight, it.birthDate.getAge(), it.sex)
                 adapter.userSettings = it
             }
-            MainScope().launch {
+            runInForeground {
                 loadLastMeasure()
                 refreshUI()
             }
@@ -102,11 +96,11 @@ class NewMeasureActivity : AppCompatActivity() {
 
     private fun loadLastMeasure() {
         val context = baseContext ?: return
-        GlobalScope.launch {
+        runInBackground {
             getRoomDatabase(context).measureDao().getLastMeasure()?.let { last ->
                 measure.measureMethod = last.measureMethod
             }
-            MainScope().launch {
+            runInForeground {
                 refreshUI()
             }
         }
@@ -167,14 +161,14 @@ class NewMeasureActivity : AppCompatActivity() {
     private fun saveAndExit() {
         val context = applicationContext ?: return
         if (measure.isValid()) {
-            GlobalScope.launch {
+            runInBackground {
                 getRoomDatabase(context).measureDao().insert(measure)
                 getRoomDatabase(context).userDao().getUserSettings().let { settings ->
                     settings.weight = measure.bodyWeight
                     getRoomDatabase(context).userDao().update(settings)
                 }
 
-                MainScope().launch {
+                runInForeground {
                     finish()
                 }
             }

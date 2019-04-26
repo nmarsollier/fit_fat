@@ -1,12 +1,16 @@
 package com.nmarsollier.fitfat
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.viewpager.widget.ViewPager
+import com.nmarsollier.fitfat.model.getRoomDatabase
 import com.nmarsollier.fitfat.utils.closeKeyboard
+import com.nmarsollier.fitfat.utils.runInBackground
+import com.nmarsollier.fitfat.utils.runInForeground
 import kotlinx.android.synthetic.main.main_activity.*
 
 class MainActivity : AppCompatActivity() {
@@ -43,11 +47,13 @@ class MainActivity : AppCompatActivity() {
                 )
             }
         })
+
+        loadSettings()
     }
 
     override fun onResume() {
         super.onResume()
-        setCurrentSelectedTab(currentScreen, true)
+        setCurrentSelectedTab(forceRefresh = true)
     }
 
     override fun onBackPressed() {
@@ -58,7 +64,21 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun setCurrentSelectedTab(selectedScreen: Screen, forceRefresh: Boolean = false) {
+    private fun loadSettings() {
+        val context = applicationContext ?: return
+
+        runInBackground {
+            val userSettings = getRoomDatabase(context).userDao().getUserSettings()
+            runInForeground {
+                if (userSettings.isNew()) {
+                    setCurrentSelectedTab(Screen.OPTIONS)
+                    Toast.makeText(context, R.string.main_setup_app_text, Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+    }
+
+    private fun setCurrentSelectedTab(selectedScreen: Screen = currentScreen, forceRefresh: Boolean = false) {
         if (currentScreen != selectedScreen || forceRefresh) {
             currentScreen = selectedScreen
 

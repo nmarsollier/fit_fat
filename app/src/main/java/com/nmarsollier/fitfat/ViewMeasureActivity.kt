@@ -13,10 +13,9 @@ import com.nmarsollier.fitfat.model.UserSettings
 import com.nmarsollier.fitfat.model.getRoomDatabase
 import com.nmarsollier.fitfat.utils.formatDateTime
 import com.nmarsollier.fitfat.utils.formatString
+import com.nmarsollier.fitfat.utils.runInBackground
+import com.nmarsollier.fitfat.utils.runInForeground
 import kotlinx.android.synthetic.main.new_measure_activity.*
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.launch
 
 
 class ViewMeasureActivity : AppCompatActivity() {
@@ -45,11 +44,11 @@ class ViewMeasureActivity : AppCompatActivity() {
 
     private fun reloadSettings() {
         val context = baseContext ?: return
-        GlobalScope.launch {
+        runInBackground {
             userSettings = getRoomDatabase(context).userDao().getUserSettings().also {
                 adapter.userSettings = it
             }
-            MainScope().launch {
+            runInForeground {
                 refreshUI()
             }
         }

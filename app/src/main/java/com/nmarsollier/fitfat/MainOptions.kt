@@ -11,9 +11,6 @@ import com.nmarsollier.fitfat.model.UserSettings
 import com.nmarsollier.fitfat.model.getRoomDatabase
 import com.nmarsollier.fitfat.utils.*
 import kotlinx.android.synthetic.main.main_options_fragment.*
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.launch
 import java.util.*
 
 
@@ -111,9 +108,10 @@ class MainOptions : Fragment() {
 
     private fun reloadSettings() {
         val context = context ?: return
-        GlobalScope.launch {
+
+        runInBackground {
             userSettings = getRoomDatabase(context).userDao().getUserSettings()
-            MainScope().launch {
+            runInForeground {
                 refreshUI()
                 dataChanged = false
             }
@@ -187,10 +185,9 @@ class MainOptions : Fragment() {
             return
         }
 
-        GlobalScope.launch {
+        runInBackground {
             getRoomDatabase(context).userDao().update(userSettings)
             dataChanged = false
-            logInfo("User Settings Saved")
         }
     }
 

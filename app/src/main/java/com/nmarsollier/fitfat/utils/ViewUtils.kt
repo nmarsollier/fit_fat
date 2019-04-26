@@ -9,6 +9,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.forEach
 import com.nmarsollier.fitfat.R
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 
 
 fun Context.updateMenuItemColor(menu: Menu?) {
@@ -41,3 +44,12 @@ fun AppCompatActivity.closeKeyboard() {
 fun Context.dpToPx(dp: Number): Float {
     return dp.toFloat() * this.resources.displayMetrics.density
 }
+
+fun Any.runInBackground(backgroundProcess: () -> Unit) {
+    GlobalScope.launch { backgroundProcess.invoke() }
+}
+
+fun Any.runInForeground(foregroundProcess: () -> Unit) {
+    MainScope().launch { foregroundProcess.invoke() }
+}
+
