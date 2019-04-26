@@ -14,6 +14,7 @@ import androidx.core.graphics.drawable.DrawableCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
+import com.evernote.android.state.State
 import com.nmarsollier.fitfat.model.Measure
 import com.nmarsollier.fitfat.model.MeasureMethod
 import com.nmarsollier.fitfat.model.MeasureValue
@@ -29,7 +30,9 @@ import java.util.*
 
 
 class MainStats : LifecycleOwner, Fragment() {
-    private var selectedMethod = MeasureMethod.WEIGHT_ONLY
+    @State
+    var selectedMethod = MeasureMethod.WEIGHT_ONLY
+
     private var graphValues: List<Measure>? = null
 
     private val maxScaleY
@@ -38,7 +41,6 @@ class MainStats : LifecycleOwner, Fragment() {
 
     private val yAxisRange
         get() = IntRange(0, maxScaleY).map { AxisValue(it.toFloat()).setLabel(it.toString()) }.toList()
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -98,13 +100,19 @@ class MainStats : LifecycleOwner, Fragment() {
         val lines = mutableListOf<Line>()
         val axisValues = mutableListOf<AxisValue>()
         MeasureValue.values()
-            .filter { it.isRequired(selectedMethod) }
+            .filter {
+                if (selectedMethod == MeasureMethod.WEIGHT_ONLY) {
+                    it.isRequired(selectedMethod)
+                } else {
+                    it.isRequired(selectedMethod) || it == MeasureValue.BODY_FAT
+                }
+            }
             .forEach { method ->
                 val lineValues = mutableListOf<PointValue>()
 
                 values
                     // First filter values that are not representative
-                    .filter { it.getValueForMethod(method).toInt() > 0 }
+                    .filter { selectedMethod == it.measureMethod && it.getValueForMethod(method).toInt() > 0 }
                     // Map Pair the date part of the day as long, to the value measured
                     .map { Pair(it.date.truncateTime(), it.getValueForMethod(method).toFloat()) }
                     // Group by date
