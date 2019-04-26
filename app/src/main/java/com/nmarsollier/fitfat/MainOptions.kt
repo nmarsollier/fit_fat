@@ -124,7 +124,7 @@ class MainOptions : Fragment() {
         inflater.inflate(R.menu.menu_save, menu)
         menu.findItem(R.id.menu_save).isEnabled = dataChanged
 
-        updateMenuItemColor(menu, resources)
+        context?.updateMenuItemColor(menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
 

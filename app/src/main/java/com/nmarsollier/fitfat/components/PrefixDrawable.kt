@@ -9,10 +9,7 @@ import kotlin.properties.Delegates
 
 // This is for the prefix.
 // It is a drawable for rendering text
-internal class PrefixDrawable(
-    var paint: Paint,
-    var lineBounds: Int = 0
-) : Drawable() {
+internal class PrefixDrawable(var paint: Paint, var lineBounds: Int = 0) : Drawable() {
 
     var text: String by Delegates.observable("") { _, _: String?, _: String? ->
         // Tell it we need to be as big as we want to be!

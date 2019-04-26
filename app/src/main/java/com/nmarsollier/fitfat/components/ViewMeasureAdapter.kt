@@ -1,10 +1,10 @@
 package com.nmarsollier.fitfat.components
 
+import android.app.Dialog
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.SeekBar
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.nmarsollier.fitfat.R
@@ -13,7 +13,9 @@ import com.nmarsollier.fitfat.model.MeasureType
 import com.nmarsollier.fitfat.model.MeasureValue
 import com.nmarsollier.fitfat.model.UserSettings
 import com.nmarsollier.fitfat.utils.formatString
+import com.nmarsollier.fitfat.utils.onProgressChangeListener
 import com.nmarsollier.fitfat.utils.toPounds
+import kotlinx.android.synthetic.main.help_dialog.*
 import kotlinx.android.synthetic.main.new_measure_fat_holder.view.*
 import kotlinx.android.synthetic.main.new_measure_holder.view.*
 
@@ -52,7 +54,7 @@ class MeasuresAdapter internal constructor(
     }
 
     override fun getItemViewType(position: Int): Int {
-        return measures[position].getHolderType()
+        return if (measures[position] == MeasureValue.BODY_FAT) 2 else 1
     }
 
     private fun newMeasureValueHolder(parent: ViewGroup, context: Context): MeasureHolder {
@@ -103,13 +105,13 @@ class MeasureValueHolder constructor(itemView: View) : MeasureHolder(itemView) {
         if (measureValue == MeasureValue.BODY_WEIGHT) {
             if (userSettings?.measureSystem == MeasureType.IMPERIAL) {
                 itemView.vValueUnit.setText(R.string.unit_lb)
-                itemView.vValueBar.max = (200.0).toPounds().toInt()
+                itemView.vValueBar.max = measureValue.maxScale.toDouble().toPounds().toInt()
             } else {
                 itemView.vValueUnit.setText(R.string.unit_kg)
-                itemView.vValueBar.max = 200
+                itemView.vValueBar.max = measureValue.maxScale
             }
         } else {
-            itemView.vValueBar.max = 60
+            itemView.vValueBar.max = measureValue.maxScale
             itemView.vValueUnit.setText(R.string.unit_mm)
         }
 
@@ -123,18 +125,25 @@ class MeasureValueHolder constructor(itemView: View) : MeasureHolder(itemView) {
         if (!readOnly) {
             itemView.vValueBar.progress = value
 
-            itemView.vValueBar.setOnSeekBarChangeListener(object : SeekBarChange() {
-                override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+            itemView.vValueBar.setOnSeekBarChangeListener(
+                onProgressChangeListener { _, progress, _ ->
                     setValue(progress, measureValue)
                     itemView.vValueText.text = getValue().formatString()
                     callback.invoke()
                 }
-            })
+            )
 
             measureValue.helpRes?.let { helpRes ->
                 itemView.vHelpIcon.isVisible = true
                 itemView.vHelpIcon.setOnClickListener {
-                    showHelpDialog(itemView.context, helpRes)
+                    Dialog(itemView.context).apply {
+                        setContentView(R.layout.help_dialog)
+                        vHelpView.setOnClickListener {
+                            dismiss()
+                        }
+                        vHelpPicture.setImageResource(helpRes)
+                        show()
+                    }
                 }
             } ?: run {
                 itemView.vHelpIcon.isVisible = false
@@ -165,20 +174,9 @@ class MeasureValueHolder constructor(itemView: View) : MeasureHolder(itemView) {
     }
 
     fun getValue(): Int {
-        return when (measureValue) {
-            MeasureValue.CHEST -> measure?.chest
-            MeasureValue.ABDOMINAL -> measure?.abdominal
-            MeasureValue.THIGH -> measure?.thigh
-            MeasureValue.TRICEP -> measure?.tricep
-            MeasureValue.SUBSCAPULAR -> measure?.subscapular
-            MeasureValue.SUPRAILIAC -> measure?.suprailiac
-            MeasureValue.MIDAXILARITY -> measure?.midaxillary
-            MeasureValue.BICEP -> measure?.bicep
-            MeasureValue.LOWER_BACK -> measure?.lowerBack
-            MeasureValue.CALF -> measure?.calf
-            MeasureValue.BODY_WEIGHT -> measure?.bodyWeight?.toInt() ?: 0
-            else -> 0
-        } ?: 0
+        val measureValue = measureValue ?: return 0
+        val measure = measure ?: return 0
+        return measure.getValueForMethod(measureValue).toInt()
     }
 }
 
@@ -203,17 +201,17 @@ class MeasureFatHolder constructor(itemView: View) : MeasureHolder(itemView) {
             itemView.vFatValueBar.progress = measure.fatPercent.toInt()
             itemView.vFatValueDecimalBar.progress = ((measure.fatPercent - measure.fatPercent.toInt()) * 100).toInt()
 
-            itemView.vFatValueBar.setOnSeekBarChangeListener(object : SeekBarChange() {
-                override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+            itemView.vFatValueBar.setOnSeekBarChangeListener(
+                onProgressChangeListener { _, progress, _ ->
                     setFatValue(progress, measureValue, callback)
                 }
-            })
+            )
 
-            itemView.vFatValueDecimalBar.setOnSeekBarChangeListener(object : SeekBarChange() {
-                override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+            itemView.vFatValueDecimalBar.setOnSeekBarChangeListener(
+                onProgressChangeListener { _, progress, _ ->
                     setFatDecimalValue(progress, measureValue, callback)
                 }
-            })
+            )
         }
 
         updateUnits(callback)
@@ -252,7 +250,7 @@ class MeasureFatHolder constructor(itemView: View) : MeasureHolder(itemView) {
     }
 
 
-    fun updateUnits(callback: () -> Unit) {
+    private fun updateUnits(callback: () -> Unit) {
         itemView.vFatValueText.text = measure?.fatPercent?.formatString() ?: ""
         callback.invoke()
     }

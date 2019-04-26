@@ -1,5 +1,7 @@
 - Mostrar mas datos en los cards del home
 	Fat en Kg
 	Lean Body Mass
+
 - Guardar el progreso en la nube
-- Grafico de historial de peso y grafico de historial de %Grasa
+
+

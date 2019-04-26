@@ -11,7 +11,6 @@ import android.util.AttributeSet
 import androidx.appcompat.widget.AppCompatEditText
 import com.nmarsollier.fitfat.R
 
-
 /**
  * [AppCompatEditText] with easy prefix and suffix support.
  *

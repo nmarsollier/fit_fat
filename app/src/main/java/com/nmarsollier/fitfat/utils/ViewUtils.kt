@@ -1,39 +1,34 @@
 package com.nmarsollier.fitfat.utils
 
 import android.content.Context
-import android.content.res.Resources
 import android.graphics.PorterDuff
+import android.util.Log
 import android.view.Menu
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.forEach
 import com.nmarsollier.fitfat.R
-import java.util.logging.Level
-import java.util.logging.Logger
 
 
-fun updateMenuItemColor(menu: Menu?, resources: Resources) {
+fun Context.updateMenuItemColor(menu: Menu?) {
     menu?.forEach { menuItem ->
         val color = if (menuItem.isEnabled) R.color.menuItemColor else R.color.menuItemColorDisabled
 
         val drawable = menuItem.icon
         if (drawable != null) {
             drawable.mutate()
-            drawable.setColorFilter(resources.getColor(color), PorterDuff.Mode.SRC_ATOP)
+            drawable.setColorFilter(ContextCompat.getColor(this, color), PorterDuff.Mode.SRC_ATOP)
         }
     }
 }
 
-fun logInfo(msg: String) {
-    Logger.getGlobal().log(Level.INFO, msg)
+fun Any.logInfo(msg: String) {
+    Log.i(this.javaClass.name, msg)
 }
 
-fun logError(msg: String) {
-    Logger.getGlobal().log(Level.SEVERE, msg)
-}
-
-fun logError(err: Exception) {
-    Logger.getGlobal().log(Level.SEVERE, err.toString())
+fun Any.logError(msg: String, e: Exception? = null) {
+    Log.e(this.javaClass.name, msg, e)
 }
 
 fun AppCompatActivity.closeKeyboard() {
@@ -41,4 +36,8 @@ fun AppCompatActivity.closeKeyboard() {
         val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
         imm?.hideSoftInputFromWindow(view.windowToken, 0)
     }
+}
+
+fun Context.dpToPx(dp: Number): Float {
+    return dp.toFloat() * this.resources.displayMetrics.density
 }

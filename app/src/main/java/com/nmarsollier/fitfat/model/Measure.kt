@@ -83,7 +83,7 @@ data class Measure(
     var fatPercent: Double = 0.0
 ) : Parcelable {
     fun isEmpty(): Boolean {
-        return (chest + abdominal + thigh + tricep + subscapular + suprailiac + midaxillary + bicep + lowerBack + calf) == 0
+        return (chest + abdominal + thigh + tricep + subscapular + suprailiac + midaxillary + bicep + lowerBack + calf + fatPercent + bodyWeight) == 0.0
     }
 
     fun isValid(): Boolean {
@@ -174,6 +174,23 @@ data class Measure(
             }
         }
     }
+
+    fun getValueForMethod(measureValue: MeasureValue): Number {
+        return when (measureValue) {
+            MeasureValue.CHEST -> chest
+            MeasureValue.ABDOMINAL -> abdominal
+            MeasureValue.THIGH -> thigh
+            MeasureValue.TRICEP -> tricep
+            MeasureValue.SUBSCAPULAR -> subscapular
+            MeasureValue.SUPRAILIAC -> suprailiac
+            MeasureValue.MIDAXILARITY -> midaxillary
+            MeasureValue.BICEP -> bicep
+            MeasureValue.LOWER_BACK -> lowerBack
+            MeasureValue.CALF -> calf
+            MeasureValue.BODY_WEIGHT -> bodyWeight
+            MeasureValue.BODY_FAT -> fatPercent
+        }
+    }
 }
 
 enum class MeasureMethod(val labelRes: Int) {
@@ -186,88 +203,117 @@ enum class MeasureMethod(val labelRes: Int) {
     WEIGHT_ONLY(R.string.measure_method_weight);
 }
 
-
-enum class MeasureValue(val titleRes: Int, val helpRes: Int?, private val requiredFor: List<MeasureMethod>) {
-    BODY_WEIGHT(R.string.measure_weight, null, listOf(MeasureMethod.FROM_SCALE, MeasureMethod.WEIGHT_ONLY)),
+enum class MeasureValue(
+    val titleRes: Int,
+    val helpRes: Int?,
+    val colorRes: Int,
+    private val requiredFor: List<MeasureMethod>,
+    val maxScale: Int
+) {
+    BODY_WEIGHT(
+        R.string.measure_weight,
+        null,
+        R.color.chartBodyWeight,
+        listOf(MeasureMethod.FROM_SCALE, MeasureMethod.WEIGHT_ONLY),
+        200
+    ),
     CHEST(
         R.string.measure_chest,
         R.drawable.img_chest,
-        listOf(MeasureMethod.JACKSON_POLLOCK_7, MeasureMethod.JACKSON_POLLOCK_3, MeasureMethod.PARRILLO)
+        R.color.chartChest,
+        listOf(MeasureMethod.JACKSON_POLLOCK_7, MeasureMethod.JACKSON_POLLOCK_3, MeasureMethod.PARRILLO),
+        30
     ),
     ABDOMINAL(
         R.string.measure_abdominal,
         R.drawable.img_abdominal,
+        R.color.chartAbdominal,
         listOf(
             MeasureMethod.JACKSON_POLLOCK_7,
             MeasureMethod.JACKSON_POLLOCK_3,
             MeasureMethod.JACKSON_POLLOCK_4,
             MeasureMethod.PARRILLO
-        )
+        ),
+        60
     ),
     THIGH(
         R.string.measure_thigh,
         R.drawable.img_thigh,
+        R.color.chartThigh,
         listOf(
             MeasureMethod.JACKSON_POLLOCK_7,
             MeasureMethod.JACKSON_POLLOCK_3,
             MeasureMethod.JACKSON_POLLOCK_4,
             MeasureMethod.PARRILLO
-        )
+        ),
+        30
     ),
     TRICEP(
         R.string.measure_tricep,
         R.drawable.img_tricep,
+        R.color.chartTricep,
         listOf(
             MeasureMethod.JACKSON_POLLOCK_7,
             MeasureMethod.DURNIN_WOMERSLEY,
             MeasureMethod.JACKSON_POLLOCK_4,
             MeasureMethod.PARRILLO
-        )
+        ),
+        30
     ),
     SUBSCAPULAR(
         R.string.measure_subscapular,
         R.drawable.img_subscapular,
-        listOf(MeasureMethod.JACKSON_POLLOCK_7, MeasureMethod.DURNIN_WOMERSLEY, MeasureMethod.PARRILLO)
+        R.color.chartSubscapular,
+        listOf(MeasureMethod.JACKSON_POLLOCK_7, MeasureMethod.DURNIN_WOMERSLEY, MeasureMethod.PARRILLO),
+        60
     ),
     SUPRAILIAC(
         R.string.measure_suprailiac,
         R.drawable.img_suprailiac,
+        R.color.chartSuprailiac,
         listOf(
             MeasureMethod.JACKSON_POLLOCK_7,
             MeasureMethod.DURNIN_WOMERSLEY,
             MeasureMethod.JACKSON_POLLOCK_4,
             MeasureMethod.PARRILLO
-        )
+        ),
+        60
     ),
     MIDAXILARITY(
         R.string.measure_midaxillary,
         R.drawable.img_midaxilarity,
-        listOf(MeasureMethod.JACKSON_POLLOCK_7)
+        R.color.chartMidaxilarity,
+        listOf(MeasureMethod.JACKSON_POLLOCK_7),
+        30
     ),
     BICEP(
         R.string.measure_bicep,
         R.drawable.img_bicep,
-        listOf(MeasureMethod.DURNIN_WOMERSLEY, MeasureMethod.PARRILLO)
+        R.color.chartBicep,
+        listOf(MeasureMethod.DURNIN_WOMERSLEY, MeasureMethod.PARRILLO),
+        30
     ),
     LOWER_BACK(
         R.string.measure_lower_back,
         R.drawable.img_lower_back,
-        listOf(MeasureMethod.PARRILLO)
+        R.color.chartLowerBack,
+        listOf(MeasureMethod.PARRILLO),
+        60
     ),
     CALF(
         R.string.measure_calf,
         R.drawable.img_calf,
-        listOf(MeasureMethod.PARRILLO)
+        R.color.chartCalf,
+        listOf(MeasureMethod.PARRILLO),
+        30
     ),
     BODY_FAT(
         R.string.measure_fat,
         null,
-        listOf(MeasureMethod.FROM_SCALE)
+        R.color.chartBodyFat,
+        listOf(MeasureMethod.FROM_SCALE),
+        99
     );
-
-    fun getHolderType(): Int {
-        return if (this == BODY_FAT) 2 else 1
-    }
 
     fun isRequired(method: MeasureMethod): Boolean {
         return requiredFor.contains(method)
