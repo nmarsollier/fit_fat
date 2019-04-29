@@ -64,13 +64,13 @@ class MainOptions : Fragment() {
 
         vHeight.doOnTextChanged { text, _, _, _ ->
             val userSettings = userSettings ?: return@doOnTextChanged
-            userSettings.height = text.toStdWidth(userSettings.measureSystem)
+            userSettings.height = userSettings.measureSystem.standardWidth(text.toString().parseDouble())
             dataChanged = true
         }
 
         vWeight.doOnTextChanged { text, _, _, _ ->
             val userSettings = userSettings ?: return@doOnTextChanged
-            userSettings.weight = text.toString().parseDouble().toStdWeight(userSettings.measureSystem)
+            userSettings.weight = userSettings.measureSystem.standardWeight(text.toString().parseDouble())
             dataChanged = true
         }
 
@@ -152,17 +152,10 @@ class MainOptions : Fragment() {
     private fun refreshNumbers() {
         val userSettings = userSettings ?: return
 
-        if (userSettings.measureSystem == MeasureType.METRIC) {
-            vWeight.suffix = getString(R.string.unit_kg)
-            vHeight.suffix = getString(R.string.unit_cm)
-            vWeight.setText(userSettings.weight.formatString())
-            vHeight.setText(userSettings.height.formatString())
-        } else {
-            vWeight.suffix = getString(R.string.unit_lb)
-            vHeight.suffix = getString(R.string.unit_in)
-            vWeight.setText(userSettings.weight.toPounds().formatString())
-            vHeight.setText(userSettings.height.toInch().formatString())
-        }
+        vWeight.suffix = getString(userSettings.measureSystem.weightResId)
+        vHeight.suffix = getString(userSettings.measureSystem.heightResId)
+        vWeight.setText(userSettings.measureSystem.displayWeight(userSettings.weight).formatString())
+        vHeight.setText(userSettings.measureSystem.displayHeight(userSettings.height).formatString())
     }
 
     override fun setUserVisibleHint(isVisibleToUser: Boolean) {

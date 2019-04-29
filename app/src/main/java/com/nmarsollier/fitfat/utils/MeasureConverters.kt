@@ -1,6 +1,5 @@
 package com.nmarsollier.fitfat.utils
 
-import com.nmarsollier.fitfat.model.MeasureType
 import java.text.NumberFormat
 
 fun Double.toPounds() = this * 2.20462
@@ -33,28 +32,4 @@ fun String.parseDouble(default: Double = 0.0): Double {
     } catch (e: Exception) {
         default
     }
-}
-
-fun Double.toStdWeight(type: MeasureType): Double {
-    return if (type == MeasureType.IMPERIAL) {
-        this.toKg()
-    } else {
-        this
-    }
-}
-
-fun Double.toStdWidth(type: MeasureType): Double {
-    return if (type == MeasureType.IMPERIAL) {
-        this.toCm()
-    } else {
-        this
-    }
-}
-
-fun CharSequence?.toStdWidth(type: MeasureType): Double {
-    return this?.toString()?.parseDouble()?.toStdWidth(type) ?: 0.0
-}
-
-fun CharSequence?.toStdWeight(type: MeasureType): Double {
-    return this?.toString()?.parseDouble()?.toStdWeight(type) ?: 0.0
 }

@@ -11,10 +11,12 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
 import com.nmarsollier.fitfat.model.Measure
-import com.nmarsollier.fitfat.model.MeasureType
 import com.nmarsollier.fitfat.model.UserSettings
 import com.nmarsollier.fitfat.model.getRoomDatabase
-import com.nmarsollier.fitfat.utils.*
+import com.nmarsollier.fitfat.utils.formatDateTime
+import com.nmarsollier.fitfat.utils.formatString
+import com.nmarsollier.fitfat.utils.runInBackground
+import com.nmarsollier.fitfat.utils.runInForeground
 import kotlinx.android.synthetic.main.main_home_fragment.*
 import kotlinx.android.synthetic.main.main_home_measure_holder.view.*
 
@@ -99,18 +101,17 @@ class MainHome : Fragment() {
     }
 
     class MeasureHolder private constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private lateinit var userSettings: UserSettings
+
         fun bind(userSettings: UserSettings, measure: Measure) {
+            this.userSettings = userSettings
+
             itemView.vDate.text = measure.date.formatDateTime()
             itemView.vMethod.setText(measure.measureMethod.labelRes)
             itemView.vFat.text = measure.fatPercent.formatString()
 
-            if (userSettings.measureSystem == MeasureType.METRIC) {
-                itemView.vUnit.text = itemView.context.getString(R.string.unit_kg)
-                itemView.vWeight.text = measure.bodyWeight.formatString()
-            } else {
-                itemView.vUnit.text = itemView.context.getString(R.string.unit_lb)
-                itemView.vWeight.text = measure.bodyWeight.toPounds().formatString()
-            }
+            itemView.vWeight.text = userSettings.measureSystem.displayWeight(measure.bodyWeight).formatString()
+            itemView.vUnit.text = itemView.context.getString(userSettings.measureSystem.weightResId)
 
             itemView.setOnLongClickListener {
                 AlertDialog.Builder(itemView.context)

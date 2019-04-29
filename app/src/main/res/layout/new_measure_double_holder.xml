@@ -29,6 +29,7 @@
             android:layout_toRightOf="@id/vFatTextLabel"/>
 
     <TextView
+            android:id="@+id/vMeasureUnit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="2dp"
@@ -39,7 +40,7 @@
             android:layout_toRightOf="@id/vFatValueText"/>
 
     <SeekBar
-            android:id="@+id/vFatValueBar"
+            android:id="@+id/vIntBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
@@ -48,11 +49,11 @@
             android:layout_alignParentStart="true"/>
 
     <SeekBar
-            android:id="@+id/vFatValueDecimalBar"
+            android:id="@+id/vDecimalBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:max="99"
-            android:layout_below="@id/vFatValueBar"
+            android:layout_below="@id/vIntBar"
             android:layout_alignParentStart="true"/>
 </RelativeLayout>

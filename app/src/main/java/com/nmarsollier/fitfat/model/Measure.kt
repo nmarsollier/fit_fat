@@ -191,6 +191,23 @@ data class Measure(
             MeasureValue.BODY_FAT -> fatPercent
         }
     }
+
+    fun setValueForMethod(measureValue: MeasureValue, value: Number) {
+        when (measureValue) {
+            MeasureValue.CHEST -> chest = value.toInt()
+            MeasureValue.ABDOMINAL -> abdominal = value.toInt()
+            MeasureValue.THIGH -> thigh = value.toInt()
+            MeasureValue.TRICEP -> tricep = value.toInt()
+            MeasureValue.SUBSCAPULAR -> subscapular = value.toInt()
+            MeasureValue.SUPRAILIAC -> suprailiac = value.toInt()
+            MeasureValue.MIDAXILARITY -> midaxillary = value.toInt()
+            MeasureValue.BICEP -> bicep = value.toInt()
+            MeasureValue.LOWER_BACK -> lowerBack = value.toInt()
+            MeasureValue.CALF -> calf = value.toInt()
+            MeasureValue.BODY_WEIGHT -> bodyWeight = value.toDouble()
+            MeasureValue.BODY_FAT -> fatPercent = value.toDouble()
+        }
+    }
 }
 
 enum class MeasureMethod(val labelRes: Int) {
@@ -203,26 +220,40 @@ enum class MeasureMethod(val labelRes: Int) {
     WEIGHT_ONLY(R.string.measure_method_weight);
 }
 
+enum class InputType {
+    INT, DOUBLE
+}
+
+enum class UnitType {
+    PERCENT, WEIGHT, WIDTH
+}
+
 enum class MeasureValue(
     val titleRes: Int,
     val helpRes: Int?,
     val colorRes: Int,
     private val requiredFor: List<MeasureMethod>,
-    val maxScale: Int
+    val maxScale: Int,
+    val inputType: InputType,
+    val unitType: UnitType
 ) {
     BODY_WEIGHT(
         R.string.measure_weight,
         null,
         R.color.chartBodyWeight,
         listOf(MeasureMethod.FROM_SCALE, MeasureMethod.WEIGHT_ONLY),
-        200
+        200,
+        InputType.DOUBLE,
+        UnitType.WEIGHT
     ),
     CHEST(
         R.string.measure_chest,
         R.drawable.img_chest,
         R.color.chartChest,
         listOf(MeasureMethod.JACKSON_POLLOCK_7, MeasureMethod.JACKSON_POLLOCK_3, MeasureMethod.PARRILLO),
-        30
+        30,
+        InputType.INT,
+        UnitType.WIDTH
     ),
     ABDOMINAL(
         R.string.measure_abdominal,
@@ -234,7 +265,9 @@ enum class MeasureValue(
             MeasureMethod.JACKSON_POLLOCK_4,
             MeasureMethod.PARRILLO
         ),
-        60
+        60,
+        InputType.INT,
+        UnitType.WIDTH
     ),
     THIGH(
         R.string.measure_thigh,
@@ -246,7 +279,9 @@ enum class MeasureValue(
             MeasureMethod.JACKSON_POLLOCK_4,
             MeasureMethod.PARRILLO
         ),
-        30
+        30,
+        InputType.INT,
+        UnitType.WIDTH
     ),
     TRICEP(
         R.string.measure_tricep,
@@ -258,14 +293,18 @@ enum class MeasureValue(
             MeasureMethod.JACKSON_POLLOCK_4,
             MeasureMethod.PARRILLO
         ),
-        30
+        30,
+        InputType.INT,
+        UnitType.WIDTH
     ),
     SUBSCAPULAR(
         R.string.measure_subscapular,
         R.drawable.img_subscapular,
         R.color.chartSubscapular,
         listOf(MeasureMethod.JACKSON_POLLOCK_7, MeasureMethod.DURNIN_WOMERSLEY, MeasureMethod.PARRILLO),
-        60
+        60,
+        InputType.INT,
+        UnitType.WIDTH
     ),
     SUPRAILIAC(
         R.string.measure_suprailiac,
@@ -277,42 +316,54 @@ enum class MeasureValue(
             MeasureMethod.JACKSON_POLLOCK_4,
             MeasureMethod.PARRILLO
         ),
-        60
+        60,
+        InputType.INT,
+        UnitType.WIDTH
     ),
     MIDAXILARITY(
         R.string.measure_midaxillary,
         R.drawable.img_midaxilarity,
         R.color.chartMidaxilarity,
         listOf(MeasureMethod.JACKSON_POLLOCK_7),
-        30
+        30,
+        InputType.INT,
+        UnitType.WIDTH
     ),
     BICEP(
         R.string.measure_bicep,
         R.drawable.img_bicep,
         R.color.chartBicep,
         listOf(MeasureMethod.DURNIN_WOMERSLEY, MeasureMethod.PARRILLO),
-        30
+        30,
+        InputType.INT,
+        UnitType.WIDTH
     ),
     LOWER_BACK(
         R.string.measure_lower_back,
         R.drawable.img_lower_back,
         R.color.chartLowerBack,
         listOf(MeasureMethod.PARRILLO),
-        60
+        60,
+        InputType.INT,
+        UnitType.WIDTH
     ),
     CALF(
         R.string.measure_calf,
         R.drawable.img_calf,
         R.color.chartCalf,
         listOf(MeasureMethod.PARRILLO),
-        30
+        30,
+        InputType.INT,
+        UnitType.WIDTH
     ),
     BODY_FAT(
         R.string.measure_fat,
         null,
         R.color.chartBodyFat,
         listOf(MeasureMethod.FROM_SCALE),
-        99
+        99,
+        InputType.DOUBLE,
+        UnitType.PERCENT
     );
 
     fun isRequired(method: MeasureMethod): Boolean {

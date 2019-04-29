@@ -2,6 +2,11 @@ package com.nmarsollier.fitfat.model
 
 import android.os.Parcelable
 import androidx.room.*
+import com.nmarsollier.fitfat.R
+import com.nmarsollier.fitfat.utils.toCm
+import com.nmarsollier.fitfat.utils.toInch
+import com.nmarsollier.fitfat.utils.toKg
+import com.nmarsollier.fitfat.utils.toPounds
 import kotlinx.android.parcel.Parcelize
 import java.util.*
 
@@ -63,7 +68,42 @@ enum class SexType {
     MALE, FEMALE
 }
 
-enum class MeasureType {
-    METRIC, IMPERIAL
+enum class MeasureType(val heightResId: Int, val weightResId: Int) {
+    METRIC(R.string.unit_cm, R.string.unit_kg),
+    IMPERIAL(R.string.unit_in, R.string.unit_lb);
+
+    fun standardWeight(value: Double): Double {
+        return if (this == IMPERIAL) {
+            value.toKg()
+        } else {
+            value
+        }
+    }
+
+    fun standardWidth(value: Double): Double {
+        return if (this == IMPERIAL) {
+            value.toCm()
+        } else {
+            value
+        }
+    }
+
+
+    fun displayWeight(value: Double): Double {
+        return if (this == IMPERIAL) {
+            value.toPounds()
+        } else {
+            value
+        }
+    }
+
+    fun displayHeight(value: Double): Double {
+        return if (this == IMPERIAL) {
+            value.toInch()
+        } else {
+            value
+        }
+    }
+
 }
 
