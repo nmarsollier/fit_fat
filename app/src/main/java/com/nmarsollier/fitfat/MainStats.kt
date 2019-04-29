@@ -29,7 +29,10 @@ import lecho.lib.hellocharts.model.*
 import java.util.*
 
 
+private const val A_DAY = (1000 * 60 * 60 * 24)
+
 class MainStats : LifecycleOwner, Fragment() {
+
     @State
     var selectedMethod = MeasureMethod.WEIGHT_ONLY
 
@@ -99,6 +102,10 @@ class MainStats : LifecycleOwner, Fragment() {
         val legends = mutableListOf<MeasureValue>()
         val lines = mutableListOf<Line>()
         val axisValues = mutableListOf<AxisValue>()
+
+        var minDate = Long.MAX_VALUE
+        var maxDate = 0L
+
         MeasureValue.values()
             .filter {
                 if (selectedMethod == MeasureMethod.WEIGHT_ONLY) {
@@ -112,7 +119,10 @@ class MainStats : LifecycleOwner, Fragment() {
 
                 values
                     // First filter values that are not representative
-                    .filter { selectedMethod == it.measureMethod && it.getValueForMethod(method).toInt() > 0 }
+                    .filter {
+                        (selectedMethod == MeasureMethod.WEIGHT_ONLY || selectedMethod == it.measureMethod)
+                                && it.getValueForMethod(method).toInt() > 0
+                    }
                     // Map Pair the date part of the day as long, to the value measured
                     .map { Pair(it.date.truncateTime(), it.getValueForMethod(method).toFloat()) }
                     // Group by date
@@ -121,6 +131,8 @@ class MainStats : LifecycleOwner, Fragment() {
                     .map { Pair(it.key, (it.value.sumByDouble { p -> p.second.toDouble() }).toFloat() / it.value.size) }
                     // For each date->average value add lines
                     .forEach { pair ->
+                        minDate = Math.min(pair.first, minDate)
+                        maxDate = Math.max(pair.first, maxDate)
                         lineValues.add(PointValue(pair.first.toFloat(), pair.second))
                         axisValues.add(AxisValue(pair.first.toFloat()).apply {
                             setLabel(Date(pair.first).formatShortDate())
@@ -155,6 +167,16 @@ class MainStats : LifecycleOwner, Fragment() {
             setHasTiltedLabels(true)
         }
 
+        if (minDate == maxDate) {
+            val vp = Viewport(minDate.toFloat() - A_DAY, maxScaleY.toFloat(), maxDate.toFloat() + A_DAY, 0f)
+            vChart.maximumViewport = vp
+            vChart.currentViewport = vp
+            vChart.isViewportCalculationEnabled = false
+        } else {
+            vChart.isViewportCalculationEnabled = true
+            vChart.resetViewports()
+        }
+
         vChart.lineChartData = data
 
         setLegends(legends)
@@ -171,7 +193,7 @@ class MainStats : LifecycleOwner, Fragment() {
                 val bulletIcon = DrawableCompat.wrap(
                     ContextCompat.getDrawable(context, R.drawable.ic_dot_24dp)!!.mutate()
                 )
-                bulletIcon.setBounds(0, 0, bulletSize, bulletSize);
+                bulletIcon.setBounds(0, 0, bulletSize, bulletSize)
                 DrawableCompat.setTint(bulletIcon, ContextCompat.getColor(context, it.colorRes))
 
                 s.setSpan(
