@@ -61,6 +61,13 @@ class MainHome : Fragment() {
         }
     }
 
+    override fun setUserVisibleHint(isVisibleToUser: Boolean) {
+        super.setUserVisibleHint(isVisibleToUser)
+        if (isVisible) {
+            vRecyclerView.adapter?.notifyDataSetChanged()
+        }
+    }
+
     companion object {
         fun newInstance() = MainHome()
     }
