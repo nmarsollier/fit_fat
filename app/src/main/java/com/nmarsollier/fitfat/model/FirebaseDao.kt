@@ -120,6 +120,12 @@ object FirebaseDao {
         }
     }
 
+
+    fun deleteMeasure(context: Context, measureId: String) {
+        val instance = FirebaseFirestore.getInstance()
+        instance.collection("measures").document(measureId).delete()
+    }
+
     fun downloadUserSettings(context: Context, token: String, callback: () -> Unit) {
         val key = getUserKey() ?: return
 

@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
+import com.nmarsollier.fitfat.model.FirebaseDao
 import com.nmarsollier.fitfat.model.Measure
 import com.nmarsollier.fitfat.model.UserSettings
 import com.nmarsollier.fitfat.model.getRoomDatabase
@@ -144,6 +145,7 @@ class MainHome : Fragment() {
 
         private fun deleteMeasure(context: Context, measure: Measure) {
             runInBackground {
+                FirebaseDao.deleteMeasure(context, measure.uid)
                 getRoomDatabase(context).measureDao().delete(measure)
             }
         }
