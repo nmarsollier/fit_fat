@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.room.*
 import java.util.*
 
-@Database(entities = [UserSettings::class, Measure::class], version = 1, exportSchema = false)
+@Database(entities = [UserSettings::class, Measure::class], version = 2, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class FitFatDatabase : RoomDatabase() {
     abstract fun userDao(): UserSettingsDao

@@ -167,6 +167,7 @@ class NewMeasureActivity : AppCompatActivity() {
                     settings.weight = measure.bodyWeight
                     getRoomDatabase(context).userDao().update(settings)
                 }
+                FirebaseDao.uploadPendingMeasures(context)
 
                 runInForeground {
                     finish()

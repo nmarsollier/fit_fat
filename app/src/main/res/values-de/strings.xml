@@ -40,4 +40,5 @@
     <string name="measure_weight">Gewicht</string>
     <string name="main_setup_app_text">Vergessen Sie nicht, zuerst die Anwendung zu konfigurieren</string>
     <string name="options_system_of_measurement_metric">Metrisch</string>
+    <string name="save_my_data_in_cloud">Speichern Sie meine Daten in der Cloud</string>
 </resources>

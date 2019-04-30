@@ -16,11 +16,20 @@ abstract class MeasureDao {
     @Query("SELECT * FROM measures ORDER BY date DESC LIMIT 1")
     abstract fun getLastMeasure(): Measure?
 
+    @Query("SELECT * FROM measures WHERE cloud_sync = 0 ")
+    abstract fun getMeasuresToSync(): List<Measure>?
+
+    @Query("SELECT * FROM measures WHERE uid=:id")
+    abstract fun getById(id: String): Measure?
+
     @Insert
-    abstract fun internalInsert(measure: Measure)
+    protected abstract fun internalInsert(measure: Measure)
 
     @Delete
     abstract fun delete(measure: Measure)
+
+    @Update
+    abstract fun update(measure: Measure)
 
     fun insert(measure: Measure) {
         measure.calculateFatPercent()
@@ -80,7 +89,11 @@ data class Measure(
     var calf: Int = 0,
 
     @ColumnInfo(name = "fat_percent")
-    var fatPercent: Double = 0.0
+    var fatPercent: Double = 0.0,
+
+    @ColumnInfo(name = "cloud_sync")
+    var cloudSync: Boolean = false
+
 ) : Parcelable {
     fun isEmpty(): Boolean {
         return (chest + abdominal + thigh + tricep + subscapular + suprailiac + midaxillary + bicep + lowerBack + calf + fatPercent + bodyWeight) == 0.0

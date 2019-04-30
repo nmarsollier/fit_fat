@@ -34,6 +34,7 @@ abstract class UserSettingsDao {
     fun update(user: UserSettings) {
         USER_SETTINGS = null
         updateUserSettings(user)
+        FirebaseDao.uploadUserSettings(user)
     }
 }
 
@@ -59,7 +60,10 @@ data class UserSettings(
     var sex: SexType = SexType.MALE,
 
     @ColumnInfo(name = "measure_system")
-    var measureSystem: MeasureType = MeasureType.METRIC
+    var measureSystem: MeasureType = MeasureType.METRIC,
+
+    @ColumnInfo(name = "firebase_token")
+    var firebaseToken: String? = null
 ) : Parcelable {
     fun isNew() = weight == 0.0 || height == 0.0
 }

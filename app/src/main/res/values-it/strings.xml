@@ -40,4 +40,5 @@
     <string name="new_measure_date">Data di misurazione</string>
     <string name="measure_weight">Peso</string>
     <string name="main_setup_app_text">Non dimenticare di configurare prima l\'applicazione</string>
+    <string name="save_my_data_in_cloud">Salva i miei dati nel cloud</string>
 </resources>

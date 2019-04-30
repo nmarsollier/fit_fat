@@ -1,14 +1,15 @@
 package com.nmarsollier.fitfat
 
 import android.app.DatePickerDialog
+import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
-import com.nmarsollier.fitfat.model.MeasureType
-import com.nmarsollier.fitfat.model.SexType
-import com.nmarsollier.fitfat.model.UserSettings
-import com.nmarsollier.fitfat.model.getRoomDatabase
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.common.api.ApiException
+import com.google.firebase.auth.FirebaseAuth
+import com.nmarsollier.fitfat.model.*
 import com.nmarsollier.fitfat.utils.*
 import kotlinx.android.synthetic.main.main_options_fragment.*
 import java.util.*
@@ -57,7 +58,6 @@ class MainOptions : Fragment() {
 
         vDisplayName.doOnTextChanged { text, _, _, _ ->
             val userSettings = userSettings ?: return@doOnTextChanged
-            System.out.println(text)
             userSettings.displayName = text.toString()
             dataChanged = true
         }
@@ -99,6 +99,55 @@ class MainOptions : Fragment() {
             userSettings.sex = SexType.MALE
             dataChanged = true
         }
+
+        vCloudSave.setOnClickListener {
+            val userSettings = userSettings ?: return@setOnClickListener
+
+            if (userSettings.firebaseToken != null) {
+                disableSaveData()
+            } else {
+                enableSaveData()
+            }
+        }
+
+    }
+
+    private fun enableSaveData() {
+        FirebaseDao.login(this)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        val userSettings = userSettings ?: return
+        val context = context ?: return
+
+        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
+        if (requestCode == ResultCodes.RC_SIGN_IN.code) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+            try {
+                // Google Sign In was successful, authenticate with Firebase
+                task.getResult(ApiException::class.java)?.idToken?.let {
+                    FirebaseDao.firebaseAuthWithGoogle(it) {
+                        FirebaseDao.downloadUserSettings(context, it) {
+                            reloadSettings()
+                            FirebaseDao.downloadMeasurements(context)
+                        }
+                    }
+                }
+
+            } catch (e: ApiException) {
+                logError("Google sign in failed", e)
+            }
+        }
+    }
+
+    private fun disableSaveData() {
+        FirebaseAuth.getInstance().signOut()
+        val userSettings = userSettings ?: return
+        userSettings.firebaseToken = null
+        dataChanged = true
+        saveSettings()
+        refreshUI()
     }
 
     override fun onResume() {
@@ -145,6 +194,7 @@ class MainOptions : Fragment() {
         vSexMale.isChecked = userSettings.sex == SexType.MALE
         vDisplayName.setText(userSettings.displayName)
         vBirthDate.setText(userSettings.birthDate.formatDate())
+        vCloudSave.isChecked = userSettings.firebaseToken != null
 
         refreshNumbers()
     }

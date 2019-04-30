@@ -40,4 +40,5 @@
     <string name="new_measure_date">Datum för mätning</string>
     <string name="measure_weight">Vikt</string>
     <string name="main_setup_app_text">Glöm inte att konfigurera programmet först</string>
+    <string name="save_my_data_in_cloud">Spara mina data i molnet</string>
 </resources>

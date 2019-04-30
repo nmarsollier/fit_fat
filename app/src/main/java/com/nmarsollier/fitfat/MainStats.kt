@@ -167,6 +167,7 @@ class MainStats : LifecycleOwner, Fragment() {
             setHasTiltedLabels(true)
         }
 
+        // When graph is only one date, dots are not displayed properly
         if (minDate == maxDate) {
             val vp = Viewport(minDate.toFloat() - A_DAY, maxScaleY.toFloat(), maxDate.toFloat() + A_DAY, 0f)
             vChart.maximumViewport = vp
