@@ -41,4 +41,5 @@
     <string name="measure_weight">Gewicht</string>
     <string name="main_setup_app_text">Vergeet niet eerst de applicatie te configureren</string>
     <string name="save_my_data_in_cloud">Sla mijn gegevens op in de cloud</string>
+    <string name="loading">Bezig met laden. Even geduld aub...</string>
 </resources>

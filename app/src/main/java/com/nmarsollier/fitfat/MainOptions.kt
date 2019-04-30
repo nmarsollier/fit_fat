@@ -128,7 +128,7 @@ class MainOptions : Fragment() {
             try {
                 // Google Sign In was successful, authenticate with Firebase
                 task.getResult(ApiException::class.java)?.idToken?.let {
-                    val dialog = ProgressDialog.show(context, "", "Loading. Please wait...", true)
+                    val dialog = ProgressDialog.show(context, "", getString(R.string.loading), true)
 
                     userSettings.firebaseToken = it
                     FirebaseDao.firebaseAuthWithGoogle(it) {
