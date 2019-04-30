@@ -133,7 +133,7 @@ object FirebaseDao {
                     userSettings.birthDate = document.getString("birthDate")?.parseIso8601() ?: userSettings.birthDate
                     userSettings.displayName = document.getString("displayName") ?: userSettings.displayName
                     userSettings.height = document.getDouble("height") ?: userSettings.height
-                    userSettings.weight = document.getDouble("weight") ?: userSettings.height
+                    userSettings.weight = document.getDouble("weight") ?: userSettings.weight
                     userSettings.measureSystem = MeasureType.valueOf(
                         document.getString("measureSystem") ?: userSettings.measureSystem.toString()
                     )

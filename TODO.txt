@@ -3,6 +3,7 @@
 	Fat en Kg
 	Lean Body Mass
 
-- Guardar el progreso en la nube
+Elliminar measures de la nube cuando se eliminan localmente
+
 
 - Cargar los datos en forma paginada, o solamnete el ultimo periodo
