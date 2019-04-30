@@ -1,6 +1,7 @@
 package com.nmarsollier.fitfat
 
 import android.app.DatePickerDialog
+import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.*
@@ -127,10 +128,14 @@ class MainOptions : Fragment() {
             try {
                 // Google Sign In was successful, authenticate with Firebase
                 task.getResult(ApiException::class.java)?.idToken?.let {
+                    val dialog = ProgressDialog.show(context, "", "Loading. Please wait...", true)
+
+                    userSettings.firebaseToken = it
                     FirebaseDao.firebaseAuthWithGoogle(it) {
                         FirebaseDao.downloadUserSettings(context, it) {
-                            reloadSettings()
                             FirebaseDao.downloadMeasurements(context)
+                            reloadSettings()
+                            dialog.dismiss()
                         }
                     }
                 }

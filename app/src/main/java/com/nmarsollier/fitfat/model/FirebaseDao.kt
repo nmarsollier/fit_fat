@@ -143,8 +143,8 @@ object FirebaseDao {
                     userSettings.firebaseToken = token
 
                     dao.update(userSettings)
+                    callback.invoke()
                 }
-                callback.invoke()
             }
             .addOnFailureListener { exception ->
                 logError("get failed with ", exception)
