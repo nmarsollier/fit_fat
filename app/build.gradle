@@ -3,6 +3,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'com.google.gms.google-services'
+apply plugin: 'io.fabric'
 
 android {
     compileSdkVersion 28
@@ -10,8 +11,8 @@ android {
         applicationId "com.nmarsollier.fitfat"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 2
-        versionName "1.1"
+        versionCode 3
+        versionName "1.2"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         resConfigs "de", "fr", "it", "es", "nl", "pt", "sv"
@@ -54,12 +55,16 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth:16.2.1'
     implementation 'com.google.firebase:firebase-firestore:18.2.0'
     implementation 'com.google.android.gms:play-services-auth:16.0.1'
+    implementation 'com.google.firebase:firebase-core:16.0.8'
     annotationProcessor 'com.evernote:android-state-processor:1.4.1'
     kapt 'android.arch.persistence.room:compiler:1.1.1'
     kapt 'com.evernote:android-state-processor:1.4.1'
     testImplementation 'junit:junit:4.13-beta-2'
     androidTestImplementation 'androidx.test:runner:1.2.0-alpha04'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0-alpha04'
+    compile('com.crashlytics.sdk.android:crashlytics:2.9.9@aar') {
+        transitive = true;
+    }
 }
 
 androidExtensions {
@@ -68,4 +73,5 @@ androidExtensions {
 
 repositories {
     jcenter()
+    maven { url 'https://maven.fabric.io/public' }
 }

@@ -12,10 +12,12 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.crashlytics.android.Crashlytics
 import com.evernote.android.state.State
 import com.nmarsollier.fitfat.components.MeasuresAdapter
 import com.nmarsollier.fitfat.model.*
 import com.nmarsollier.fitfat.utils.*
+import io.fabric.sdk.android.Fabric
 import kotlinx.android.synthetic.main.new_measure_activity.*
 import java.util.*
 
@@ -30,6 +32,8 @@ class NewMeasureActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Fabric.with(this, Crashlytics())
+
         setContentView(R.layout.new_measure_activity)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)

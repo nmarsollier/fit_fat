@@ -12,6 +12,9 @@ import com.nmarsollier.fitfat.utils.closeKeyboard
 import com.nmarsollier.fitfat.utils.runInBackground
 import com.nmarsollier.fitfat.utils.runInForeground
 import kotlinx.android.synthetic.main.main_activity.*
+import com.crashlytics.android.Crashlytics
+import io.fabric.sdk.android.Fabric
+
 
 class MainActivity : AppCompatActivity() {
     private var currentScreen = Screen.HOME
@@ -22,6 +25,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Fabric.with(this, Crashlytics())
+
         setContentView(R.layout.main_activity)
 
         vNavigation.setOnNavigationItemSelectedListener { item ->

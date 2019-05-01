@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.crashlytics.android.Crashlytics
 import com.evernote.android.state.State
 import com.nmarsollier.fitfat.components.MeasuresAdapter
 import com.nmarsollier.fitfat.model.Measure
@@ -15,6 +16,7 @@ import com.nmarsollier.fitfat.utils.formatDateTime
 import com.nmarsollier.fitfat.utils.formatString
 import com.nmarsollier.fitfat.utils.runInBackground
 import com.nmarsollier.fitfat.utils.runInForeground
+import io.fabric.sdk.android.Fabric
 import kotlinx.android.synthetic.main.new_measure_activity.*
 
 
@@ -28,6 +30,8 @@ class ViewMeasureActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Fabric.with(this, Crashlytics())
+
         measure = intent.getParcelableExtra("measure")
 
         setContentView(R.layout.new_measure_activity)
