@@ -4,6 +4,9 @@ import android.content.Context
 import androidx.room.*
 import java.util.*
 
+private var INSTANCE: FitFatDatabase? = null
+private const val DATABASE_NAME = "fitfat"
+
 @Database(entities = [UserSettings::class, Measure::class], version = 2, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class FitFatDatabase : RoomDatabase() {
@@ -11,18 +14,12 @@ abstract class FitFatDatabase : RoomDatabase() {
     abstract fun measureDao(): MeasureDao
 }
 
-private var INSTANCE: FitFatDatabase? = null
-
 fun getRoomDatabase(context: Context): FitFatDatabase {
-    if (INSTANCE == null) {
-        INSTANCE = Room.databaseBuilder(
-            context,
-            FitFatDatabase::class.java, "fitfat"
-        )
-            .fallbackToDestructiveMigration()
-            .build()
-    }
-    return INSTANCE!!
+    return INSTANCE ?: Room.databaseBuilder(context, FitFatDatabase::class.java, DATABASE_NAME)
+        .fallbackToDestructiveMigration()
+        .build().also {
+            INSTANCE = it
+        }
 }
 
 class Converters {
@@ -60,5 +57,3 @@ class Converters {
         fun toMeasureMethod(value: MeasureMethod?) = value.toString()
     }
 }
-
-

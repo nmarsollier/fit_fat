@@ -21,7 +21,6 @@ import com.nmarsollier.fitfat.utils.runInForeground
 import kotlinx.android.synthetic.main.main_home_fragment.*
 import kotlinx.android.synthetic.main.main_home_measure_holder.view.*
 
-
 class MainHome : Fragment() {
     private var userSettings: UserSettings? = null
 
@@ -145,7 +144,7 @@ class MainHome : Fragment() {
 
         private fun deleteMeasure(context: Context, measure: Measure) {
             runInBackground {
-                FirebaseDao.deleteMeasure(context, measure.uid)
+                FirebaseDao.deleteMeasure(measure.uid)
                 getRoomDatabase(context).measureDao().delete(measure)
             }
         }

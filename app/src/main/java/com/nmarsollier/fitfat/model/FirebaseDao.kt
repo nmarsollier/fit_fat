@@ -30,7 +30,7 @@ object FirebaseDao {
         runInBackground {
             getRoomDatabase(context).userDao().getUserSettings().firebaseToken?.let {
                 runInForeground {
-                    firebaseAuthWithGoogle(it) {}
+                    googleAuth(it) {}
                 }
             }
         }
@@ -47,7 +47,7 @@ object FirebaseDao {
         fragment.startActivityForResult(signInIntent, ResultCodes.RC_SIGN_IN.code)
     }
 
-    fun firebaseAuthWithGoogle(token: String, callback: () -> Unit) {
+    fun googleAuth(token: String, callback: () -> Unit) {
         val credential = GoogleAuthProvider.getCredential(token, null)
         auth.signInWithCredential(credential).addOnCompleteListener { task ->
             if (task.isSuccessful) {
@@ -125,7 +125,7 @@ object FirebaseDao {
     }
 
 
-    fun deleteMeasure(context: Context, measureId: String) {
+    fun deleteMeasure(measureId: String) {
         val instance = FirebaseFirestore.getInstance()
         instance.collection("measures").document(measureId).delete()
     }

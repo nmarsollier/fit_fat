@@ -108,6 +108,5 @@ enum class MeasureType(val heightResId: Int, val weightResId: Int) {
             value
         }
     }
-
 }
 

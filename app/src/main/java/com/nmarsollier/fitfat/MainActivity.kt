@@ -7,14 +7,13 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
 import androidx.viewpager.widget.ViewPager
+import com.crashlytics.android.Crashlytics
 import com.nmarsollier.fitfat.model.getRoomDatabase
 import com.nmarsollier.fitfat.utils.closeKeyboard
 import com.nmarsollier.fitfat.utils.runInBackground
 import com.nmarsollier.fitfat.utils.runInForeground
-import kotlinx.android.synthetic.main.main_activity.*
-import com.crashlytics.android.Crashlytics
 import io.fabric.sdk.android.Fabric
-
+import kotlinx.android.synthetic.main.main_activity.*
 
 class MainActivity : AppCompatActivity() {
     private var currentScreen = Screen.HOME

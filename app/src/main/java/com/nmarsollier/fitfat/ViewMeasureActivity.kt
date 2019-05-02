@@ -19,7 +19,6 @@ import com.nmarsollier.fitfat.utils.runInForeground
 import io.fabric.sdk.android.Fabric
 import kotlinx.android.synthetic.main.new_measure_activity.*
 
-
 class ViewMeasureActivity : AppCompatActivity() {
     private var userSettings: UserSettings? = null
 

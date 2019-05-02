@@ -28,7 +28,6 @@ import lecho.lib.hellocharts.formatter.SimpleAxisValueFormatter
 import lecho.lib.hellocharts.model.*
 import java.util.*
 
-
 private const val A_DAY = (1000 * 60 * 60 * 24)
 
 class MainStats : LifecycleOwner, Fragment() {
@@ -71,16 +70,16 @@ class MainStats : LifecycleOwner, Fragment() {
 
         val measureMethods = MeasureMethod.values().map { getString(it.labelRes) }.toTypedArray()
 
-        var dialog: AlertDialog? = null
-        dialog = AlertDialog.Builder(context)
+        AlertDialog.Builder(context)
             .setTitle(R.string.new_measure_method_title)
-            .setSingleChoiceItems(measureMethods, selectedMethod.ordinal) { _, which ->
+            .setSingleChoiceItems(measureMethods, selectedMethod.ordinal) { dialog, which ->
                 setSelectedMeasureType(MeasureMethod.values()[which])
-                dialog?.dismiss()
+                dialog.dismiss()
             }
             .setNegativeButton(android.R.string.cancel, null)
-            .create()
-        dialog.show()
+            .create().also {
+                it.show()
+            }
     }
 
     private fun setSelectedMeasureType(measureMethod: MeasureMethod) {

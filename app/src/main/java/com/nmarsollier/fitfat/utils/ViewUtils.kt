@@ -52,4 +52,3 @@ fun Any.runInBackground(backgroundProcess: () -> Unit) {
 fun Any.runInForeground(foregroundProcess: () -> Unit) {
     MainScope().launch { foregroundProcess.invoke() }
 }
-

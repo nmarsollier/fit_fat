@@ -128,7 +128,7 @@ class MainOptions : Fragment() {
                     dialog = showProgressDialog(context)
 
                     userSettings.firebaseToken = it
-                    FirebaseDao.firebaseAuthWithGoogle(it) {
+                    FirebaseDao.googleAuth(it) {
                         FirebaseDao.downloadUserSettings(context, it) {
                             FirebaseDao.downloadMeasurements(context)
                             reloadSettings()

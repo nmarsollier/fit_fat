@@ -19,7 +19,6 @@ import com.nmarsollier.fitfat.R
 class PrefixSuffixEditText @JvmOverloads constructor(context: Context, attrs: AttributeSet, defStyle: Int = 0) :
     AppCompatEditText(context, attrs) {
 
-
     private val textPaint: TextPaint by lazy {
         TextPaint().apply {
             color = currentHintTextColor

@@ -186,17 +186,17 @@ class NewMeasureActivity : AppCompatActivity() {
         val measureMethods = MeasureMethod.values().map { getString(it.labelRes) }.toTypedArray()
         val selected = measure.measureMethod.ordinal
 
-        var dialog: AlertDialog? = null
-        dialog = AlertDialog.Builder(this)
+        AlertDialog.Builder(this)
             .setTitle(R.string.new_measure_method_title)
-            .setSingleChoiceItems(measureMethods, selected) { _, which ->
+            .setSingleChoiceItems(measureMethods, selected) { dialog, which ->
                 measure.measureMethod = MeasureMethod.values()[which]
                 refreshUI()
-                dialog?.dismiss()
+                dialog.dismiss()
             }
             .setNegativeButton(android.R.string.cancel, null)
-            .create()
-        dialog.show()
+            .create().also {
+                it.show()
+            }
     }
 
     companion object {
