@@ -4,6 +4,7 @@ import android.os.Parcelable
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.nmarsollier.fitfat.R
+import com.nmarsollier.fitfat.utils.getAge
 import com.nmarsollier.fitfat.utils.toPounds
 import kotlinx.android.parcel.Parcelize
 import java.util.*
@@ -11,16 +12,16 @@ import java.util.*
 @Dao
 abstract class MeasureDao {
     @Query("SELECT * FROM measures ORDER BY date DESC")
-    abstract fun getMeasures(): LiveData<List<Measure>>
+    abstract fun findAll(): LiveData<List<Measure>>
 
     @Query("SELECT * FROM measures ORDER BY date DESC LIMIT 1")
-    abstract fun getLastMeasure(): Measure?
+    abstract fun findLast(): Measure?
 
     @Query("SELECT * FROM measures WHERE cloud_sync = 0 ")
-    abstract fun getMeasuresToSync(): List<Measure>?
+    abstract fun findUnsynced(): List<Measure>?
 
     @Query("SELECT * FROM measures WHERE uid=:id")
-    abstract fun getById(id: String): Measure?
+    abstract fun findById(id: String): Measure?
 
     @Insert
     protected abstract fun internalInsert(measure: Measure)
@@ -219,6 +220,21 @@ data class Measure(
             MeasureValue.CALF -> calf = value.toInt()
             MeasureValue.BODY_WEIGHT -> bodyWeight = value.toDouble()
             MeasureValue.BODY_FAT -> fatPercent = value.toDouble()
+        }
+    }
+
+    companion object {
+        fun newMeasure() = Measure(UUID.randomUUID().toString(), 0.0, 0, SexType.MALE)
+
+        fun newMeasure(uid: String) = Measure(uid, 0.0, 0, SexType.MALE)
+
+        fun newMeasure(userSettings: UserSettings): Measure {
+            return Measure(
+                UUID.randomUUID().toString(),
+                userSettings.weight,
+                userSettings.birthDate.getAge(),
+                userSettings.sex
+            )
         }
     }
 }

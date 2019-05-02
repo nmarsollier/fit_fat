@@ -1,152 +1,157 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            xmlns:tools="http://schemas.android.com/tools"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <LinearLayout android:orientation="vertical"
-                  android:layout_width="match_parent"
-                  android:layout_height="match_parent"
-                  android:layout_margin="@dimen/screen_margin"
-                  android:paddingBottom="100dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/screen_margin"
+        android:orientation="vertical"
+        android:paddingBottom="100dp">
 
         <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/options_display_name"
-                android:labelFor="@id/vDisplayName"
-                style="@style/Label"/>
+            style="@style/Label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:labelFor="@id/vDisplayName"
+            android:text="@string/options_display_name" />
 
         <EditText
-                android:id="@+id/vDisplayName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/editPrimary"
-                android:inputType="textCapWords"/>
+            android:id="@+id/vDisplayName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textCapWords"
+            android:textColor="@color/editPrimary" />
 
-        <TextView android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:layout_marginTop="@dimen/view_margin"
-                  android:labelFor="@id/vBirthDate"
-                  android:text="@string/options_birth_date"
-                  style="@style/Label"/>
+        <TextView
+            style="@style/Label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/view_margin"
+            android:labelFor="@id/vBirthDate"
+            android:text="@string/options_birth_date" />
 
         <EditText
-                android:id="@+id/vBirthDate"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="date"
-                android:editable="false"
-                android:focusable="false"
-                android:textColor="@color/editPrimary"
-                android:importantForAutofill="no"/>
+            android:id="@+id/vBirthDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:editable="false"
+            android:focusable="false"
+            android:importantForAutofill="no"
+            android:inputType="date"
+            android:textColor="@color/editPrimary" />
 
-        <TextView android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:layout_marginTop="@dimen/view_margin"
-                  android:text="@string/options_system_of_measurement"
-                  android:labelFor="@id/vMeasure"
-                  style="@style/Label"/>
-
-        <RadioGroup
-                android:id="@+id/vMeasure"
-                android:layout_width="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginStart="@dimen/screen_margin"
-                android:layout_height="wrap_content">
-
-            <RadioButton
-                    android:id="@+id/vMeasureMetric"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/editPrimary"
-                    android:text="@string/options_system_of_measurement_metric"
-                    android:checked="true"/>
-
-            <RadioButton
-                    android:id="@+id/vMeasureImperial"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/view_margin"
-                    android:textColor="@color/editPrimary"
-                    android:text="@string/options_system_of_measurement_imperial"/>
-        </RadioGroup>
-
-        <TextView android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:layout_marginTop="@dimen/view_margin"
-                  android:labelFor="@id/vSex"
-                  android:text="@string/options_sex"
-                  style="@style/Label"/>
+        <TextView
+            style="@style/Label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/view_margin"
+            android:labelFor="@id/vMeasure"
+            android:text="@string/options_system_of_measurement" />
 
         <RadioGroup
-                android:id="@+id/vSex"
+            android:id="@+id/vMeasure"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/screen_margin"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/vMeasureMetric"
                 android:layout_width="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginStart="@dimen/screen_margin"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="@string/options_system_of_measurement_metric"
+                android:textColor="@color/editPrimary" />
 
             <RadioButton
-                    android:id="@+id/vSexMale"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/options_sex_male"
-                    android:textColor="@color/editPrimary"
-                    android:checked="true"/>
-
-            <RadioButton
-                    android:id="@+id/vSexFemale"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/view_margin"
-                    android:textColor="@color/editPrimary"
-                    android:text="@string/options_sex_female"/>
+                android:id="@+id/vMeasureImperial"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/view_margin"
+                android:text="@string/options_system_of_measurement_imperial"
+                android:textColor="@color/editPrimary" />
         </RadioGroup>
 
-        <TextView android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:layout_marginTop="@dimen/view_margin"
-                  android:text="@string/options_weight"
-                  android:labelFor="@id/vWeight"
-                  style="@style/Label"/>
+        <TextView
+            style="@style/Label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/view_margin"
+            android:labelFor="@id/vSex"
+            android:text="@string/options_sex" />
+
+        <RadioGroup
+            android:id="@+id/vSex"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/screen_margin"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/vSexMale"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="@string/options_sex_male"
+                android:textColor="@color/editPrimary" />
+
+            <RadioButton
+                android:id="@+id/vSexFemale"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/view_margin"
+                android:text="@string/options_sex_female"
+                android:textColor="@color/editPrimary" />
+        </RadioGroup>
+
+        <TextView
+            style="@style/Label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/view_margin"
+            android:labelFor="@id/vWeight"
+            android:text="@string/options_weight" />
 
         <com.nmarsollier.fitfat.components.PrefixSuffixEditText
-                android:id="@+id/vWeight"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:inputType="numberDecimal"
-                tools:text="99"
-                app:innerPadding="4dp"
-                app:suffix="kg"
-                android:textColor="@color/editPrimary"
-        />
+            android:id="@+id/vWeight"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:textColor="@color/editPrimary"
+            app:innerPadding="4dp"
+            app:suffix="kg"
+            tools:text="99" />
 
-        <TextView android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:layout_marginTop="@dimen/view_margin"
-                  android:labelFor="@id/vHeight"
-                  style="@style/Label"
-                  android:text="@string/options_height"/>
+        <TextView
+            style="@style/Label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/view_margin"
+            android:labelFor="@id/vHeight"
+            android:text="@string/options_height" />
 
         <com.nmarsollier.fitfat.components.PrefixSuffixEditText
-                android:id="@+id/vHeight"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
-                android:inputType="numberDecimal"
-                tools:text="180"
-                android:textColor="@color/editPrimary"
-                app:innerPadding="4dp"
-                app:suffix="cm"
-        />
+            android:id="@+id/vHeight"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:textColor="@color/editPrimary"
+            app:innerPadding="4dp"
+            app:suffix="cm"
+            tools:text="180" />
 
-        <Switch android:id="@+id/vCloudSave"
-                android:text="@string/save_my_data_in_cloud"
-                android:layout_marginTop="@dimen/view_margin"
-                android:layout_width="match_parent"
-                style="@style/TextAppearance.AppCompat.Body1"
-                android:layout_height="wrap_content"/>
+        <Switch
+            android:id="@+id/vCloudSave"
+            style="@style/TextAppearance.AppCompat.Body1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/view_margin"
+            android:text="@string/save_my_data_in_cloud" />
 
 
     </LinearLayout>

@@ -82,7 +82,7 @@ class MainHome : Fragment() {
         private var measures = emptyList<Measure>()
 
         init {
-            getRoomDatabase(fragment.context!!).measureDao().getMeasures().observe(fragment,
+            getRoomDatabase(fragment.context!!).measureDao().findAll().observe(fragment,
                 Observer<List<Measure>> { measures ->
                     measures?.let { values ->
                         setData(values)

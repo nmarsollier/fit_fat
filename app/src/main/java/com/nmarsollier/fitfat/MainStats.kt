@@ -56,7 +56,7 @@ class MainStats : LifecycleOwner, Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         vMeasureMethod.setOnClickListener { showMeasureTypeSelectionDialog() }
-        getRoomDatabase(context!!).measureDao().getMeasures()
+        getRoomDatabase(context!!).measureDao().findAll()
             .observe(this, Observer<List<Measure>> { measures ->
                 measures?.let { values ->
                     graphValues = values
@@ -84,7 +84,7 @@ class MainStats : LifecycleOwner, Fragment() {
     }
 
     private fun setSelectedMeasureType(measureMethod: MeasureMethod) {
-        getRoomDatabase(context!!).measureDao().getMeasures().removeObservers(this)
+        getRoomDatabase(context!!).measureDao().findAll().removeObservers(this)
         selectedMethod = measureMethod
         updateGraph()
         refreshUI()

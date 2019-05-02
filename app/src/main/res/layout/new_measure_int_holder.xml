@@ -1,61 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/view_margin">
+
+    <TextView
+        android:id="@+id/vTitleLabel"
+        style="@style/Label"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/view_margin">
+        android:layout_alignBottom="@id/vValueText"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:gravity="bottom"
+        android:text="@string/measure_abdominal" />
 
     <TextView
-            android:id="@+id/vTitleLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/Label"
-            android:layout_alignBottom="@id/vValueText"
-            android:gravity="bottom"
-            android:text="@string/measure_abdominal"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"/>
+        android:id="@+id/vValueText"
+        style="@style/NumericLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_toEndOf="@id/vTitleLabel"
+        android:gravity="end"
+        tools:text="35" />
 
     <TextView
-            android:id="@+id/vValueText"
-            android:layout_width="wrap_content"
-            android:gravity="end"
-            android:layout_marginStart="4dp"
-            android:layout_height="wrap_content"
-            style="@style/NumericLabel"
-            tools:text="35"
-            android:layout_toEndOf="@id/vTitleLabel"/>
-
-    <TextView
-            android:id="@+id/vValueUnit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="2dp"
-            style="@style/Label"
-            android:layout_alignBottom="@id/vValueText"
-            android:gravity="bottom"
-            android:text="@string/unit_mm"
-            android:layout_toEndOf="@id/vValueText"/>
+        android:id="@+id/vValueUnit"
+        style="@style/Label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/vValueText"
+        android:layout_marginStart="2dp"
+        android:layout_toEndOf="@id/vValueText"
+        android:gravity="bottom"
+        android:text="@string/unit_mm" />
 
     <ImageView
-            android:id="@+id/vHelpIcon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_help_outline_black_24dp"
-            android:tint="@color/colorPrimary"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"/>
+        android:id="@+id/vHelpIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/ic_help_outline_black_24dp"
+        android:tint="@color/colorPrimary" />
 
     <SeekBar
-            android:id="@+id/vValueBar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:max="60"
-            android:layout_below="@id/vTitleLabel"
-            android:layout_toStartOf="@id/vHelpIcon"
-            android:layout_alignParentStart="true"/>
+        android:id="@+id/vValueBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/vTitleLabel"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="4dp"
+        android:layout_toStartOf="@id/vHelpIcon"
+        android:max="60" />
 </RelativeLayout>
 

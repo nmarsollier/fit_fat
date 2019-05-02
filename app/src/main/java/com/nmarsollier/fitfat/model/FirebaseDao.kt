@@ -11,6 +11,7 @@ import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
 import com.nmarsollier.fitfat.R
 import com.nmarsollier.fitfat.utils.*
+import java.util.*
 
 
 object FirebaseDao {
@@ -55,6 +56,9 @@ object FirebaseDao {
             } else {
                 currentUser = null
             }
+        }.addOnCanceledListener {
+            currentUser = null
+            callback.invoke()
         }
     }
 
@@ -87,7 +91,7 @@ object FirebaseDao {
             val instance = FirebaseFirestore.getInstance()
             val dao = getRoomDatabase(context).measureDao()
 
-            dao.getMeasuresToSync()?.forEach { measure ->
+            dao.findUnsynced()?.forEach { measure ->
                 instance.collection("measures").document(measure.uid).set(
                     mapOf(
                         "user" to key,
@@ -167,32 +171,31 @@ object FirebaseDao {
             .addOnSuccessListener { documents ->
                 documents.forEach { document ->
                     runInBackground {
-                        if (dao.getById(document.id) == null) {
-                            val measure = Measure(document.id, 0.0, 0, SexType.MALE)
-                            measure.bodyWeight = document.getDouble("bodyWeight") ?: 0.0
-                            measure.fatPercent = document.getDouble("fatPercent") ?: 0.0
-                            measure.age = (document.getDouble("age") ?: 0.0).toInt()
-                            measure.sex = SexType.valueOf(
-                                document.getString("sex") ?: measure.sex.toString()
-                            )
-                            measure.age = (document.getDouble("calf") ?: 0.0).toInt()
-                            measure.measureMethod =
-                                MeasureMethod.valueOf(
-                                    document.getString("measureMethod") ?: MeasureMethod.WEIGHT_ONLY.toString()
+                        if (dao.findById(document.id) == null) {
+                            dao.insert(Measure.newMeasure(document.id).apply {
+                                bodyWeight = document.getDouble("bodyWeight") ?: 0.0
+                                fatPercent = document.getDouble("fatPercent") ?: 0.0
+                                age = (document.getDouble("age") ?: 0.0).toInt()
+                                sex = SexType.valueOf(
+                                    document.getString("sex") ?: SexType.MALE.toString()
                                 )
-                            measure.chest = (document.getDouble("chest") ?: 0.0).toInt()
-                            measure.abdominal = (document.getDouble("abdominal") ?: 0.0).toInt()
-                            measure.thigh = (document.getDouble("thigh") ?: 0.0).toInt()
-                            measure.tricep = (document.getDouble("tricep") ?: 0.0).toInt()
-                            measure.subscapular = (document.getDouble("subscapular") ?: 0.0).toInt()
-                            measure.suprailiac = (document.getDouble("suprailiac") ?: 0.0).toInt()
-                            measure.midaxillary = (document.getDouble("midaxillary") ?: 0.0).toInt()
-                            measure.bicep = (document.getDouble("bicep") ?: 0.0).toInt()
-                            measure.lowerBack = (document.getDouble("lowerBack") ?: 0.0).toInt()
-                            measure.date = document.getString("date")?.parseIso8601() ?: measure.date
-                            measure.cloudSync = true
-
-                            dao.insert(measure)
+                                age = (document.getDouble("calf") ?: 0.0).toInt()
+                                measureMethod =
+                                    MeasureMethod.valueOf(
+                                        document.getString("measureMethod") ?: MeasureMethod.WEIGHT_ONLY.toString()
+                                    )
+                                chest = (document.getDouble("chest") ?: 0.0).toInt()
+                                abdominal = (document.getDouble("abdominal") ?: 0.0).toInt()
+                                thigh = (document.getDouble("thigh") ?: 0.0).toInt()
+                                tricep = (document.getDouble("tricep") ?: 0.0).toInt()
+                                subscapular = (document.getDouble("subscapular") ?: 0.0).toInt()
+                                suprailiac = (document.getDouble("suprailiac") ?: 0.0).toInt()
+                                midaxillary = (document.getDouble("midaxillary") ?: 0.0).toInt()
+                                bicep = (document.getDouble("bicep") ?: 0.0).toInt()
+                                lowerBack = (document.getDouble("lowerBack") ?: 0.0).toInt()
+                                date = document.getString("date")?.parseIso8601() ?: Date()
+                                cloudSync = true
+                            })
                         }
                     }
                 }

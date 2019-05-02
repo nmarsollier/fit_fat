@@ -1,7 +1,7 @@
 package com.nmarsollier.fitfat
 
 import android.app.DatePickerDialog
-import android.app.ProgressDialog
+import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.*
@@ -107,14 +107,10 @@ class MainOptions : Fragment() {
             if (userSettings.firebaseToken != null) {
                 disableSaveData()
             } else {
-                enableSaveData()
+                FirebaseDao.login(this)
             }
         }
 
-    }
-
-    private fun enableSaveData() {
-        FirebaseDao.login(this)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -123,26 +119,31 @@ class MainOptions : Fragment() {
         val context = context ?: return
 
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
+        var dialog: Dialog? = null
         if (requestCode == ResultCodes.RC_SIGN_IN.code) {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             try {
                 // Google Sign In was successful, authenticate with Firebase
                 task.getResult(ApiException::class.java)?.idToken?.let {
-                    val dialog = ProgressDialog.show(context, "", getString(R.string.loading), true)
+                    dialog = showProgressDialog(context)
 
                     userSettings.firebaseToken = it
                     FirebaseDao.firebaseAuthWithGoogle(it) {
                         FirebaseDao.downloadUserSettings(context, it) {
                             FirebaseDao.downloadMeasurements(context)
                             reloadSettings()
-                            dialog.dismiss()
+                            dialog?.dismiss()
                         }
                     }
+                } ?: run {
+                    dialog?.dismiss()
                 }
-
             } catch (e: ApiException) {
                 logError("Google sign in failed", e)
+                dialog?.dismiss()
             }
+        } else {
+            dialog?.dismiss()
         }
     }
 

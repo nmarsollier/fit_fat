@@ -26,7 +26,7 @@ class NewMeasureActivity : AppCompatActivity() {
     var userSettings: UserSettings? = null
 
     @State
-    var measure = Measure(UUID.randomUUID().toString(), 0.0, 0, SexType.MALE)
+    var measure = Measure.newMeasure()
 
     private lateinit var adapter: MeasuresAdapter
 
@@ -88,7 +88,7 @@ class NewMeasureActivity : AppCompatActivity() {
 
         runInBackground {
             userSettings = getRoomDatabase(context).userDao().getUserSettings().also {
-                measure = Measure(UUID.randomUUID().toString(), it.weight, it.birthDate.getAge(), it.sex)
+                measure = Measure.newMeasure(it)
                 adapter.userSettings = it
             }
             runInForeground {
@@ -101,7 +101,7 @@ class NewMeasureActivity : AppCompatActivity() {
     private fun loadLastMeasure() {
         val context = baseContext ?: return
         runInBackground {
-            getRoomDatabase(context).measureDao().getLastMeasure()?.let { last ->
+            getRoomDatabase(context).measureDao().findLast()?.let { last ->
                 measure.measureMethod = last.measureMethod
             }
             runInForeground {

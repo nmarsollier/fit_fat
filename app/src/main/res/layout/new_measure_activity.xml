@@ -1,91 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-    <TextView
-            android:id="@+id/vMeasureMethod"
-            android:text="@string/new_measure_method_title"
-            style="@style/TextAppearance.AppCompat.Body1"
-            android:drawableEnd="@drawable/ic_arrow_drop_down_black_24dp"
-            android:drawablePadding="4dp"
-            android:drawableTint="@color/menuItemColorDisabled"
-            android:layout_marginTop="@dimen/screen_margin"
-            android:layout_marginStart="@dimen/screen_margin"
-            android:textColor="@color/editPrimary"
-            android:layout_width="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true"
-            android:layout_height="wrap_content"/>
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <TextView
-            android:id="@+id/vDateLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:labelFor="@id/vBirthDate"
-            android:text="@string/new_measure_date"
-            android:layout_below="@+id/vMeasureMethod"
-            android:layout_marginStart="@dimen/screen_margin"
-            android:layout_marginTop="@dimen/view_margin"
-            style="@style/Label"/>
+        android:id="@+id/vMeasureMethod"
+        style="@style/TextAppearance.AppCompat.Body1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="@dimen/screen_margin"
+        android:layout_marginTop="@dimen/screen_margin"
+        android:drawableEnd="@drawable/ic_arrow_drop_down_black_24dp"
+        android:drawablePadding="4dp"
+        android:drawableTint="@color/menuItemColorDisabled"
+        android:text="@string/new_measure_method_title"
+        android:textColor="@color/editPrimary" />
+
+    <TextView
+        android:id="@+id/vDateLabel"
+        style="@style/Label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/vMeasureMethod"
+        android:layout_marginStart="@dimen/screen_margin"
+        android:layout_marginTop="@dimen/view_margin"
+        android:labelFor="@id/vBirthDate"
+        android:text="@string/new_measure_date" />
 
     <EditText
-            android:id="@+id/vMeasureDate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:inputType="date"
-            android:editable="false"
-            android:focusable="false"
-            tools:text="Dec 1. 2018 19:00 AM"
-            android:layout_below="@+id/vDateLabel"
-            android:layout_marginStart="@dimen/screen_margin"
-            android:textColor="@color/editPrimary"
-            android:importantForAutofill="no"/>
+        android:id="@+id/vMeasureDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/vDateLabel"
+        android:layout_marginStart="@dimen/screen_margin"
+        android:editable="false"
+        android:focusable="false"
+        android:importantForAutofill="no"
+        android:inputType="date"
+        android:textColor="@color/editPrimary"
+        tools:text="Dec 1. 2018 19:00 AM" />
 
     <TextView
-            android:id="@+id/vFatMeasureLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toStartOf="@+id/vFat"
-            android:layout_alignBaseline="@id/vMeasureDate"
-            style="@style/Label"
-            android:text="@string/measure_fat"/>
+        android:id="@+id/vFatMeasureLabel"
+        style="@style/Label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/vMeasureDate"
+        android:layout_toStartOf="@+id/vFat"
+        android:text="@string/measure_fat" />
 
     <TextView
-            android:id="@+id/vFat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            style="@style/NumericLabel"
-            android:layout_toStartOf="@id/vFatPercentLabel"
-            android:layout_alignBaseline="@id/vFatMeasureLabel"
-            android:textSize="18sp"
-            tools:text="35"/>
+        android:id="@+id/vFat"
+        style="@style/NumericLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/vFatMeasureLabel"
+        android:layout_marginStart="4dp"
+        android:layout_toStartOf="@id/vFatPercentLabel"
+        android:textSize="18sp"
+        tools:text="35" />
 
     <TextView
-            android:id="@+id/vFatPercentLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="2dp"
-            style="@style/Label"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="@dimen/screen_margin"
-            android:layout_alignBaseline="@id/vFatMeasureLabel"
-            android:text="@string/unit_percent"/>
+        android:id="@+id/vFatPercentLabel"
+        style="@style/Label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@id/vFatMeasureLabel"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="2dp"
+        android:layout_marginEnd="@dimen/screen_margin"
+        android:text="@string/unit_percent" />
 
     <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/vRecyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingStart="@dimen/screen_margin"
-            android:paddingEnd="@dimen/screen_margin"
-            android:paddingBottom="@dimen/screen_margin"
-            android:layout_below="@+id/vMeasureDate"
-            android:clipToPadding="false"
-            android:layout_alignParentBottom="true"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+        android:id="@+id/vRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/vMeasureDate"
+        android:layout_alignParentBottom="true"
+        android:clipToPadding="false"
+        android:paddingStart="@dimen/screen_margin"
+        android:paddingEnd="@dimen/screen_margin"
+        android:paddingBottom="@dimen/screen_margin"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
 </RelativeLayout>
 
