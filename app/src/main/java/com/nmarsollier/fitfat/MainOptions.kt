@@ -27,9 +27,8 @@ class MainOptions : Fragment() {
         }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val result = inflater.inflate(R.layout.main_options_fragment, container, false)
         setHasOptionsMenu(true)
-        return result
+        return inflater.inflate(R.layout.main_options_fragment, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

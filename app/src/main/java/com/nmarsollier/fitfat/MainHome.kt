@@ -2,10 +2,9 @@ package com.nmarsollier.fitfat
 
 import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -14,20 +13,15 @@ import com.nmarsollier.fitfat.model.FirebaseDao
 import com.nmarsollier.fitfat.model.Measure
 import com.nmarsollier.fitfat.model.UserSettings
 import com.nmarsollier.fitfat.model.getRoomDatabase
-import com.nmarsollier.fitfat.utils.formatDateTime
-import com.nmarsollier.fitfat.utils.formatString
-import com.nmarsollier.fitfat.utils.runInBackground
-import com.nmarsollier.fitfat.utils.runInForeground
+import com.nmarsollier.fitfat.utils.*
 import kotlinx.android.synthetic.main.main_home_fragment.*
 import kotlinx.android.synthetic.main.main_home_measure_holder.view.*
 
 class MainHome : Fragment() {
     private var userSettings: UserSettings? = null
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        setHasOptionsMenu(true)
         return inflater.inflate(R.layout.main_home_fragment, container, false)
     }
 
@@ -58,6 +52,34 @@ class MainHome : Fragment() {
     private fun initAdapter() {
         userSettings?.let {
             vRecyclerView.adapter = MeasureAdapter(it, this)
+        }
+    }
+
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        if (BuildConfig.DEBUG) {
+            inflater.inflate(R.menu.debug_menu, menu)
+        }
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.menu_db_inspector -> {
+                dbInspector()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun dbInspector() {
+        try {
+            val intent = Intent()
+            intent.setClassName(activity!!.packageName, "im.dino.dbinspector.activities.DbInspectorActivity")
+            startActivity(intent)
+        } catch (e: Exception) {
+            logError("Unable to launch db inspector", e)
         }
     }
 
