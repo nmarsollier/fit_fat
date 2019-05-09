@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.*
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -137,10 +138,35 @@ class MainHome : Fragment() {
 
             itemView.vDate.text = measure.date.formatDateTime()
             itemView.vMethod.setText(measure.measureMethod.labelRes)
-            itemView.vFat.text = measure.fatPercent.formatString()
 
+            // Fat Percent
+            val fat = measure.fatPercent
+            itemView.vFatLabel.isVisible = fat > 0
+            itemView.vFat.isVisible = fat > 0
+            itemView.vFatSymbol.isVisible = fat > 0
+            itemView.vBodyFatSepatator.isVisible = fat > 0
+            itemView.vBodyFat.isVisible = fat > 0
+            itemView.vBodyFatUnit.isVisible = fat > 0
+
+            itemView.vFat.text = fat.formatString()
             itemView.vWeight.text = userSettings.measureSystem.displayWeight(measure.bodyWeight).formatString()
             itemView.vUnit.text = itemView.context.getString(userSettings.measureSystem.weightResId)
+            itemView.vBodyFat.text = userSettings.measureSystem.displayWeight(measure.bodyFatMass).formatString()
+            itemView.vBodyFatUnit.text = itemView.context.getString(userSettings.measureSystem.weightResId)
+
+            // Free Fat Mass
+            val freeFatMass = measure.leanWeight
+            itemView.vFreeFatMassLabel.isVisible = freeFatMass > 0
+            itemView.vFreeFatMass.isVisible = freeFatMass > 0
+            itemView.vFreeFatMassUnit.isVisible = freeFatMass > 0
+            itemView.vFreeFatMass.text = userSettings.measureSystem.displayWeight(freeFatMass).formatString()
+            itemView.vFreeFatMassUnit.text = itemView.context.getString(userSettings.measureSystem.weightResId)
+
+            // FFMI
+            val freeFatMassIndex = measure.freeFatMassIndex
+            itemView.vFFMILabel.isVisible = freeFatMassIndex > 0
+            itemView.vFFMI.isVisible = freeFatMassIndex > 0
+            itemView.vFFMI.text = freeFatMassIndex.formatString()
 
             itemView.setOnLongClickListener {
                 AlertDialog.Builder(itemView.context)

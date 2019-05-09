@@ -47,6 +47,9 @@ data class Measure(
     @ColumnInfo(name = "body_weight")
     var bodyWeight: Double,
 
+    @ColumnInfo(name = "body_height")
+    var bodyHeight: Double,
+
     @ColumnInfo(name = "age")
     var age: Int,
 
@@ -223,15 +226,43 @@ data class Measure(
         }
     }
 
-    companion object {
-        fun newMeasure() = Measure(UUID.randomUUID().toString(), 0.0, 0, SexType.MALE)
+    val bodyFatMass: Double
+        get() {
+            return if (bodyWeight > 0 && fatPercent > 0) {
+                bodyWeight * (fatPercent / 100)
+            } else {
+                0.0
+            }
+        }
 
-        fun newMeasure(uid: String) = Measure(uid, 0.0, 0, SexType.MALE)
+    val leanWeight: Double
+        get() {
+            return if (bodyWeight > 0 && fatPercent > 0) {
+                bodyWeight * (1 - (fatPercent / 100))
+            } else {
+                0.0
+            }
+        }
+
+    val freeFatMassIndex: Double
+        get() {
+            val lw = leanWeight
+            val bh = bodyHeight
+            return if (lw > 0 && bh > 0) {
+                lw / ((bh / 100) * (bh / 100))
+            } else {
+                0.0
+            }
+        }
+
+    companion object {
+        fun newMeasure(uid: String = UUID.randomUUID().toString()) = Measure(uid, 0.0, 0.0, 0, SexType.MALE)
 
         fun newMeasure(userSettings: UserSettings): Measure {
             return Measure(
                 UUID.randomUUID().toString(),
                 userSettings.weight,
+                userSettings.height,
                 userSettings.birthDate.getAge(),
                 userSettings.sex
             )

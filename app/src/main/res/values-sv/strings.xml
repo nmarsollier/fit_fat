@@ -42,4 +42,5 @@
     <string name="main_setup_app_text">Glöm inte att konfigurera programmet först</string>
     <string name="save_my_data_in_cloud">Spara mina data i molnet</string>
     <string name="loading">Läser in. Vänta...</string>
+    <string name="free_fat_mass">Fri fettmassa</string>
 </resources>

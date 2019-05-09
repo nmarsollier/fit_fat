@@ -96,6 +96,7 @@ object FirebaseDao {
                     mapOf(
                         "user" to key,
                         "bodyWeight" to measure.bodyWeight,
+                        "bodyHeight" to measure.bodyHeight,
                         "age" to measure.age,
                         "sex" to measure.sex.toString(),
                         "date" to measure.date.toIso8601(),
@@ -167,6 +168,7 @@ object FirebaseDao {
         val instance = FirebaseFirestore.getInstance()
         val docRef = instance.collection("measures").whereEqualTo("user", key)
         val dao = getRoomDatabase(context).measureDao()
+        val userSettings = getRoomDatabase(context).userDao().getUserSettings()
         docRef.get()
             .addOnSuccessListener { documents ->
                 documents.forEach { document ->
@@ -175,6 +177,7 @@ object FirebaseDao {
                             dao.insert(Measure.newMeasure(document.id).apply {
                                 bodyWeight = document.getDouble("bodyWeight") ?: 0.0
                                 fatPercent = document.getDouble("fatPercent") ?: 0.0
+                                bodyHeight = document.getDouble("bodyHeight") ?: userSettings.height
                                 age = (document.getDouble("age") ?: 0.0).toInt()
                                 sex = SexType.valueOf(
                                     document.getString("sex") ?: SexType.MALE.toString()

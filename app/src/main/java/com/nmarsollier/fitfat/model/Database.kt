@@ -2,12 +2,14 @@ package com.nmarsollier.fitfat.model
 
 import android.content.Context
 import androidx.room.*
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import java.util.*
 
 private var INSTANCE: FitFatDatabase? = null
 private const val DATABASE_NAME = "fitfat"
 
-@Database(entities = [UserSettings::class, Measure::class], version = 2, exportSchema = false)
+@Database(entities = [UserSettings::class, Measure::class], version = 3, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class FitFatDatabase : RoomDatabase() {
     abstract fun userDao(): UserSettingsDao
@@ -16,11 +18,22 @@ abstract class FitFatDatabase : RoomDatabase() {
 
 fun getRoomDatabase(context: Context): FitFatDatabase {
     return INSTANCE ?: Room.databaseBuilder(context, FitFatDatabase::class.java, DATABASE_NAME)
-        .fallbackToDestructiveMigration()
-        .build().also {
+        .addMigrations(
+            object : Migration(1, 2) {
+                override fun migrate(database: SupportSQLiteDatabase) {
+                }
+            },
+            object : Migration(2, 3) {
+                override fun migrate(database: SupportSQLiteDatabase) {
+                    database.execSQL("ALTER TABLE measures add column body_height REAL not null default 0")
+                    database.execSQL("UPDATE measures set body_height = ifnull((SELECT MAX(height) from user_settings), 0) ")
+                }
+            }
+        ).build().also {
             INSTANCE = it
         }
 }
+
 
 class Converters {
     companion object {

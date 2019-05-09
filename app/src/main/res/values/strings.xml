@@ -54,4 +54,7 @@
     <string name="main_setup_app_text">Don\'t forget to setup the app first.</string>
     <string name="save_my_data_in_cloud">Save my data in cloud</string>
     <string name="loading">Loading. Please wait...</string>
+    <string name="fmmi" translatable="false">FMMI</string>
+    <string name="free_fat_mass">Free Fat Mass</string>
+    <string name="dash" translatable="false">/</string>
 </resources>

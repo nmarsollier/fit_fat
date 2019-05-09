@@ -42,4 +42,5 @@
     <string name="main_setup_app_text">N\'oubliez pas de configurer d\'abord l\'application</string>
     <string name="save_my_data_in_cloud">Sauvegarder mes données dans le cloud</string>
     <string name="loading">Chargement. S\'il vous plaît, attendez...</string>
+    <string name="free_fat_mass">Masse grasse libre</string>
 </resources>
