@@ -191,7 +191,7 @@ class DoubleHolder constructor(itemView: View) : MeasureHolder(itemView) {
             val currentValue = getCurrentValue()
 
             itemView.vIntBar.progress = currentValue.toInt()
-            itemView.vDecimalBar.progress = ((currentValue - currentValue.toInt()) * 100).toInt()
+            itemView.vDecimalBar.progress = ((currentValue - currentValue.toInt()) * 10).toInt()
 
             itemView.vIntBar.setOnSeekBarChangeListener(
                 onProgressChangeListener { _, progress, _ ->
@@ -244,7 +244,7 @@ class DoubleHolder constructor(itemView: View) : MeasureHolder(itemView) {
         }
 
         val currentValue = measure.getValueForMethod(measureValue)
-        var newValue = currentValue.toInt().toDouble() + (progress.toDouble() / 100)
+        var newValue = currentValue.toInt().toDouble() + (progress.toDouble() / 10)
         if (measureValue.unitType == UnitType.WEIGHT) {
             newValue = userSettings.measureSystem.standardWeight(newValue)
         }

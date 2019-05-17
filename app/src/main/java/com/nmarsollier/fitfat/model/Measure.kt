@@ -302,7 +302,7 @@ enum class MeasureValue(
         null,
         R.color.chartBodyWeight,
         listOf(MeasureMethod.FROM_SCALE, MeasureMethod.WEIGHT_ONLY),
-        200,
+        149,
         InputType.DOUBLE,
         UnitType.WEIGHT
     ),
@@ -325,7 +325,7 @@ enum class MeasureValue(
             MeasureMethod.JACKSON_POLLOCK_4,
             MeasureMethod.PARRILLO
         ),
-        60,
+        40,
         InputType.INT,
         UnitType.WIDTH
     ),
@@ -339,7 +339,7 @@ enum class MeasureValue(
             MeasureMethod.JACKSON_POLLOCK_4,
             MeasureMethod.PARRILLO
         ),
-        30,
+        40,
         InputType.INT,
         UnitType.WIDTH
     ),
@@ -362,7 +362,7 @@ enum class MeasureValue(
         R.drawable.img_subscapular,
         R.color.chartSubscapular,
         listOf(MeasureMethod.JACKSON_POLLOCK_7, MeasureMethod.DURNIN_WOMERSLEY, MeasureMethod.PARRILLO),
-        60,
+        40,
         InputType.INT,
         UnitType.WIDTH
     ),
@@ -376,7 +376,7 @@ enum class MeasureValue(
             MeasureMethod.JACKSON_POLLOCK_4,
             MeasureMethod.PARRILLO
         ),
-        60,
+        40,
         InputType.INT,
         UnitType.WIDTH
     ),
@@ -403,7 +403,7 @@ enum class MeasureValue(
         R.drawable.img_lower_back,
         R.color.chartLowerBack,
         listOf(MeasureMethod.PARRILLO),
-        60,
+        40,
         InputType.INT,
         UnitType.WIDTH
     ),
@@ -421,7 +421,7 @@ enum class MeasureValue(
         null,
         R.color.chartBodyFat,
         listOf(MeasureMethod.FROM_SCALE),
-        99,
+        49,
         InputType.DOUBLE,
         UnitType.PERCENT
     );
