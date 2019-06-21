@@ -1,5 +1,6 @@
 package com.nmarsollier.fitfat.utils
 
+import android.app.Activity
 import android.content.Context
 import android.graphics.PorterDuff
 import android.util.Log
@@ -8,6 +9,7 @@ import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.forEach
+import androidx.fragment.app.Fragment
 import com.nmarsollier.fitfat.R
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.MainScope
@@ -45,10 +47,41 @@ fun Context.dpToPx(dp: Number): Float {
     return dp.toFloat() * this.resources.displayMetrics.density
 }
 
-fun Any.runInBackground(backgroundProcess: () -> Unit) {
-    GlobalScope.launch { backgroundProcess.invoke() }
+fun runInBackground(backgroundProcess: () -> Unit) {
+    GlobalScope.launch {
+        backgroundProcess.invoke()
+    }
 }
 
-fun Any.runInForeground(foregroundProcess: () -> Unit) {
-    MainScope().launch { foregroundProcess.invoke() }
+fun Activity.runInForeground(foregroundProcess: () -> Unit) {
+    MainScope().launch {
+        applicationContext ?: return@launch
+        try {
+            foregroundProcess.invoke()
+        } catch (exception: java.lang.IllegalStateException) {
+            logError("missing Activity.applicationContext in runInForeground", exception)
+        }
+    }
+}
+
+fun Fragment.runInForeground(foregroundProcess: () -> Unit) {
+    MainScope().launch {
+        context ?: return@launch
+        try {
+            foregroundProcess.invoke()
+        } catch (exception: java.lang.IllegalStateException) {
+            logError("missing Fragment.context in runInForeground", exception)
+        }
+    }
+}
+
+fun Context?.runInForeground(foregroundProcess: () -> Unit) {
+    val context = this ?: return
+    MainScope().launch {
+        try {
+            foregroundProcess.invoke()
+        } catch (exception: java.lang.IllegalStateException) {
+            logError("missing context in runInForeground", exception)
+        }
+    }
 }

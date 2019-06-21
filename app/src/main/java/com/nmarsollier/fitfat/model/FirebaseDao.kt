@@ -29,7 +29,7 @@ object FirebaseDao {
 
         runInBackground {
             getRoomDatabase(context).userDao().getUserSettings().firebaseToken?.let {
-                runInForeground {
+                context.runInForeground {
                     googleAuth(it) {}
                 }
             }

@@ -192,7 +192,7 @@ data class Measure(
         }
     }
 
-    fun getValueForMethod(measureValue: MeasureValue): Number {
+    fun getValueForMethod(measureValue: MeasureValue, userSettings: UserSettings? = null): Number {
         return when (measureValue) {
             MeasureValue.CHEST -> chest
             MeasureValue.ABDOMINAL -> abdominal
@@ -204,7 +204,7 @@ data class Measure(
             MeasureValue.BICEP -> bicep
             MeasureValue.LOWER_BACK -> lowerBack
             MeasureValue.CALF -> calf
-            MeasureValue.BODY_WEIGHT -> bodyWeight
+            MeasureValue.BODY_WEIGHT -> userSettings?.measureSystem?.displayWeight(bodyWeight) ?: bodyWeight
             MeasureValue.BODY_FAT -> fatPercent
         }
     }
