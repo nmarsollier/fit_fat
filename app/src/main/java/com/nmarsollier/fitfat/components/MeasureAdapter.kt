@@ -11,9 +11,10 @@ import com.nmarsollier.fitfat.R
 import com.nmarsollier.fitfat.model.*
 import com.nmarsollier.fitfat.utils.formatString
 import com.nmarsollier.fitfat.utils.onProgressChangeListener
+import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.help_dialog.*
-import kotlinx.android.synthetic.main.new_measure_double_holder.view.*
-import kotlinx.android.synthetic.main.new_measure_int_holder.view.*
+import kotlinx.android.synthetic.main.new_measure_double_holder.*
+import kotlinx.android.synthetic.main.new_measure_int_holder.*
 
 
 class MeasuresAdapter internal constructor(
@@ -74,7 +75,12 @@ class MeasuresAdapter internal constructor(
     }
 }
 
-abstract class MeasureHolder constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
+abstract class MeasureHolder constructor(itemView: View) : RecyclerView.ViewHolder(itemView), LayoutContainer {
+    override val containerView: View?
+        get() = itemView
+
+    val context: Context = itemView.context
+
     abstract fun bind(
         measureValue: MeasureValue,
         measure: Measure,
@@ -100,31 +106,31 @@ class MeasureValueHolder constructor(itemView: View) : MeasureHolder(itemView) {
         this.measure = measure
         this.userSettings = userSettings
 
-        itemView.vValueBar.max = measureValue.maxScale
-        itemView.vValueUnit.setText(R.string.unit_mm)
+        vValueBar.max = measureValue.maxScale
+        vValueUnit.setText(R.string.unit_mm)
 
         val value = getValue()
-        itemView.vValueText.text = value.formatString()
+        vValueText.text = value.formatString()
 
-        itemView.vValueBar.isVisible = !readOnly
-        itemView.vHelpIcon.isVisible = !readOnly
-        itemView.vTitleLabel.text = itemView.context.getString(measureValue.titleRes)
+        vValueBar.isVisible = !readOnly
+        vHelpIcon.isVisible = !readOnly
+        vTitleLabel.text = context.getString(measureValue.titleRes)
 
         if (!readOnly) {
-            itemView.vValueBar.progress = value
+            vValueBar.progress = value
 
-            itemView.vValueBar.setOnSeekBarChangeListener(
+            vValueBar.setOnSeekBarChangeListener(
                 onProgressChangeListener { _, progress, _ ->
                     setValue(progress, measureValue)
-                    itemView.vValueText.text = getValue().formatString()
+                    vValueText.text = getValue().formatString()
                     callback.invoke()
                 }
             )
 
             measureValue.helpRes?.let { helpRes ->
-                itemView.vHelpIcon.isVisible = true
-                itemView.vHelpIcon.setOnClickListener {
-                    Dialog(itemView.context).apply {
+                vHelpIcon.isVisible = true
+                vHelpIcon.setOnClickListener {
+                    Dialog(context).apply {
                         setContentView(R.layout.help_dialog)
                         vHelpView.setOnClickListener {
                             dismiss()
@@ -134,7 +140,7 @@ class MeasureValueHolder constructor(itemView: View) : MeasureHolder(itemView) {
                     }
                 }
             } ?: run {
-                itemView.vHelpIcon.isVisible = false
+                vHelpIcon.isVisible = false
             }
         }
     }
@@ -171,35 +177,35 @@ class DoubleHolder constructor(itemView: View) : MeasureHolder(itemView) {
         this.measure = measure
         this.userSettings = userSettings
 
-        itemView.vIntBar.isVisible = !readOnly
-        itemView.vDecimalBar.isVisible = !readOnly
-        itemView.vFatTextLabel.text = itemView.context.getString(measureValue.titleRes)
-        itemView.vMeasureUnit.text = when (measureValue.unitType) {
-            UnitType.PERCENT -> itemView.context.getString(R.string.unit_percent)
-            UnitType.WEIGHT -> itemView.context.getString(userSettings.measureSystem.weightResId)
-            UnitType.WIDTH -> itemView.context.getString(R.string.unit_mm)
+        vIntBar.isVisible = !readOnly
+        vDecimalBar.isVisible = !readOnly
+        vFatTextLabel.text = context.getString(measureValue.titleRes)
+        vMeasureUnit.text = when (measureValue.unitType) {
+            UnitType.PERCENT -> context.getString(R.string.unit_percent)
+            UnitType.WEIGHT -> context.getString(userSettings.measureSystem.weightResId)
+            UnitType.WIDTH -> context.getString(R.string.unit_mm)
         }
 
         if (!readOnly) {
             if (measureValue.unitType == UnitType.WEIGHT) {
-                itemView.vIntBar.max =
+                vIntBar.max =
                     userSettings.measureSystem.displayWeight(measureValue.maxScale.toDouble()).toInt()
             } else {
-                itemView.vIntBar.max = measureValue.maxScale
+                vIntBar.max = measureValue.maxScale
             }
 
             val currentValue = getCurrentValue()
 
-            itemView.vIntBar.progress = currentValue.toInt()
-            itemView.vDecimalBar.progress = ((currentValue - currentValue.toInt()) * 10).toInt()
+            vIntBar.progress = currentValue.toInt()
+            vDecimalBar.progress = ((currentValue - currentValue.toInt()) * 10).toInt()
 
-            itemView.vIntBar.setOnSeekBarChangeListener(
+            vIntBar.setOnSeekBarChangeListener(
                 onProgressChangeListener { _, progress, _ ->
                     setIntValue(progress, measureValue, callback)
                 }
             )
 
-            itemView.vDecimalBar.setOnSeekBarChangeListener(
+            vDecimalBar.setOnSeekBarChangeListener(
                 onProgressChangeListener { _, progress, _ ->
                     setDecimalValue(progress, measureValue, callback)
                 }
@@ -265,7 +271,7 @@ class DoubleHolder constructor(itemView: View) : MeasureHolder(itemView) {
     }
 
     private fun updateUnits(callback: () -> Unit) {
-        itemView.vFatValueText.text = getCurrentValue().formatString()
+        vFatValueText.text = getCurrentValue().formatString()
         callback.invoke()
     }
 }

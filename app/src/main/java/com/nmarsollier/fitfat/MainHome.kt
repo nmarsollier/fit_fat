@@ -15,8 +15,9 @@ import com.nmarsollier.fitfat.model.Measure
 import com.nmarsollier.fitfat.model.UserSettings
 import com.nmarsollier.fitfat.model.getRoomDatabase
 import com.nmarsollier.fitfat.utils.*
+import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.main_home_fragment.*
-import kotlinx.android.synthetic.main.main_home_measure_holder.view.*
+import kotlinx.android.synthetic.main.main_home_measure_holder.*
 
 class MainHome : Fragment() {
     private var userSettings: UserSettings? = null
@@ -130,52 +131,57 @@ class MainHome : Fragment() {
         }
     }
 
-    class MeasureHolder private constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class MeasureHolder private constructor(itemView: View) : RecyclerView.ViewHolder(itemView), LayoutContainer {
         private lateinit var userSettings: UserSettings
+
+        override val containerView: View?
+            get() = itemView
+
+        val context: Context = itemView.context
 
         fun bind(userSettings: UserSettings, measure: Measure) {
             this.userSettings = userSettings
 
-            itemView.vDate.text = measure.date.formatDateTime()
-            itemView.vMethod.setText(measure.measureMethod.labelRes)
+            vDate.text = measure.date.formatDateTime()
+            vMethod.setText(measure.measureMethod.labelRes)
 
             // Fat Percent
             val fat = measure.fatPercent
-            itemView.vFatLabel.isVisible = fat > 0
-            itemView.vFat.isVisible = fat > 0
-            itemView.vFatSymbol.isVisible = fat > 0
-            itemView.vBodyFatSepatator.isVisible = fat > 0
-            itemView.vBodyFat.isVisible = fat > 0
-            itemView.vBodyFatUnit.isVisible = fat > 0
+            vFatLabel.isVisible = fat > 0
+            vFat.isVisible = fat > 0
+            vFatSymbol.isVisible = fat > 0
+            vBodyFatSepatator.isVisible = fat > 0
+            vBodyFat.isVisible = fat > 0
+            vBodyFatUnit.isVisible = fat > 0
 
-            itemView.vFat.text = fat.formatString()
-            itemView.vWeight.text = userSettings.measureSystem.displayWeight(measure.bodyWeight).formatString()
-            itemView.vUnit.text = itemView.context.getString(userSettings.measureSystem.weightResId)
-            itemView.vBodyFat.text = userSettings.measureSystem.displayWeight(measure.bodyFatMass).formatString()
-            itemView.vBodyFatUnit.text = itemView.context.getString(userSettings.measureSystem.weightResId)
+            vFat.text = fat.formatString()
+            vWeight.text = userSettings.measureSystem.displayWeight(measure.bodyWeight).formatString()
+            vUnit.text = context.getString(userSettings.measureSystem.weightResId)
+            vBodyFat.text = userSettings.measureSystem.displayWeight(measure.bodyFatMass).formatString()
+            vBodyFatUnit.text = context.getString(userSettings.measureSystem.weightResId)
 
             // Free Fat Mass
             val freeFatMass = measure.leanWeight
-            itemView.vFreeFatMassLabel.isVisible = freeFatMass > 0
-            itemView.vFreeFatMass.isVisible = freeFatMass > 0
-            itemView.vFreeFatMassUnit.isVisible = freeFatMass > 0
-            itemView.vFreeFatMass.text = userSettings.measureSystem.displayWeight(freeFatMass).formatString()
-            itemView.vFreeFatMassUnit.text = itemView.context.getString(userSettings.measureSystem.weightResId)
+            vFreeFatMassLabel.isVisible = freeFatMass > 0
+            vFreeFatMass.isVisible = freeFatMass > 0
+            vFreeFatMassUnit.isVisible = freeFatMass > 0
+            vFreeFatMass.text = userSettings.measureSystem.displayWeight(freeFatMass).formatString()
+            vFreeFatMassUnit.text = context.getString(userSettings.measureSystem.weightResId)
 
             // FFMI
             val freeFatMassIndex = measure.freeFatMassIndex
-            itemView.vFFMILabel.isVisible = freeFatMassIndex > 0
-            itemView.vFFMI.isVisible = freeFatMassIndex > 0
-            itemView.vFFMI.text = freeFatMassIndex.formatString()
+            vFFMILabel.isVisible = freeFatMassIndex > 0
+            vFFMI.isVisible = freeFatMassIndex > 0
+            vFFMI.text = freeFatMassIndex.formatString()
 
             itemView.setOnLongClickListener {
-                AlertDialog.Builder(itemView.context)
-                    .setTitle(itemView.context.getString(R.string.measure_delete_title))
-                    .setMessage(itemView.context.getString(R.string.measure_delete_message))
+                AlertDialog.Builder(context)
+                    .setTitle(context.getString(R.string.measure_delete_title))
+                    .setMessage(context.getString(R.string.measure_delete_message))
                     .setPositiveButton(
                         android.R.string.yes
                     ) { _, _ ->
-                        deleteMeasure(itemView.context, measure)
+                        deleteMeasure(context, measure)
                     }
                     .setNegativeButton(
                         android.R.string.no
@@ -186,7 +192,7 @@ class MainHome : Fragment() {
             }
 
             itemView.setOnClickListener {
-                ViewMeasureActivity.startActivity(itemView.context, measure)
+                ViewMeasureActivity.startActivity(context, measure)
             }
         }
 
