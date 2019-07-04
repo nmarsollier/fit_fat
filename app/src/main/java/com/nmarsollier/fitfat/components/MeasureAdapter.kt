@@ -249,7 +249,7 @@ class DoubleHolder constructor(itemView: View) : MeasureHolder(itemView) {
             return
         }
 
-        val currentValue = measure.getValueForMethod(measureValue)
+        val currentValue = measure.getValueForMethod(measureValue, userSettings)
         var newValue = currentValue.toInt().toDouble() + (progress.toDouble() / 10)
         if (measureValue.unitType == UnitType.WEIGHT) {
             newValue = userSettings.measureSystem.standardWeight(newValue)

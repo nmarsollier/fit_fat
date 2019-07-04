@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -19,26 +20,15 @@
         android:text="@string/new_measure_method_title"
         android:textColor="@color/editPrimary" />
 
-    <lecho.lib.hellocharts.view.LineChartView
-        android:id="@+id/vChart"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/vLegend"
-        android:layout_below="@+id/vMeasureMethod"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginStart="@dimen/screen_margin"
-        android:layout_marginTop="@dimen/screen_margin"
-        android:layout_marginEnd="@dimen/screen_margin" />
-
-    <TextView
-        android:id="@+id/vLegend"
-        style="@style/TextAppearance.AppCompat.Small"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/vRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_margin="@dimen/screen_margin" />
+        android:layout_height="match_parent"
+        android:layout_below="@+id/vMeasureMethod"
+        android:layout_marginTop="12dp"
+        android:clipToPadding="false"
+        android:paddingBottom="64dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
 
 </RelativeLayout>
