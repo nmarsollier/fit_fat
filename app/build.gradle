@@ -11,8 +11,8 @@ android {
         applicationId "com.nmarsollier.fitfat"
         minSdkVersion 21
         targetSdkVersion 28
-        versionCode 7
-        versionName "1.6"
+        versionCode 8
+        versionName "1.7"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         resConfigs "de", "fr", "it", "es", "nl", "pt", "sv"
