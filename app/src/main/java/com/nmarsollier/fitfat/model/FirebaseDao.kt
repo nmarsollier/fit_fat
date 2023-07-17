@@ -10,9 +10,14 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
 import com.nmarsollier.fitfat.R
-import com.nmarsollier.fitfat.utils.*
+import com.nmarsollier.fitfat.ui.utils.ResultCodes
+import com.nmarsollier.fitfat.utils.logError
+import com.nmarsollier.fitfat.utils.parseIso8601
+import com.nmarsollier.fitfat.utils.runInBackground
+import com.nmarsollier.fitfat.utils.toIso8601
+import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.runBlocking
 import java.util.*
-
 
 object FirebaseDao {
     private lateinit var gso: GoogleSignInOptions
@@ -27,13 +32,14 @@ object FirebaseDao {
 
         auth = FirebaseAuth.getInstance()
 
+        /*
         runInBackground {
             getRoomDatabase(context).userDao().getUserSettings().firebaseToken?.let {
-                context.runInForeground {
+                runInForeground {
                     googleAuth(it) {}
                 }
             }
-        }
+        }*/
     }
 
     fun login(fragment: Fragment) {
@@ -84,14 +90,14 @@ object FirebaseDao {
         }
     }
 
-    fun uploadPendingMeasures(context: Context) {
+    suspend fun uploadPendingMeasures(context: Context) {
         val key = getUserKey() ?: return
 
-        runInBackground {
-            val instance = FirebaseFirestore.getInstance()
-            val dao = getRoomDatabase(context).measureDao()
+        val instance = FirebaseFirestore.getInstance()
+        val dao = getRoomDatabase(context).measureDao()
 
-            dao.findUnsynced()?.forEach { measure ->
+        dao.findUnsynced().firstOrNull { measures ->
+            measures?.forEach { measure ->
                 instance.collection("measures").document(measure.uid).set(
                     mapOf(
                         "user" to key,
@@ -122,6 +128,7 @@ object FirebaseDao {
                     }
                 }
             }
+            true
         }
     }
 
@@ -131,30 +138,42 @@ object FirebaseDao {
         instance.collection("measures").document(measureId).delete()
     }
 
-    fun downloadUserSettings(context: Context, token: String, callback: () -> Unit) {
+    suspend fun downloadUserSettings(context: Context, token: String, callback: () -> Unit) {
         val key = getUserKey() ?: return
 
         val instance = FirebaseFirestore.getInstance()
         val docRef = instance.collection("settings").document(key)
         docRef.get()
             .addOnSuccessListener { document ->
-                runInBackground {
-                    val dao = getRoomDatabase(context).userDao()
-                    val userSettings = dao.getUserSettings()
-                    userSettings.birthDate = document.getString("birthDate")?.parseIso8601() ?: userSettings.birthDate
-                    userSettings.displayName = document.getString("displayName") ?: userSettings.displayName
-                    userSettings.height = document.getDouble("height") ?: userSettings.height
-                    userSettings.weight = document.getDouble("weight") ?: userSettings.weight
-                    userSettings.measureSystem = MeasureType.valueOf(
-                        document.getString("measureSystem") ?: userSettings.measureSystem.toString()
-                    )
-                    userSettings.sex = SexType.valueOf(
-                        document.getString("sex") ?: userSettings.sex.toString()
-                    )
-                    userSettings.firebaseToken = token
+                val dao = getRoomDatabase(context).userDao()
+                runBlocking {
+                    dao.findCurrent().firstOrNull { userSettings ->
+                        userSettings?.let {
 
-                    dao.update(userSettings)
-                    callback.invoke()
+                            userSettings.birthDate =
+                                document.getString("birthDate")?.parseIso8601()
+                                    ?: userSettings.birthDate
+                            userSettings.displayName =
+                                document.getString("displayName") ?: userSettings.displayName
+                            userSettings.height =
+                                document.getDouble("height") ?: userSettings.height
+                            userSettings.weight =
+                                document.getDouble("weight") ?: userSettings.weight
+                            userSettings.measureSystem = MeasureType.valueOf(
+                                document.getString("measureSystem")
+                                    ?: userSettings.measureSystem.toString()
+                            )
+                            userSettings.sex = SexType.valueOf(
+                                document.getString("sex") ?: userSettings.sex.toString()
+                            )
+                            userSettings.firebaseToken = token
+
+                            dao.update(userSettings)
+                            callback.invoke()
+
+                        }
+                        true
+                    }
                 }
             }
             .addOnFailureListener { exception ->
@@ -162,18 +181,24 @@ object FirebaseDao {
             }
     }
 
-    fun downloadMeasurements(context: Context) {
+    suspend fun downloadMeasurements(context: Context) {
         val key = getUserKey() ?: return
 
         val instance = FirebaseFirestore.getInstance()
         val docRef = instance.collection("measures").whereEqualTo("user", key)
         val dao = getRoomDatabase(context).measureDao()
-        val userSettings = getRoomDatabase(context).userDao().getUserSettings()
+        lateinit var userSettings: UserSettings
+        runBlocking {
+            getRoomDatabase(context).userDao().findCurrent().firstOrNull {
+                userSettings = it!!
+                true
+            }
+        }
         docRef.get()
             .addOnSuccessListener { documents ->
-                documents.forEach { document ->
-                    runInBackground {
-                        if (dao.findById(document.id) == null) {
+                runBlocking {
+                    documents.forEach { document ->
+                        dao.findById(document.id).firstOrNull {
                             dao.insert(Measure.newMeasure(document.id).apply {
                                 bodyWeight = document.getDouble("bodyWeight") ?: 0.0
                                 fatPercent = document.getDouble("fatPercent") ?: 0.0
@@ -185,7 +210,8 @@ object FirebaseDao {
                                 age = (document.getDouble("calf") ?: 0.0).toInt()
                                 measureMethod =
                                     MeasureMethod.valueOf(
-                                        document.getString("measureMethod") ?: MeasureMethod.WEIGHT_ONLY.toString()
+                                        document.getString("measureMethod")
+                                            ?: MeasureMethod.WEIGHT_ONLY.toString()
                                     )
                                 chest = (document.getDouble("chest") ?: 0.0).toInt()
                                 abdominal = (document.getDouble("abdominal") ?: 0.0).toInt()
@@ -199,12 +225,12 @@ object FirebaseDao {
                                 date = document.getString("date")?.parseIso8601() ?: Date()
                                 cloudSync = true
                             })
+                            true
                         }
                     }
+                    uploadPendingMeasures(context)
                 }
-                uploadPendingMeasures(context)
-            }
-            .addOnFailureListener { exception ->
+            }.addOnFailureListener { exception ->
                 logError("get failed with ", exception)
             }
     }

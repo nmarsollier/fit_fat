@@ -1,7 +1,9 @@
 package com.nmarsollier.fitfat.utils
 
 import android.app.Activity
+import android.app.DatePickerDialog
 import android.content.Context
+import android.content.Intent
 import android.graphics.PorterDuff
 import android.util.Log
 import android.view.Menu
@@ -14,7 +16,7 @@ import com.nmarsollier.fitfat.R
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
-
+import java.util.*
 
 fun Context.updateMenuItemColor(menu: Menu?) {
     menu?.forEach { menuItem ->
@@ -75,13 +77,43 @@ fun Fragment.runInForeground(foregroundProcess: () -> Unit) {
     }
 }
 
-fun Context?.runInForeground(foregroundProcess: () -> Unit) {
-    val context = this ?: return
+fun runInForeground(foregroundProcess: () -> Unit) {
     MainScope().launch {
         try {
             foregroundProcess.invoke()
         } catch (exception: java.lang.IllegalStateException) {
             logError("missing context in runInForeground", exception)
         }
+    }
+}
+
+fun Fragment.showDatePicker(date: Date, onChange: (date: Date) -> Unit) {
+    val birthCalendar = Calendar.getInstance()
+    birthCalendar.time = date
+
+    val datePickerDialog = DatePickerDialog(
+        requireContext(),
+        { _, year, monthOfYear, dayOfMonth ->
+            val newDate = Calendar.getInstance()
+            newDate.set(year, monthOfYear, dayOfMonth)
+            onChange.invoke(newDate.time)
+        },
+        birthCalendar.get(Calendar.YEAR),
+        birthCalendar.get(Calendar.MONTH),
+        birthCalendar.get(Calendar.DAY_OF_MONTH)
+    )
+    datePickerDialog.show()
+}
+
+fun Fragment.openDbInspector() {
+    try {
+        val intent = Intent()
+        intent.setClassName(
+            requireActivity().packageName,
+            "im.dino.dbinspector.activities.DbInspectorActivity"
+        )
+        startActivity(intent)
+    } catch (e: Exception) {
+        logError("Unable to launch db inspector", e)
     }
 }

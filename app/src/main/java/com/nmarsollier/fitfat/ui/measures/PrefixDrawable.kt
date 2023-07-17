@@ -1,4 +1,4 @@
-package com.nmarsollier.fitfat.components
+package com.nmarsollier.fitfat.ui.measures
 
 import android.graphics.Canvas
 import android.graphics.ColorFilter

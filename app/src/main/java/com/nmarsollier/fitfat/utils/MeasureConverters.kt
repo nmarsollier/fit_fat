@@ -28,7 +28,7 @@ fun Int.formatString(default: String = ""): String {
 
 fun String.parseDouble(default: Double = 0.0): Double {
     return try {
-        NumberFormat.getInstance().parse(this).toDouble()
+        NumberFormat.getInstance().parse(this)!!.toDouble()
     } catch (e: Exception) {
         default
     }

@@ -7,7 +7,7 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/vMeasureMethod"
+        android:id="@+id/measure_method"
         style="@style/TextAppearance.AppCompat.Body1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -26,14 +26,14 @@
         style="@style/Label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/vMeasureMethod"
+        android:layout_below="@+id/measure_method"
         android:layout_marginStart="@dimen/screen_margin"
         android:layout_marginTop="@dimen/view_margin"
-        android:labelFor="@id/vBirthDate"
+        android:labelFor="@id/birth_date"
         android:text="@string/new_measure_date" />
 
     <EditText
-        android:id="@+id/vMeasureDate"
+        android:id="@+id/measure_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/vDateLabel"
@@ -50,12 +50,12 @@
         style="@style/Label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@id/vMeasureDate"
-        android:layout_toStartOf="@+id/vFat"
+        android:layout_alignBaseline="@id/measure_date"
+        android:layout_toStartOf="@+id/fat"
         android:text="@string/measure_fat" />
 
     <TextView
-        android:id="@+id/vFat"
+        android:id="@+id/fat"
         style="@style/NumericLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -77,10 +77,10 @@
         android:text="@string/unit_percent" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/vRecyclerView"
+        android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/vMeasureDate"
+        android:layout_below="@+id/measure_date"
         android:layout_alignParentBottom="true"
         android:clipToPadding="false"
         android:paddingStart="@dimen/screen_margin"

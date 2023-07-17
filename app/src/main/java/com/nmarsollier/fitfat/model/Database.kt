@@ -63,7 +63,8 @@ class Converters {
 
         @TypeConverter
         @JvmStatic
-        fun toMeasureMethod(value: String?) = if (value == null) null else MeasureMethod.valueOf(value)
+        fun toMeasureMethod(value: String?) =
+            if (value == null) null else MeasureMethod.valueOf(value)
 
         @TypeConverter
         @JvmStatic

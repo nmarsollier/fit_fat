@@ -1,4 +1,4 @@
-package com.nmarsollier.fitfat.components
+package com.nmarsollier.fitfat.ui.measures
 
 import android.app.Dialog
 import android.content.Context
@@ -8,21 +8,20 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.nmarsollier.fitfat.R
+import com.nmarsollier.fitfat.databinding.HelpDialogBinding
+import com.nmarsollier.fitfat.databinding.NewMeasureDoubleHolderBinding
+import com.nmarsollier.fitfat.databinding.NewMeasureIntHolderBinding
 import com.nmarsollier.fitfat.model.*
 import com.nmarsollier.fitfat.utils.formatString
 import com.nmarsollier.fitfat.utils.onProgressChangeListener
 import kotlinx.android.extensions.LayoutContainer
-import kotlinx.android.synthetic.main.help_dialog.*
-import kotlinx.android.synthetic.main.new_measure_double_holder.*
-import kotlinx.android.synthetic.main.new_measure_int_holder.*
-
 
 class MeasuresAdapter internal constructor(
     private val context: Context,
     private var measure: Measure,
     var userSettings: UserSettings?,
     private val readOnly: Boolean,
-    private var callback: () -> Unit
+    private var callback: (measureValue: MeasureValue, value: Number) -> Unit
 ) : RecyclerView.Adapter<MeasureHolder>() {
 
     private var measures = mutableListOf<MeasureValue>()
@@ -56,8 +55,8 @@ class MeasuresAdapter internal constructor(
 
     private fun newMeasureIntHolder(parent: ViewGroup, context: Context): MeasureHolder {
         return MeasureValueHolder(
-            LayoutInflater.from(context).inflate(
-                R.layout.new_measure_int_holder,
+            NewMeasureIntHolderBinding.inflate(
+                LayoutInflater.from(context),
                 parent,
                 false
             )
@@ -66,8 +65,8 @@ class MeasuresAdapter internal constructor(
 
     private fun newMeasureDoubleHolder(parent: ViewGroup, context: Context): MeasureHolder {
         return DoubleHolder(
-            LayoutInflater.from(context).inflate(
-                R.layout.new_measure_double_holder,
+            NewMeasureDoubleHolderBinding.inflate(
+                LayoutInflater.from(context),
                 parent,
                 false
             )
@@ -75,7 +74,8 @@ class MeasuresAdapter internal constructor(
     }
 }
 
-abstract class MeasureHolder constructor(itemView: View) : RecyclerView.ViewHolder(itemView), LayoutContainer {
+abstract class MeasureHolder constructor(itemView: View) : RecyclerView.ViewHolder(itemView),
+    LayoutContainer {
     override val containerView: View?
         get() = itemView
 
@@ -85,12 +85,12 @@ abstract class MeasureHolder constructor(itemView: View) : RecyclerView.ViewHold
         measureValue: MeasureValue,
         measure: Measure,
         userSettings: UserSettings,
-        callback: () -> Unit,
+        callback: (measureValue: MeasureValue, value: Number) -> Unit,
         readOnly: Boolean
     )
 }
 
-class MeasureValueHolder constructor(itemView: View) : MeasureHolder(itemView) {
+class MeasureValueHolder(val binding: NewMeasureIntHolderBinding) : MeasureHolder(binding.root) {
     private var measureValue: MeasureValue? = null
     private var measure: Measure? = null
     private lateinit var userSettings: UserSettings
@@ -99,59 +99,64 @@ class MeasureValueHolder constructor(itemView: View) : MeasureHolder(itemView) {
         measureValue: MeasureValue,
         measure: Measure,
         userSettings: UserSettings,
-        callback: () -> Unit,
+        callback: (measureValue: MeasureValue, value: Number) -> Unit,
         readOnly: Boolean
     ) {
         this.measureValue = measureValue
         this.measure = measure
         this.userSettings = userSettings
 
-        vValueBar.max = measureValue.maxScale
-        vValueUnit.setText(R.string.unit_mm)
+        binding.vValueBar.max = measureValue.maxScale
+        binding.vValueUnit.setText(R.string.unit_mm)
 
         val value = getValue()
-        vValueText.text = value.formatString()
+        binding.vValueText.text = value.formatString()
 
-        vValueBar.isVisible = !readOnly
-        vHelpIcon.isVisible = !readOnly
-        vTitleLabel.text = context.getString(measureValue.titleRes)
+        binding.vValueBar.isVisible = !readOnly
+        binding.vHelpIcon.isVisible = !readOnly
+        binding.vTitleLabel.text = context.getString(measureValue.titleRes)
 
         if (!readOnly) {
-            vValueBar.progress = value
+            binding.vValueBar.progress = value
 
-            vValueBar.setOnSeekBarChangeListener(
+            binding.vValueBar.setOnSeekBarChangeListener(
                 onProgressChangeListener { _, progress, _ ->
-                    setValue(progress, measureValue)
-                    vValueText.text = getValue().formatString()
-                    callback.invoke()
+                    setValue(progress, measureValue, callback)
+                    binding.vValueText.text = getValue().formatString()
                 }
             )
 
             measureValue.helpRes?.let { helpRes ->
-                vHelpIcon.isVisible = true
-                vHelpIcon.setOnClickListener {
+                binding.vHelpIcon.isVisible = true
+                binding.vHelpIcon.setOnClickListener {
+                    val bind =
+                        HelpDialogBinding.inflate(LayoutInflater.from(context), binding.root, false)
                     Dialog(context).apply {
-                        setContentView(R.layout.help_dialog)
-                        vHelpView.setOnClickListener {
+                        setContentView(bind.root)
+                        bind.vHelpView.setOnClickListener {
                             dismiss()
                         }
-                        vHelpPicture.setImageResource(helpRes)
+                        bind.vHelpPicture.setImageResource(helpRes)
                         show()
                     }
                 }
             } ?: run {
-                vHelpIcon.isVisible = false
+                binding.vHelpIcon.isVisible = false
             }
         }
     }
 
-    fun setValue(value: Int, fromMeasureValue: MeasureValue) {
+    fun setValue(
+        value: Int,
+        fromMeasureValue: MeasureValue,
+        callback: (measure: MeasureValue, value: Number) -> Unit
+    ) {
         val measureValue = measureValue
         if (fromMeasureValue != measureValue) {
             return
         }
 
-        measure?.setValueForMethod(measureValue, value)
+        callback.invoke(measureValue, value)
     }
 
     fun getValue(): Int {
@@ -161,7 +166,7 @@ class MeasureValueHolder constructor(itemView: View) : MeasureHolder(itemView) {
     }
 }
 
-class DoubleHolder constructor(itemView: View) : MeasureHolder(itemView) {
+class DoubleHolder(val binding: NewMeasureDoubleHolderBinding) : MeasureHolder(binding.root) {
     private var measureValue: MeasureValue? = null
     private var measure: Measure? = null
     private lateinit var userSettings: UserSettings
@@ -170,17 +175,17 @@ class DoubleHolder constructor(itemView: View) : MeasureHolder(itemView) {
         measureValue: MeasureValue,
         measure: Measure,
         userSettings: UserSettings,
-        callback: () -> Unit,
+        callback: (measureValue: MeasureValue, value: Number) -> Unit,
         readOnly: Boolean
     ) {
         this.measureValue = measureValue
         this.measure = measure
         this.userSettings = userSettings
 
-        vIntBar.isVisible = !readOnly
-        vDecimalBar.isVisible = !readOnly
-        vFatTextLabel.text = context.getString(measureValue.titleRes)
-        vMeasureUnit.text = when (measureValue.unitType) {
+        binding.vIntBar.isVisible = !readOnly
+        binding.vDecimalBar.isVisible = !readOnly
+        binding.vFatTextLabel.text = context.getString(measureValue.titleRes)
+        binding.vMeasureUnit.text = when (measureValue.unitType) {
             UnitType.PERCENT -> context.getString(R.string.unit_percent)
             UnitType.WEIGHT -> context.getString(userSettings.measureSystem.weightResId)
             UnitType.WIDTH -> context.getString(R.string.unit_mm)
@@ -188,37 +193,38 @@ class DoubleHolder constructor(itemView: View) : MeasureHolder(itemView) {
 
         if (!readOnly) {
             if (measureValue.unitType == UnitType.WEIGHT) {
-                vIntBar.max =
-                    userSettings.measureSystem.displayWeight(measureValue.maxScale.toDouble()).toInt()
+                binding.vIntBar.max =
+                    userSettings.measureSystem.displayWeight(measureValue.maxScale.toDouble())
+                        .toInt()
             } else {
-                vIntBar.max = measureValue.maxScale
+                binding.vIntBar.max = measureValue.maxScale
             }
 
             val currentValue = getCurrentValue()
 
-            vIntBar.progress = currentValue.toInt()
-            vDecimalBar.progress = ((currentValue - currentValue.toInt()) * 10).toInt()
+            binding.vIntBar.progress = currentValue.toInt()
+            binding.vDecimalBar.progress = ((currentValue - currentValue.toInt()) * 10).toInt()
 
-            vIntBar.setOnSeekBarChangeListener(
+            binding.vIntBar.setOnSeekBarChangeListener(
                 onProgressChangeListener { _, progress, _ ->
                     setIntValue(progress, measureValue, callback)
                 }
             )
 
-            vDecimalBar.setOnSeekBarChangeListener(
+            binding.vDecimalBar.setOnSeekBarChangeListener(
                 onProgressChangeListener { _, progress, _ ->
                     setDecimalValue(progress, measureValue, callback)
                 }
             )
         }
 
-        updateUnits(callback)
+        binding.vFatValueText.text = getCurrentValue().formatString()
     }
 
     private fun setIntValue(
         progress: Int,
         fromMeasureValue: MeasureValue,
-        callback: () -> Unit
+        callback: (measureValue: MeasureValue, value: Number) -> Unit
     ) {
         val measureValue = measureValue ?: return
         val measure = measure ?: return
@@ -234,14 +240,13 @@ class DoubleHolder constructor(itemView: View) : MeasureHolder(itemView) {
             newValue = userSettings.measureSystem.standardWeight(newValue)
         }
 
-        measure.setValueForMethod(measureValue, newValue)
-        updateUnits(callback)
+        callback(measureValue, newValue)
     }
 
     private fun setDecimalValue(
         progress: Int,
         fromMeasureValue: MeasureValue,
-        callback: () -> Unit
+        callback: (measureValue: MeasureValue, value: Number) -> Unit
     ) {
         val measureValue = measureValue
         val measure = measure ?: return
@@ -255,8 +260,7 @@ class DoubleHolder constructor(itemView: View) : MeasureHolder(itemView) {
             newValue = userSettings.measureSystem.standardWeight(newValue)
         }
 
-        measure.setValueForMethod(measureValue, newValue)
-        updateUnits(callback)
+        callback(measureValue, newValue)
     }
 
     private fun getCurrentValue(): Double {
@@ -268,10 +272,5 @@ class DoubleHolder constructor(itemView: View) : MeasureHolder(itemView) {
             currentValue = userSettings.measureSystem.displayWeight(currentValue)
         }
         return currentValue
-    }
-
-    private fun updateUnits(callback: () -> Unit) {
-        vFatValueText.text = getCurrentValue().formatString()
-        callback.invoke()
     }
 }

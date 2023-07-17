@@ -1,42 +1,14 @@
 package com.nmarsollier.fitfat.model
 
 import android.os.Parcelable
-import androidx.lifecycle.LiveData
-import androidx.room.*
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.nmarsollier.fitfat.R
 import com.nmarsollier.fitfat.utils.getAge
 import com.nmarsollier.fitfat.utils.toPounds
 import kotlinx.android.parcel.Parcelize
 import java.util.*
-
-@Dao
-abstract class MeasureDao {
-    @Query("SELECT * FROM measures ORDER BY date DESC")
-    abstract fun findAll(): LiveData<List<Measure>>
-
-    @Query("SELECT * FROM measures ORDER BY date DESC LIMIT 1")
-    abstract fun findLast(): Measure?
-
-    @Query("SELECT * FROM measures WHERE cloud_sync = 0 ")
-    abstract fun findUnsynced(): List<Measure>?
-
-    @Query("SELECT * FROM measures WHERE uid=:id")
-    abstract fun findById(id: String): Measure?
-
-    @Insert
-    protected abstract fun internalInsert(measure: Measure)
-
-    @Delete
-    abstract fun delete(measure: Measure)
-
-    @Update
-    abstract fun update(measure: Measure)
-
-    fun insert(measure: Measure) {
-        measure.calculateFatPercent()
-        internalInsert(measure)
-    }
-}
 
 @Parcelize
 @Entity(tableName = "measures")
@@ -126,7 +98,8 @@ data class Measure(
 
         fatPercent = when (measureMethod) {
             MeasureMethod.JACKSON_POLLOCK_7 -> {
-                val sum = chest + abdominal + thigh + tricep + subscapular + suprailiac + midaxillary
+                val sum =
+                    chest + abdominal + thigh + tricep + subscapular + suprailiac + midaxillary
                 val density = if (sex == SexType.MALE) {
                     1.112 - (0.00043499 * sum) + (0.00000055 * sum * sum) - (0.00028826 * age)
                 } else {
@@ -180,7 +153,8 @@ data class Measure(
                 495 / density - 450
             }
             MeasureMethod.PARRILLO -> {
-                val sum = chest + abdominal + thigh + bicep + tricep + subscapular + suprailiac + lowerBack + calf
+                val sum =
+                    chest + abdominal + thigh + bicep + tricep + subscapular + suprailiac + lowerBack + calf
                 27 * sum / bodyWeight.toPounds()
             }
             MeasureMethod.FROM_SCALE -> {
@@ -204,7 +178,8 @@ data class Measure(
             MeasureValue.BICEP -> bicep
             MeasureValue.LOWER_BACK -> lowerBack
             MeasureValue.CALF -> calf
-            MeasureValue.BODY_WEIGHT -> userSettings?.measureSystem?.displayWeight(bodyWeight) ?: bodyWeight
+            MeasureValue.BODY_WEIGHT -> userSettings?.measureSystem?.displayWeight(bodyWeight)
+                ?: bodyWeight
             MeasureValue.BODY_FAT -> fatPercent
         }
     }
@@ -256,7 +231,8 @@ data class Measure(
         }
 
     companion object {
-        fun newMeasure(uid: String = UUID.randomUUID().toString()) = Measure(uid, 0.0, 0.0, 0, SexType.MALE)
+        fun newMeasure(uid: String = UUID.randomUUID().toString()) =
+            Measure(uid, 0.0, 0.0, 0, SexType.MALE)
 
         fun newMeasure(userSettings: UserSettings): Measure {
             return Measure(
@@ -310,7 +286,11 @@ enum class MeasureValue(
         R.string.measure_chest,
         R.drawable.img_chest,
         R.color.chartChest,
-        listOf(MeasureMethod.JACKSON_POLLOCK_7, MeasureMethod.JACKSON_POLLOCK_3, MeasureMethod.PARRILLO),
+        listOf(
+            MeasureMethod.JACKSON_POLLOCK_7,
+            MeasureMethod.JACKSON_POLLOCK_3,
+            MeasureMethod.PARRILLO
+        ),
         30,
         InputType.INT,
         UnitType.WIDTH
@@ -361,7 +341,11 @@ enum class MeasureValue(
         R.string.measure_subscapular,
         R.drawable.img_subscapular,
         R.color.chartSubscapular,
-        listOf(MeasureMethod.JACKSON_POLLOCK_7, MeasureMethod.DURNIN_WOMERSLEY, MeasureMethod.PARRILLO),
+        listOf(
+            MeasureMethod.JACKSON_POLLOCK_7,
+            MeasureMethod.DURNIN_WOMERSLEY,
+            MeasureMethod.PARRILLO
+        ),
         40,
         InputType.INT,
         UnitType.WIDTH
