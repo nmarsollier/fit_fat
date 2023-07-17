@@ -43,8 +43,6 @@ class HomeFragment : Fragment() {
         }
 
         binding.recyclerView.adapter = MeasureAdapter(this)
-
-        viewModel.loadSettings(requireContext())
     }
 
     override fun onResume() {

@@ -23,7 +23,7 @@ class MainActivity : AppCompatActivity() {
 
         setContentView(binding.root)
 
-        binding.navigation.setOnNavigationItemSelectedListener { item ->
+        binding.navigation.setOnItemSelectedListener { item ->
             viewModel.setCurrentSelectedTab(
                 when (item.itemId) {
                     R.id.menu_options -> Screen.OPTIONS

@@ -43,7 +43,10 @@ class StatsFragment : LifecycleOwner, Fragment() {
                 else -> Unit
             }
         }
+    }
 
+    override fun onResume() {
+        super.onResume()
         viewModel.load(requireContext())
     }
 

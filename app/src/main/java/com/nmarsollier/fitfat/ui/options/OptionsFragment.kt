@@ -85,7 +85,10 @@ class OptionsFragment : Fragment() {
                 }
             }
         }
+    }
 
+    override fun onResume() {
+        super.onResume()
         viewModel.load(requireContext())
     }
 
