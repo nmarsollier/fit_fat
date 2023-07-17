@@ -4,8 +4,10 @@ import android.content.Context
 import androidx.lifecycle.viewModelScope
 import com.nmarsollier.fitfat.model.*
 import com.nmarsollier.fitfat.ui.utils.BaseViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.*
 
 sealed class NewMeasureState {
@@ -71,10 +73,14 @@ class NewMeasureViewModel : BaseViewModel<NewMeasureState>(NewMeasureState.Initi
         state.emit(NewMeasureState.Loading)
 
         if (measure.isValid()) {
-            getRoomDatabase(context).measureDao().insert(measure)
+            withContext(Dispatchers.IO) {
+                getRoomDatabase(context).measureDao().insert(measure)
 
-            userSettings.weight = measure.bodyWeight
-            getRoomDatabase(context).userDao().update(userSettings)
+                if (measure.bodyWeight > 0) {
+                    userSettings.weight = measure.bodyWeight
+                    getRoomDatabase(context).userDao().update(userSettings)
+                }
+            }
 
             //FirebaseDao.uploadPendingMeasures(context)
 

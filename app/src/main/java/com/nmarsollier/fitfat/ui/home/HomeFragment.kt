@@ -47,6 +47,11 @@ class HomeFragment : Fragment() {
         viewModel.loadSettings(requireContext())
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.loadSettings(requireContext())
+    }
+
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         if (BuildConfig.DEBUG) {
             inflater.inflate(R.menu.debug_menu, menu)

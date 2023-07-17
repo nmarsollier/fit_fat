@@ -35,8 +35,8 @@ class StatsFragment : LifecycleOwner, Fragment() {
         viewModel.state.observe(viewLifecycleOwner) {
             when (it) {
                 is StatsState.Ready -> {
-                    initAdapter()
-                    refreshUI()
+                    initAdapter(it)
+                    refreshUI(it)
                 }
                 else -> Unit
             }
@@ -45,9 +45,8 @@ class StatsFragment : LifecycleOwner, Fragment() {
         viewModel.load(requireContext())
     }
 
-    private fun initAdapter() {
+    private fun initAdapter(state: StatsState.Ready) {
         val context = context ?: return
-        val state = (viewModel.state.value as? StatsState.Ready) ?: return
 
         val values = MeasureValue.values()
             .filter {
@@ -85,10 +84,8 @@ class StatsFragment : LifecycleOwner, Fragment() {
             }
     }
 
-    private fun refreshUI() {
-        val selectedMethod = (viewModel.state.value as? StatsState.Ready)?.selectedMethod
-            ?: MeasureMethod.WEIGHT_ONLY
-
+    private fun refreshUI(state: StatsState.Ready) {
+        val selectedMethod = state.selectedMethod
         binding.measureMethod.setText(selectedMethod.labelRes)
     }
 

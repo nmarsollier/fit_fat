@@ -30,8 +30,6 @@ abstract class MeasureDao {
 
     suspend fun insert(measure: Measure) {
         measure.calculateFatPercent()
-        withContext(Dispatchers.IO) {
-            internalInsert(measure)
-        }
+        internalInsert(measure)
     }
 }

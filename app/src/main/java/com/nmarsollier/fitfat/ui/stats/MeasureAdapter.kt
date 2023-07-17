@@ -47,7 +47,7 @@ class MeasureAdapter(
     override fun getItemCount() = measures.size
 }
 
-class MeasureGraphHolder(private val binding: MainStatsMeasureGraphHolderBinding) :
+class MeasureGraphHolder(val binding: MainStatsMeasureGraphHolderBinding) :
     RecyclerView.ViewHolder(binding.root),
     LayoutContainer {
     private var graphValues: List<Measure>? = null
@@ -103,7 +103,7 @@ class MeasureGraphHolder(private val binding: MainStatsMeasureGraphHolderBinding
             .map {
                 Pair(
                     it.key,
-                    (it.value.sumOf { p -> p.second }) / it.value.size
+                    (it.value.sumByDouble { p -> p.second }) / it.value.size
                 )
             }
 
@@ -162,11 +162,11 @@ class MeasureGraphHolder(private val binding: MainStatsMeasureGraphHolderBinding
                 maxDate.toFloat() + A_DAY,
                 (minScaleY * 0.9).toFloat()
             )
-        binding.vChart.maximumViewport = vp
-        binding.vChart.currentViewport = vp
-        binding.vChart.isViewportCalculationEnabled = false
+        binding.chart.maximumViewport = vp
+        binding.chart.currentViewport = vp
+        binding.chart.isViewportCalculationEnabled = false
 
-        binding.vChart.lineChartData = data
+        binding.chart.lineChartData = data
 
         setLegends(legends)
     }
@@ -177,7 +177,7 @@ class MeasureGraphHolder(private val binding: MainStatsMeasureGraphHolderBinding
 
         val bulletSize = context.dpToPx(14).toInt()
 
-        binding.vLegend.text = legends.joinToSpannedString(separator = "     ") {
+        binding.legend.text = legends.joinToSpannedString(separator = "     ") {
             SpannableString("\u00A0\u00A0" + context.getString(it.titleRes)).also { s ->
 
                 val bulletIcon = DrawableCompat.wrap(
@@ -196,10 +196,11 @@ class MeasureGraphHolder(private val binding: MainStatsMeasureGraphHolderBinding
         }
     }
 
-    override val containerView: View
+    override val containerView: View?
         get() = itemView
 
-    val context: Context = binding.root.context
+    val context: Context = itemView.context
+
 
     companion object {
         fun newInstance(parent: ViewGroup, context: Context): MeasureGraphHolder {

@@ -1,7 +1,0 @@
-
-- Mostrar mas datos en los cards del home
-	Fat en Kg
-	Lean Body Mass
-
-
-- Cargar los datos en forma paginada, o solamnete el ultimo periodo
