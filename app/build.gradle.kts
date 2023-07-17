@@ -1,10 +1,10 @@
 plugins {
-    id("com.android.application")
-    id("kotlin-android")
-    id("kotlin-kapt")
-    id("kotlin-parcelize")
-    id("com.google.firebase.crashlytics")
-    id("com.google.gms.google-services")
+    id(Plugins.application)
+    id(Plugins.kotlin)
+    id(Plugins.kapt)
+    id(Plugins.parcelize)
+    id(Plugins.crashlytics)
+    id(Plugins.googleServices)
 }
 
 android {
@@ -51,35 +51,34 @@ android {
 
 dependencies {
 
-    implementation("androidx.room:room-ktx:2.4.2")
-    implementation("androidx.room:room-runtime:2.4.2")
-    kapt("androidx.room:room-compiler:2.4.2")
+    implementation(AndroidXLibraries.roomKtx)
+    implementation(AndroidXLibraries.roomRuntime)
+    kapt(AndroidXLibraries.roomCompiler)
 
-    implementation("androidx.appcompat:appcompat:1.5.1")
-    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
-    implementation("androidx.core:core-ktx:1.8.0")
-    implementation("androidx.lifecycle:lifecycle-livedata:2.5.0")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0")
-    implementation("androidx.fragment:fragment-ktx:1.3.2")
+    implementation(AndroidXLibraries.appCompat)
+    implementation(AndroidXLibraries.constraintLayout)
+    implementation(AndroidXLibraries.coreKtx)
+    implementation(AndroidXLibraries.liveData)
+    implementation(AndroidXLibraries.viewModelKtx)
+    implementation(AndroidXLibraries.fragmentKtx)
 
-    implementation("com.google.android.gms:play-services-auth:20.6.0")
-    implementation("com.google.android.material:material:1.9.0")
+    implementation(GoogleLibraries.googleAuth)
+    implementation(GoogleLibraries.material)
 
-    implementation(platform("com.google.firebase:firebase-bom:32.2.0"))
-    implementation("com.google.firebase:firebase-crashlytics-ktx")
-    implementation("com.google.firebase:firebase-analytics-ktx")
-    implementation("com.google.firebase:firebase-firestore-ktx")
-    implementation("com.google.firebase:firebase-auth-ktx")
+    implementation(platform(FirebaseLibraries.bom))
+    implementation(FirebaseLibraries.crashlitics)
+    implementation(FirebaseLibraries.analytics)
+    implementation(FirebaseLibraries.firestore)
+    implementation(FirebaseLibraries.auth)
 
-    implementation("com.github.lecho:hellocharts-library:1.5.8@aar")
-    implementation("com.evernote:android-state:1.4.1")
+    implementation(ThirdPartyLibraries.helloCharts)
 
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.7.10")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0")
-    debugImplementation("im.dino:dbinspector:3.4.1@aar")
+    implementation(JetbrainsLibraries.stdLib)
+    implementation(JetbrainsLibraries.coroutinesAndroid)
+    implementation(JetbrainsLibraries.coroutinesCore)
+    debugImplementation(ThirdPartyLibraries.dbInspector)
 
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.1")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.1.0")
+    testImplementation(TestLibraries.jUnit)
+    androidTestImplementation(TestLibraries.extJUnit)
+    androidTestImplementation(TestLibraries.espressoCore)
 }

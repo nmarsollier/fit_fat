@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import com.nmarsollier.fitfat.R
 import com.nmarsollier.fitfat.databinding.MainStatsFragmentBinding
@@ -15,7 +14,7 @@ import com.nmarsollier.fitfat.model.MeasureMethod
 import com.nmarsollier.fitfat.model.MeasureValue
 import com.nmarsollier.fitfat.utils.observe
 
-class StatsFragment : LifecycleOwner, Fragment() {
+class StatsFragment : Fragment() {
     private val binding: MainStatsFragmentBinding by lazy {
         MainStatsFragmentBinding.inflate(layoutInflater)
     }
@@ -25,9 +24,7 @@ class StatsFragment : LifecycleOwner, Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
-        return binding.root
-    }
+    ) = binding.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
