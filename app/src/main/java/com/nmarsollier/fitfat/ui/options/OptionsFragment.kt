@@ -5,6 +5,7 @@ import android.view.*
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import com.nmarsollier.fitfat.R
 import com.nmarsollier.fitfat.databinding.MainOptionsFragmentBinding
@@ -32,7 +33,7 @@ class OptionsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.state.observe(viewLifecycleOwner) {
+        viewModel.state.observe(viewModel.viewModelScope) {
             when (it) {
                 is OptionsState.Ready -> refreshUI(it)
                 else -> Unit

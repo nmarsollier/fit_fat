@@ -8,6 +8,7 @@ import com.nmarsollier.fitfat.model.UserSettings
 import com.nmarsollier.fitfat.model.UserSettingsRepository
 import com.nmarsollier.fitfat.ui.utils.BaseViewModel
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -25,15 +26,17 @@ class OptionsViewModel : BaseViewModel<OptionsState>(OptionsState.Initial) {
     fun load(
         context: Context
     ) = viewModelScope.launch {
-        state.emit(OptionsState.Loading)
+        mutableState.update {
+            OptionsState.Loading
+        }
 
-        UserSettingsRepository.load(context).firstOrNull {
-            state.emit(
+        UserSettingsRepository.load(context).firstOrNull { state ->
+            mutableState.update {
                 OptionsState.Ready(
                     hasChanged = false,
-                    userSettings = it
+                    userSettings = state
                 )
-            )
+            }
             true
         }
     }
@@ -49,106 +52,106 @@ class OptionsViewModel : BaseViewModel<OptionsState>(OptionsState.Initial) {
         val userSettings = currentUserSettings ?: return
 
         viewModelScope.launch {
-            UserSettingsRepository.save(context, userSettings).firstOrNull {
-                state.emit(
+            UserSettingsRepository.save(context, userSettings).firstOrNull { state ->
+                mutableState.update {
                     OptionsState.Ready(
-                        userSettings = it,
+                        userSettings = state,
                         hasChanged = false
                     )
-                )
+                }
                 true
             }
         }
     }
 
     fun updateBirthDate(newBirthDate: Date) {
-        currentUserSettings?.let {
-            state.emit(
+        currentUserSettings?.let { us ->
+            mutableState.update {
                 OptionsState.Ready(
                     hasChanged = true,
-                    userSettings = it.copy(
+                    userSettings = us.copy(
                         birthDate = newBirthDate
                     )
                 )
-            )
+            }
         }
     }
 
     fun updateDisplayName(newName: String) {
-        currentUserSettings?.takeIf { it.displayName != newName }?.let {
-            state.emit(
+        currentUserSettings?.takeIf { it.displayName != newName }?.let { us ->
+            mutableState.update {
                 OptionsState.Ready(
                     hasChanged = true,
-                    userSettings = it.copy(
+                    userSettings = us.copy(
                         displayName = newName
                     )
                 )
-            )
+            }
         }
     }
 
     fun updateHeight(newHeight: Double) {
-        currentUserSettings?.takeIf { it.height != newHeight }?.let {
-            state.emit(
+        currentUserSettings?.takeIf { it.height != newHeight }?.let { us ->
+            mutableState.update {
                 OptionsState.Ready(
                     hasChanged = true,
-                    userSettings = it.copy(
+                    userSettings = us.copy(
                         height = newHeight
                     )
                 )
-            )
+            }
         }
     }
 
     fun updateWeight(newWeight: Double) {
-        currentUserSettings?.takeIf { it.weight != newWeight }?.let {
-            state.emit(
+        currentUserSettings?.takeIf { it.weight != newWeight }?.let { us ->
+            mutableState.update {
                 OptionsState.Ready(
                     hasChanged = true,
-                    userSettings = it.copy(
+                    userSettings = us.copy(
                         weight = newWeight
                     )
                 )
-            )
+            }
         }
     }
 
     fun updateMeasureSystem(system: MeasureType) {
-        currentUserSettings?.takeIf { it.measureSystem != system }?.let {
-            state.emit(
+        currentUserSettings?.takeIf { it.measureSystem != system }?.let { us ->
+            mutableState.update {
                 OptionsState.Ready(
                     hasChanged = true,
-                    userSettings = it.copy(
+                    userSettings = us.copy(
                         measureSystem = system
                     )
                 )
-            )
+            }
         }
     }
 
     fun updateSex(newSex: SexType) {
-        currentUserSettings?.takeIf { it.sex != newSex }?.let {
-            state.emit(
+        currentUserSettings?.takeIf { it.sex != newSex }?.let { us ->
+            mutableState.update {
                 OptionsState.Ready(
                     hasChanged = true,
-                    userSettings = it.copy(
+                    userSettings = us.copy(
                         sex = newSex
                     )
                 )
-            )
+            }
         }
     }
 
     fun disableFirebase() {
-        currentUserSettings?.takeIf { it.firebaseToken != null }?.let {
-            state.emit(
+        currentUserSettings?.takeIf { it.firebaseToken != null }?.let { us ->
+            mutableState.update {
                 OptionsState.Ready(
                     hasChanged = true,
-                    userSettings = it.copy(
+                    userSettings = us.copy(
                         firebaseToken = null
                     )
                 )
-            )
+            }
         }
     }
 }

@@ -10,6 +10,7 @@ import com.nmarsollier.fitfat.ui.utils.BaseViewModel
 import com.nmarsollier.fitfat.utils.ifNotNull
 import com.nmarsollier.fitfat.utils.runInForeground
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 sealed class HomeState {
@@ -27,7 +28,7 @@ class HomeViewModel : BaseViewModel<HomeState>(HomeState.Initial) {
     private var measures: List<Measure>? = null
 
     fun loadSettings(context: Context) = viewModelScope.launch {
-        state.emit(HomeState.Loading)
+        mutableState.update { HomeState.Loading }
 
         UserSettingsRepository.load(context).firstOrNull {
             userSettings = it
@@ -43,7 +44,7 @@ class HomeViewModel : BaseViewModel<HomeState>(HomeState.Initial) {
     }
 
     fun deleteMeasure(context: Context, measure: Measure) = viewModelScope.launch {
-        state.emit(HomeState.Loading)
+        mutableState.update { HomeState.Loading }
         MeasuresRepository.delete(context, measure).firstOrNull {
             loadSettings(context)
             true
@@ -52,12 +53,12 @@ class HomeViewModel : BaseViewModel<HomeState>(HomeState.Initial) {
 
     private fun updateState() = runInForeground {
         ifNotNull(measures, userSettings) { measures, userSettings ->
-            state.emit(
+            mutableState.update {
                 HomeState.Ready(
                     userSettings = userSettings,
                     measures = measures
                 )
-            )
+            }
         }
     }
 }

@@ -7,11 +7,13 @@ import android.view.MenuItem
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.viewModelScope
 import com.nmarsollier.fitfat.R
 import com.nmarsollier.fitfat.databinding.NewMeasureActivityBinding
 import com.nmarsollier.fitfat.model.Measure
 import com.nmarsollier.fitfat.utils.formatDateTime
 import com.nmarsollier.fitfat.utils.formatString
+import com.nmarsollier.fitfat.utils.observe
 import com.nmarsollier.fitfat.utils.runInForeground
 
 class ViewMeasureActivity : AppCompatActivity() {
@@ -26,7 +28,7 @@ class ViewMeasureActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        viewModel.state.observe(this) {
+        viewModel.state.observe(viewModel.viewModelScope) {
             when (it) {
                 is ViewMeasureState.Initial -> Unit
                 is ViewMeasureState.Ready -> {

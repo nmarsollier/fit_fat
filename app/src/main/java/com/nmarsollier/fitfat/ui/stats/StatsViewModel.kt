@@ -6,6 +6,7 @@ import com.nmarsollier.fitfat.model.*
 import com.nmarsollier.fitfat.ui.utils.BaseViewModel
 import com.nmarsollier.fitfat.utils.ifNotNull
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 sealed class StatsState(
@@ -31,13 +32,15 @@ class StatsViewModel : BaseViewModel<StatsState>(StatsState.Initial(MeasureMetho
     private var measures: List<Measure>? = null
 
     private val measureMethod: MeasureMethod
-        get() = state.value?.selectedMethod ?: MeasureMethod.WEIGHT_ONLY
+        get() = state.value.selectedMethod
 
     fun load(
         context: Context
     ) = viewModelScope.launch {
 
-        state.emit(StatsState.Loading(measureMethod))
+        mutableState.update {
+            StatsState.Loading(measureMethod)
+        }
 
         UserSettingsRepository.load(context).firstOrNull {
             userSettings = it
@@ -53,14 +56,14 @@ class StatsViewModel : BaseViewModel<StatsState>(StatsState.Initial(MeasureMetho
     }
 
     fun updateMethod(selectedMethod: MeasureMethod) {
-        state.emit(
+        mutableState.update {
             when (val value = state.value) {
                 is StatsState.Initial -> value.copy(method = selectedMethod)
                 is StatsState.Loading -> value.copy(method = selectedMethod)
                 is StatsState.Ready -> value.copy(method = selectedMethod)
                 null -> StatsState.Initial(selectedMethod)
             }
-        )
+        }
     }
 
     private fun updateState() = viewModelScope.launch {
@@ -68,13 +71,13 @@ class StatsViewModel : BaseViewModel<StatsState>(StatsState.Initial(MeasureMetho
             userSettings,
             measures
         ) { userSettings, measures ->
-            state.emit(
+            mutableState.update {
                 StatsState.Ready(
                     method = measureMethod,
                     userSettings = userSettings,
                     measures = measures
                 )
-            )
+            }
         }
     }
 }

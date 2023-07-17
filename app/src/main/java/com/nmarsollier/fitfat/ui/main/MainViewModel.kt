@@ -6,6 +6,7 @@ import com.nmarsollier.fitfat.model.UserSettings
 import com.nmarsollier.fitfat.model.UserSettingsRepository
 import com.nmarsollier.fitfat.ui.utils.BaseViewModel
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 enum class Screen {
@@ -29,10 +30,10 @@ class MainViewModel : BaseViewModel<MainState>(MainState.Initial(Screen.HOME)) {
         get() = state.value?.selectedTab ?: Screen.HOME
 
     fun load(context: Context) = viewModelScope.launch {
-        state.emit(MainState.Loading(currentTab))
+        mutableState.update { MainState.Loading(currentTab) }
 
         UserSettingsRepository.load(context).firstOrNull { data ->
-            state.emit(
+            mutableState.update {
                 MainState.Ready(
                     tab = if (data.isNew()) {
                         Screen.OPTIONS
@@ -41,19 +42,19 @@ class MainViewModel : BaseViewModel<MainState>(MainState.Initial(Screen.HOME)) {
                     },
                     userSettings = data
                 )
-            )
+            }
             true
         }
     }
 
     fun setCurrentSelectedTab(screen: Screen) {
-        state.emit(
+        mutableState.update {
             when (val value = state.value) {
                 is MainState.Initial -> value.copy(tab = screen)
                 is MainState.Loading -> value.copy(tab = screen)
                 is MainState.Ready -> value.copy(tab = screen)
                 null -> MainState.Initial(Screen.HOME)
             }
-        )
+        }
     }
 }

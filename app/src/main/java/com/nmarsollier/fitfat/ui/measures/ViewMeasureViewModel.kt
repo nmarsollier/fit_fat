@@ -8,6 +8,7 @@ import com.nmarsollier.fitfat.model.UserSettingsRepository
 import com.nmarsollier.fitfat.ui.utils.BaseViewModel
 import com.nmarsollier.fitfat.utils.ifNotNull
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 sealed class ViewMeasureState {
@@ -40,7 +41,9 @@ class ViewMeasureViewModel : BaseViewModel<ViewMeasureState>(ViewMeasureState.In
 
     fun updateState() {
         ifNotNull(measure, userSettings) { measure, userSettings ->
-            state.emit(ViewMeasureState.Ready(measure, userSettings))
+            mutableState.update {
+                ViewMeasureState.Ready(measure, userSettings)
+            }
         }
     }
 }

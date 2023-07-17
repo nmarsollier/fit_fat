@@ -8,10 +8,12 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.lifecycleScope
 import com.nmarsollier.fitfat.R
 import com.nmarsollier.fitfat.databinding.MainStatsFragmentBinding
 import com.nmarsollier.fitfat.model.MeasureMethod
 import com.nmarsollier.fitfat.model.MeasureValue
+import com.nmarsollier.fitfat.utils.observe
 
 class StatsFragment : LifecycleOwner, Fragment() {
     private val binding: MainStatsFragmentBinding by lazy {
@@ -32,7 +34,7 @@ class StatsFragment : LifecycleOwner, Fragment() {
 
         binding.measureMethod.setOnClickListener { showMeasureTypeSelectionDialog() }
 
-        viewModel.state.observe(viewLifecycleOwner) {
+        viewModel.state.observe(lifecycleScope) {
             when (it) {
                 is StatsState.Ready -> {
                     initAdapter(it)

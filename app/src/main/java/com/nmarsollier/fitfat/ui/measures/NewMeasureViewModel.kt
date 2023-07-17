@@ -6,6 +6,7 @@ import com.nmarsollier.fitfat.model.*
 import com.nmarsollier.fitfat.ui.utils.BaseViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.*
@@ -46,7 +47,7 @@ class NewMeasureViewModel : BaseViewModel<NewMeasureState>(NewMeasureState.Initi
 
     private fun updateState() {
         userSettings?.let { userSettings ->
-            state.emit(
+            mutableState.update {
                 when (val value = state.value) {
                     NewMeasureState.Initial -> NewMeasureState.Ready(
                         userSettings = userSettings,
@@ -61,7 +62,7 @@ class NewMeasureViewModel : BaseViewModel<NewMeasureState>(NewMeasureState.Initi
                     is NewMeasureState.Ready -> value.copy(userSettings = userSettings)
                     else -> NewMeasureState.Initial
                 }
-            )
+            }
         }
     }
 
@@ -70,7 +71,9 @@ class NewMeasureViewModel : BaseViewModel<NewMeasureState>(NewMeasureState.Initi
         val measure = (currentState as? NewMeasureState.Ready)?.measure ?: return@launch
         val userSettings = (currentState as? NewMeasureState.Ready)?.userSettings ?: return@launch
 
-        state.emit(NewMeasureState.Loading)
+        mutableState.update {
+            NewMeasureState.Loading
+        }
 
         if (measure.isValid()) {
             withContext(Dispatchers.IO) {
@@ -84,33 +87,39 @@ class NewMeasureViewModel : BaseViewModel<NewMeasureState>(NewMeasureState.Initi
 
             //FirebaseDao.uploadPendingMeasures(context)
 
-            state.emit(NewMeasureState.Close)
+            mutableState.update {
+                NewMeasureState.Close
+            }
         } else {
-            state.emit(NewMeasureState.Invalid)
-            state.emit(currentState)
+            mutableState.update {
+                NewMeasureState.Invalid
+            }
+            mutableState.update {
+                currentState
+            }
         }
     }
 
     fun updateDate(time: Date) {
-        (state.value as? NewMeasureState.Ready)?.let {
-            state.emit(
-                it.copy(
-                    measure = it.measure.copy(
+        (state.value as? NewMeasureState.Ready)?.let { newState ->
+            mutableState.update {
+                newState.copy(
+                    measure = newState.measure.copy(
                         date = time
                     )
                 )
-            )
+            }
         }
     }
 
     fun updateMeasureValue(measureValue: MeasureValue, value: Number) {
         currentMeasure.setValueForMethod(measureValue, value)
-        (state.value as? NewMeasureState.Ready)?.let {
-            state.emit(
-                it.copy(
+        (state.value as? NewMeasureState.Ready)?.let { newState ->
+            mutableState.update {
+                newState.copy(
                     measure = currentMeasure
                 )
-            )
+            }
         }
     }
 }

@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.nmarsollier.fitfat.R
 import com.nmarsollier.fitfat.databinding.MainHomeMeasureHolderBinding
@@ -15,7 +16,9 @@ import com.nmarsollier.fitfat.ui.measures.ViewMeasureActivity
 import com.nmarsollier.fitfat.utils.formatDateTime
 import com.nmarsollier.fitfat.utils.formatString
 import com.nmarsollier.fitfat.utils.ifNotNull
+import com.nmarsollier.fitfat.utils.observe
 import kotlinx.android.extensions.LayoutContainer
+import kotlinx.coroutines.coroutineScope
 
 @SuppressLint("NotifyDataSetChanged")
 class MeasureAdapter internal constructor(
@@ -26,7 +29,7 @@ class MeasureAdapter internal constructor(
     private var userSettings: UserSettings? = null
 
     init {
-        fragment.viewModel.state.observe(fragment.viewLifecycleOwner) {
+        fragment.viewModel.state.observe(fragment.lifecycleScope) {
             (it as? HomeState.Ready)?.let { state ->
                 userSettings = state.userSettings
                 measures = state.measures

@@ -13,12 +13,14 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.viewModelScope
 import com.nmarsollier.fitfat.R
 import com.nmarsollier.fitfat.databinding.NewMeasureActivityBinding
 import com.nmarsollier.fitfat.model.Measure
 import com.nmarsollier.fitfat.model.MeasureMethod
 import com.nmarsollier.fitfat.utils.formatDateTime
 import com.nmarsollier.fitfat.utils.formatString
+import com.nmarsollier.fitfat.utils.observe
 import com.nmarsollier.fitfat.utils.updateMenuItemColor
 import java.util.*
 
@@ -39,7 +41,7 @@ class NewMeasureActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowHomeEnabled(true)
         title = getString(R.string.new_measure_title)
 
-        viewModel.state.observe(this) { state ->
+        viewModel.state.observe(viewModel.viewModelScope) { state ->
             when (state) {
                 NewMeasureState.Close -> finish()
                 NewMeasureState.Invalid -> {

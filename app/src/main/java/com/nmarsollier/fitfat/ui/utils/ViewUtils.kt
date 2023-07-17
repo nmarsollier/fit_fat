@@ -12,9 +12,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.forEach
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LifecycleOwner
 import com.nmarsollier.fitfat.R
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.flow.FlowCollector
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -116,4 +120,8 @@ fun Fragment.openDbInspector() {
     } catch (e: Exception) {
         logError("Unable to launch db inspector", e)
     }
+}
+
+fun <T> StateFlow<T>.observe(scope: CoroutineScope, collector: FlowCollector<T>) = scope.launch {
+    collect(collector)
 }
