@@ -6,7 +6,8 @@ import java.util.*
 
 val APP_FORMAT_SHORT: DateFormat = DateFormat.getDateInstance(DateFormat.SHORT)
 val APP_FORMAT_DATE: DateFormat = DateFormat.getDateInstance(DateFormat.DEFAULT)
-val APP_FORMAT_DATETIME: DateFormat = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.SHORT)
+val APP_FORMAT_DATETIME: DateFormat =
+    DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.SHORT)
 
 val UTC_FORMAT = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US).apply {
     timeZone = TimeZone.getTimeZone("UTC")

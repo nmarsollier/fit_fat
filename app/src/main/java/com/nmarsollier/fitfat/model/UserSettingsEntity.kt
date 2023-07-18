@@ -1,7 +1,9 @@
 package com.nmarsollier.fitfat.model
 
 import android.os.Parcelable
-import androidx.room.*
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.nmarsollier.fitfat.R
 import com.nmarsollier.fitfat.utils.toCm
 import com.nmarsollier.fitfat.utils.toInch
@@ -9,34 +11,6 @@ import com.nmarsollier.fitfat.utils.toKg
 import com.nmarsollier.fitfat.utils.toPounds
 import kotlinx.android.parcel.Parcelize
 import java.util.*
-
-private var USER_SETTINGS: UserSettings? = null
-
-@Dao
-abstract class UserSettingsDao {
-    @Query("SELECT * FROM user_settings LIMIT 1")
-    protected abstract fun findUserSettings(): UserSettings?
-
-    @Insert
-    protected abstract fun insertUserSettings(user: UserSettings)
-
-    @Update
-    protected abstract fun updateUserSettings(user: UserSettings)
-
-    fun getUserSettings(): UserSettings {
-        return USER_SETTINGS ?: (findUserSettings() ?: UserSettings(1).also {
-            insertUserSettings(it)
-        }).also {
-            USER_SETTINGS = it
-        }
-    }
-
-    fun update(user: UserSettings) {
-        USER_SETTINGS = null
-        updateUserSettings(user)
-        FirebaseDao.uploadUserSettings(user)
-    }
-}
 
 @Parcelize
 @Entity(tableName = "user_settings")

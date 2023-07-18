@@ -1,4 +1,4 @@
-package com.nmarsollier.fitfat.components
+package com.nmarsollier.fitfat.ui.measures
 
 import android.content.Context
 import android.content.res.TypedArray
@@ -16,7 +16,11 @@ import com.nmarsollier.fitfat.R
  *
  * Inspired by https://gist.github.com/morristech/5480419
  */
-class PrefixSuffixEditText @JvmOverloads constructor(context: Context, attrs: AttributeSet, defStyle: Int = 0) :
+class PrefixSuffixEditText @JvmOverloads constructor(
+    context: Context,
+    attrs: AttributeSet,
+    defStyle: Int = 0
+) :
     AppCompatEditText(context, attrs) {
 
     private val textPaint: TextPaint by lazy {
@@ -60,14 +64,15 @@ class PrefixSuffixEditText @JvmOverloads constructor(context: Context, attrs: At
         updatePrefixDrawable()
         isInitialized = true
 
-        val typedArray: TypedArray = context.obtainStyledAttributes(attrs, R.styleable.PrefixSuffixEditText)
+        val typedArray: TypedArray =
+            context.obtainStyledAttributes(attrs, R.styleable.PrefixSuffixEditText)
         prefix = typedArray.getString(R.styleable.PrefixSuffixEditText_prefix) ?: ""
         suffix = typedArray.getString(R.styleable.PrefixSuffixEditText_suffix)
         innerPadding = typedArray.getDimension(R.styleable.PrefixSuffixEditText_innerPadding, 0f)
         typedArray.recycle()
     }
 
-    override fun setTypeface(typeface: Typeface) {
+    override fun setTypeface(typeface: Typeface?) {
         super.setTypeface(typeface)
 
         if (isInitialized) {
