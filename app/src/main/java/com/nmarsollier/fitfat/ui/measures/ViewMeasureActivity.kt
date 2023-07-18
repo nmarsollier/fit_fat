@@ -10,10 +10,10 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewModelScope
 import com.nmarsollier.fitfat.R
 import com.nmarsollier.fitfat.databinding.NewMeasureActivityBinding
-import com.nmarsollier.fitfat.model.Measure
+import com.nmarsollier.fitfat.model.measures.Measure
+import com.nmarsollier.fitfat.ui.utils.observe
 import com.nmarsollier.fitfat.utils.formatDateTime
 import com.nmarsollier.fitfat.utils.formatString
-import com.nmarsollier.fitfat.utils.observe
 import com.nmarsollier.fitfat.utils.runInForeground
 
 class ViewMeasureActivity : AppCompatActivity() {

@@ -15,7 +15,7 @@ android {
         minSdk = 28
         targetSdk = 32
         versionCode = 1
-        versionName = "1.0"
+        versionName = "1.8"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -50,7 +50,6 @@ android {
 }
 
 dependencies {
-
     implementation(AndroidXLibraries.roomKtx)
     implementation(AndroidXLibraries.roomRuntime)
     kapt(AndroidXLibraries.roomCompiler)

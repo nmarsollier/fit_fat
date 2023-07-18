@@ -2,12 +2,11 @@ package com.nmarsollier.fitfat.ui.measures
 
 import android.content.Context
 import androidx.lifecycle.viewModelScope
-import com.nmarsollier.fitfat.model.Measure
-import com.nmarsollier.fitfat.model.UserSettings
-import com.nmarsollier.fitfat.model.UserSettingsRepository
+import com.nmarsollier.fitfat.model.measures.Measure
+import com.nmarsollier.fitfat.model.userSettings.UserSettings
+import com.nmarsollier.fitfat.model.userSettings.UserSettingsRepository
 import com.nmarsollier.fitfat.ui.utils.BaseViewModel
 import com.nmarsollier.fitfat.utils.ifNotNull
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -29,10 +28,9 @@ class ViewMeasureViewModel : BaseViewModel<ViewMeasureState>(ViewMeasureState.In
     private var measure: Measure? = null
 
     fun initialize(context: Context, newMeasre: Measure) = viewModelScope.launch {
-        UserSettingsRepository.load(context).firstOrNull {
+        UserSettingsRepository.load(context).collect {
             userSettings = it
             updateState()
-            true
         }
 
         measure = newMeasre

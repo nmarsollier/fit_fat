@@ -2,14 +2,13 @@ package com.nmarsollier.fitfat.ui.home
 
 import android.content.Context
 import androidx.lifecycle.viewModelScope
-import com.nmarsollier.fitfat.model.Measure
-import com.nmarsollier.fitfat.model.MeasuresRepository
-import com.nmarsollier.fitfat.model.UserSettings
-import com.nmarsollier.fitfat.model.UserSettingsRepository
+import com.nmarsollier.fitfat.model.measures.Measure
+import com.nmarsollier.fitfat.model.measures.MeasuresRepository
+import com.nmarsollier.fitfat.model.userSettings.UserSettings
+import com.nmarsollier.fitfat.model.userSettings.UserSettingsRepository
 import com.nmarsollier.fitfat.ui.utils.BaseViewModel
 import com.nmarsollier.fitfat.utils.ifNotNull
 import com.nmarsollier.fitfat.utils.runInForeground
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -30,24 +29,21 @@ class HomeViewModel : BaseViewModel<HomeState>(HomeState.Initial) {
     fun loadSettings(context: Context) = viewModelScope.launch {
         mutableState.update { HomeState.Loading }
 
-        UserSettingsRepository.load(context).firstOrNull {
+        UserSettingsRepository.load(context).collect {
             userSettings = it
             updateState()
-            true
         }
 
-        MeasuresRepository.loadAll(context).firstOrNull {
+        MeasuresRepository.loadAll(context).collect {
             measures = it
             updateState()
-            true
         }
     }
 
     fun deleteMeasure(context: Context, measure: Measure) = viewModelScope.launch {
         mutableState.update { HomeState.Loading }
-        MeasuresRepository.delete(context, measure).firstOrNull {
+        MeasuresRepository.delete(context, measure).collect {
             loadSettings(context)
-            true
         }
     }
 

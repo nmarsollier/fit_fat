@@ -7,8 +7,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.viewpager.widget.ViewPager
 import com.nmarsollier.fitfat.R
 import com.nmarsollier.fitfat.databinding.MainActivityBinding
+import com.nmarsollier.fitfat.ui.utils.observe
 import com.nmarsollier.fitfat.utils.closeKeyboard
-import com.nmarsollier.fitfat.utils.observe
 
 class MainActivity : AppCompatActivity() {
     private val binding: MainActivityBinding by lazy {

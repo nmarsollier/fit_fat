@@ -1,4 +1,4 @@
-package com.nmarsollier.fitfat.utils
+package com.nmarsollier.fitfat.ui.measures
 
 import android.widget.SeekBar
 

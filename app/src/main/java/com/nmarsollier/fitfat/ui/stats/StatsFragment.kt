@@ -10,9 +10,9 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.nmarsollier.fitfat.R
 import com.nmarsollier.fitfat.databinding.MainStatsFragmentBinding
-import com.nmarsollier.fitfat.model.MeasureMethod
-import com.nmarsollier.fitfat.model.MeasureValue
-import com.nmarsollier.fitfat.utils.observe
+import com.nmarsollier.fitfat.model.measures.MeasureMethod
+import com.nmarsollier.fitfat.model.measures.MeasureValue
+import com.nmarsollier.fitfat.ui.utils.observe
 
 class StatsFragment : Fragment() {
     private val binding: MainStatsFragmentBinding by lazy {

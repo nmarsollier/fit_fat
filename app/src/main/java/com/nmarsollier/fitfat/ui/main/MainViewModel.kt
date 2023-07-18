@@ -2,10 +2,9 @@ package com.nmarsollier.fitfat.ui.main
 
 import android.content.Context
 import androidx.lifecycle.viewModelScope
-import com.nmarsollier.fitfat.model.UserSettings
-import com.nmarsollier.fitfat.model.UserSettingsRepository
+import com.nmarsollier.fitfat.model.userSettings.UserSettings
+import com.nmarsollier.fitfat.model.userSettings.UserSettingsRepository
 import com.nmarsollier.fitfat.ui.utils.BaseViewModel
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -32,7 +31,7 @@ class MainViewModel : BaseViewModel<MainState>(MainState.Initial(Screen.HOME)) {
     fun load(context: Context) = viewModelScope.launch {
         mutableState.update { MainState.Loading(currentTab) }
 
-        UserSettingsRepository.load(context).firstOrNull { data ->
+        UserSettingsRepository.load(context).collect { data ->
             mutableState.update {
                 MainState.Ready(
                     tab = if (data.isNew()) {
@@ -43,7 +42,6 @@ class MainViewModel : BaseViewModel<MainState>(MainState.Initial(Screen.HOME)) {
                     userSettings = data
                 )
             }
-            true
         }
     }
 

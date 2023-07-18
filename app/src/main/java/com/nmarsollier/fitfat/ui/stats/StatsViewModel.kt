@@ -2,10 +2,13 @@ package com.nmarsollier.fitfat.ui.stats
 
 import android.content.Context
 import androidx.lifecycle.viewModelScope
-import com.nmarsollier.fitfat.model.*
+import com.nmarsollier.fitfat.model.measures.Measure
+import com.nmarsollier.fitfat.model.measures.MeasureMethod
+import com.nmarsollier.fitfat.model.measures.MeasuresRepository
+import com.nmarsollier.fitfat.model.userSettings.UserSettings
+import com.nmarsollier.fitfat.model.userSettings.UserSettingsRepository
 import com.nmarsollier.fitfat.ui.utils.BaseViewModel
 import com.nmarsollier.fitfat.utils.ifNotNull
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -42,16 +45,14 @@ class StatsViewModel : BaseViewModel<StatsState>(StatsState.Initial(MeasureMetho
             StatsState.Loading(measureMethod)
         }
 
-        UserSettingsRepository.load(context).firstOrNull {
+        UserSettingsRepository.load(context).collect {
             userSettings = it
             updateState()
-            true
         }
 
-        MeasuresRepository.loadAll(context).firstOrNull {
+        MeasuresRepository.loadAll(context).collect {
             measures = it
             updateState()
-            true
         }
     }
 
@@ -61,7 +62,6 @@ class StatsViewModel : BaseViewModel<StatsState>(StatsState.Initial(MeasureMetho
                 is StatsState.Initial -> value.copy(method = selectedMethod)
                 is StatsState.Loading -> value.copy(method = selectedMethod)
                 is StatsState.Ready -> value.copy(method = selectedMethod)
-                null -> StatsState.Initial(selectedMethod)
             }
         }
     }

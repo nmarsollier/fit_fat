@@ -1,4 +1,4 @@
-package com.nmarsollier.fitfat.model
+package com.nmarsollier.fitfat.model.userSettings
 
 import android.os.Parcelable
 import androidx.room.ColumnInfo

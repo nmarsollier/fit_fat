@@ -1,9 +1,16 @@
-package com.nmarsollier.fitfat.model
+package com.nmarsollier.fitfat.model.db
 
 import android.content.Context
 import androidx.room.*
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.nmarsollier.fitfat.model.measures.Measure
+import com.nmarsollier.fitfat.model.measures.MeasureDao
+import com.nmarsollier.fitfat.model.measures.MeasureMethod
+import com.nmarsollier.fitfat.model.userSettings.MeasureType
+import com.nmarsollier.fitfat.model.userSettings.SexType
+import com.nmarsollier.fitfat.model.userSettings.UserSettings
+import com.nmarsollier.fitfat.model.userSettings.UserSettingsDao
 import java.util.*
 
 private var INSTANCE: FitFatDatabase? = null

@@ -1,9 +1,7 @@
-package com.nmarsollier.fitfat.model
+package com.nmarsollier.fitfat.model.measures
 
 import androidx.room.*
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.withContext
 
 @Dao
 abstract class MeasureDao {

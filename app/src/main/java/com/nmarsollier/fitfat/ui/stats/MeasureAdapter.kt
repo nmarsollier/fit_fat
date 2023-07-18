@@ -13,9 +13,9 @@ import androidx.core.graphics.drawable.DrawableCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.nmarsollier.fitfat.R
 import com.nmarsollier.fitfat.databinding.MainStatsMeasureGraphHolderBinding
-import com.nmarsollier.fitfat.model.Measure
-import com.nmarsollier.fitfat.model.MeasureValue
-import com.nmarsollier.fitfat.model.UserSettings
+import com.nmarsollier.fitfat.model.measures.Measure
+import com.nmarsollier.fitfat.model.measures.MeasureValue
+import com.nmarsollier.fitfat.model.userSettings.UserSettings
 import com.nmarsollier.fitfat.utils.dpToPx
 import com.nmarsollier.fitfat.utils.formatShortDate
 import com.nmarsollier.fitfat.utils.joinToSpannedString

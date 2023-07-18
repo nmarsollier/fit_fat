@@ -2,10 +2,15 @@ package com.nmarsollier.fitfat.ui.measures
 
 import android.content.Context
 import androidx.lifecycle.viewModelScope
-import com.nmarsollier.fitfat.model.*
+import com.nmarsollier.fitfat.model.db.getRoomDatabase
+import com.nmarsollier.fitfat.model.firebase.FirebaseRepository
+import com.nmarsollier.fitfat.model.measures.Measure
+import com.nmarsollier.fitfat.model.measures.MeasureValue
+import com.nmarsollier.fitfat.model.measures.MeasuresRepository
+import com.nmarsollier.fitfat.model.userSettings.UserSettings
+import com.nmarsollier.fitfat.model.userSettings.UserSettingsRepository
 import com.nmarsollier.fitfat.ui.utils.BaseViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -32,16 +37,14 @@ class NewMeasureViewModel : BaseViewModel<NewMeasureState>(NewMeasureState.Initi
     fun load(
         context: Context
     ) = viewModelScope.launch {
-        UserSettingsRepository.load(context).firstOrNull {
+        UserSettingsRepository.load(context).collect {
             userSettings = it
             updateState()
-            true
         }
 
-        MeasuresRepository.findLast(context).firstOrNull {
+        MeasuresRepository.findLast(context).collect {
             lastMeasure = it
             updateState()
-            true
         }
     }
 
@@ -77,15 +80,14 @@ class NewMeasureViewModel : BaseViewModel<NewMeasureState>(NewMeasureState.Initi
 
         if (measure.isValid()) {
             withContext(Dispatchers.IO) {
-                getRoomDatabase(context).measureDao().insert(measure)
-
+                MeasuresRepository.insert(context, measure)
                 if (measure.bodyWeight > 0) {
                     userSettings.weight = measure.bodyWeight
                     getRoomDatabase(context).userDao().update(userSettings)
                 }
             }
 
-            //FirebaseDao.uploadPendingMeasures(context)
+            FirebaseRepository.uploadPendingMeasures(context)
 
             mutableState.update {
                 NewMeasureState.Close

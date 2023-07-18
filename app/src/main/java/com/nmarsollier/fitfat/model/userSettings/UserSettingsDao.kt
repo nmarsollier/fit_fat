@@ -1,4 +1,4 @@
-package com.nmarsollier.fitfat.model
+package com.nmarsollier.fitfat.model.userSettings
 
 import androidx.room.Dao
 import androidx.room.Insert

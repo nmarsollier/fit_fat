@@ -57,4 +57,5 @@
     <string name="fmmi" translatable="false">FFMI</string>
     <string name="free_fat_mass">Free Fat Mass</string>
     <string name="dash" translatable="false">/</string>
+    <string name="google_error">Could not connect.</string>
 </resources>

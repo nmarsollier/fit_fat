@@ -1,10 +1,12 @@
-package com.nmarsollier.fitfat.model
+package com.nmarsollier.fitfat.model.measures
 
 import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.nmarsollier.fitfat.R
+import com.nmarsollier.fitfat.model.userSettings.SexType
+import com.nmarsollier.fitfat.model.userSettings.UserSettings
 import com.nmarsollier.fitfat.utils.getAge
 import com.nmarsollier.fitfat.utils.toPounds
 import kotlinx.android.parcel.Parcelize

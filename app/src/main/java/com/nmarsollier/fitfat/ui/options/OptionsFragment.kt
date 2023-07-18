@@ -5,14 +5,22 @@ import android.view.*
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import com.nmarsollier.fitfat.R
 import com.nmarsollier.fitfat.databinding.MainOptionsFragmentBinding
-import com.nmarsollier.fitfat.model.FirebaseDao
-import com.nmarsollier.fitfat.model.MeasureType
-import com.nmarsollier.fitfat.model.SexType
+import com.nmarsollier.fitfat.model.google.GoogleLoginResult
+import com.nmarsollier.fitfat.model.google.GoogleRepository
+import com.nmarsollier.fitfat.model.measures.MeasuresRepository
+import com.nmarsollier.fitfat.model.userSettings.MeasureType
+import com.nmarsollier.fitfat.model.userSettings.SexType
+import com.nmarsollier.fitfat.model.userSettings.UserSettingsRepository
+import com.nmarsollier.fitfat.ui.utils.observe
+import com.nmarsollier.fitfat.ui.utils.showDatePicker
+import com.nmarsollier.fitfat.ui.utils.showProgressDialog
 import com.nmarsollier.fitfat.utils.*
+import kotlinx.coroutines.launch
 
 class OptionsFragment : Fragment() {
     private val binding: MainOptionsFragmentBinding by lazy {
@@ -20,6 +28,11 @@ class OptionsFragment : Fragment() {
     }
 
     private val viewModel by viewModels<OptionsViewModel>()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        GoogleRepository.registerForLogin(this)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,20 +46,31 @@ class OptionsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.state.observe(viewModel.viewModelScope) {
-            when (it) {
-                is OptionsState.Ready -> refreshUI(it)
+        viewModel.state.observe(viewModel.viewModelScope) { state ->
+            when (state) {
+                is OptionsState.Ready -> {
+                    binding.birthDate.setOnClickListener {
+                        state.userSettings.let {
+                            showDatePicker(state.userSettings.birthDate) { date ->
+                                viewModel.updateBirthDate(date)
+                            }
+                        }
+                    }
+
+                    binding.saveOnCloud.setOnClickListener {
+                        if (state.userSettings.firebaseToken != null) {
+                            disableSaveData()
+                        } else {
+                            loginWithGoogle()
+                        }
+                    }
+
+                    refreshUI(state)
+                }
                 else -> Unit
             }
         }
 
-        binding.birthDate.setOnClickListener {
-            viewModel.currentUserSettings?.let {
-                showDatePicker(it.birthDate) { date ->
-                    viewModel.updateBirthDate(date)
-                }
-            }
-        }
 
         binding.displayName.doOnTextChanged { text, _, _, _ ->
             viewModel.updateDisplayName(text.toString())
@@ -75,16 +99,6 @@ class OptionsFragment : Fragment() {
         binding.vSexMale.setOnClickListener {
             viewModel.updateSex(SexType.MALE)
         }
-
-        binding.saveOnCloud.setOnClickListener {
-            viewModel.currentUserSettings?.let { userSettings ->
-                if (userSettings.firebaseToken != null) {
-                    disableSaveData()
-                } else {
-                    FirebaseDao.login(this)
-                }
-            }
-        }
     }
 
     override fun onResume() {
@@ -92,40 +106,21 @@ class OptionsFragment : Fragment() {
         viewModel.load(requireContext())
     }
 
-    /*
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        val userSettings = userSettings ?: return
-        val context = context ?: return
+    private fun loginWithGoogle() = lifecycleScope.launch {
+        val closeDialog = showProgressDialog()
+        val context = this@OptionsFragment.context ?: return@launch
 
-        // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
-        var dialog: Dialog? = null
-        if (requestCode == ResultCodes.RC_SIGN_IN.code) {
-            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
-            try {
-                // Google Sign In was successful, authenticate with Firebase
-                task.getResult(ApiException::class.java)?.idToken?.let {
-                    dialog = showProgressDialog(context)
-
-                    userSettings.firebaseToken = it
-                    FirebaseDao.googleAuth(it) {
-                        FirebaseDao.downloadUserSettings(context, it) {
-                            FirebaseDao.downloadMeasurements(context)
-                            reloadSettings()
-                            dialog?.dismiss()
-                        }
-                    }
-                } ?: run {
-                    dialog?.dismiss()
+        GoogleRepository.login(this@OptionsFragment).collect {
+            when (it) {
+                is GoogleLoginResult.Error -> context.showToast(R.string.google_error)
+                is GoogleLoginResult.Success -> {
+                    UserSettingsRepository.load(context)
+                    MeasuresRepository.loadAll(context)
                 }
-            } catch (e: ApiException) {
-                logError("Google sign in failed", e)
-                dialog?.dismiss()
             }
-        } else {
-            dialog?.dismiss()
+            closeDialog()
         }
-    }*/
+    }
 
     private fun disableSaveData() {
         FirebaseAuth.getInstance().signOut()

@@ -10,15 +10,14 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.nmarsollier.fitfat.R
 import com.nmarsollier.fitfat.databinding.MainHomeMeasureHolderBinding
-import com.nmarsollier.fitfat.model.Measure
-import com.nmarsollier.fitfat.model.UserSettings
+import com.nmarsollier.fitfat.model.measures.Measure
+import com.nmarsollier.fitfat.model.userSettings.UserSettings
 import com.nmarsollier.fitfat.ui.measures.ViewMeasureActivity
+import com.nmarsollier.fitfat.ui.utils.observe
 import com.nmarsollier.fitfat.utils.formatDateTime
 import com.nmarsollier.fitfat.utils.formatString
 import com.nmarsollier.fitfat.utils.ifNotNull
-import com.nmarsollier.fitfat.utils.observe
 import kotlinx.android.extensions.LayoutContainer
-import kotlinx.coroutines.coroutineScope
 
 @SuppressLint("NotifyDataSetChanged")
 class MeasureAdapter internal constructor(

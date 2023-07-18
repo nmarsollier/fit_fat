@@ -2,12 +2,11 @@ package com.nmarsollier.fitfat.ui.options
 
 import android.content.Context
 import androidx.lifecycle.viewModelScope
-import com.nmarsollier.fitfat.model.MeasureType
-import com.nmarsollier.fitfat.model.SexType
-import com.nmarsollier.fitfat.model.UserSettings
-import com.nmarsollier.fitfat.model.UserSettingsRepository
+import com.nmarsollier.fitfat.model.userSettings.MeasureType
+import com.nmarsollier.fitfat.model.userSettings.SexType
+import com.nmarsollier.fitfat.model.userSettings.UserSettings
+import com.nmarsollier.fitfat.model.userSettings.UserSettingsRepository
 import com.nmarsollier.fitfat.ui.utils.BaseViewModel
-import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.*
@@ -30,14 +29,13 @@ class OptionsViewModel : BaseViewModel<OptionsState>(OptionsState.Initial) {
             OptionsState.Loading
         }
 
-        UserSettingsRepository.load(context).firstOrNull { state ->
+        UserSettingsRepository.load(context).collect { state ->
             mutableState.update {
                 OptionsState.Ready(
                     hasChanged = false,
                     userSettings = state
                 )
             }
-            true
         }
     }
 
@@ -52,14 +50,13 @@ class OptionsViewModel : BaseViewModel<OptionsState>(OptionsState.Initial) {
         val userSettings = currentUserSettings ?: return
 
         viewModelScope.launch {
-            UserSettingsRepository.save(context, userSettings).firstOrNull { state ->
+            UserSettingsRepository.save(context, userSettings).collect { state ->
                 mutableState.update {
                     OptionsState.Ready(
                         userSettings = state,
                         hasChanged = false
                     )
                 }
-                true
             }
         }
     }

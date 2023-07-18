@@ -11,9 +11,12 @@ import com.nmarsollier.fitfat.R
 import com.nmarsollier.fitfat.databinding.HelpDialogBinding
 import com.nmarsollier.fitfat.databinding.NewMeasureDoubleHolderBinding
 import com.nmarsollier.fitfat.databinding.NewMeasureIntHolderBinding
-import com.nmarsollier.fitfat.model.*
+import com.nmarsollier.fitfat.model.measures.InputType
+import com.nmarsollier.fitfat.model.measures.Measure
+import com.nmarsollier.fitfat.model.measures.MeasureValue
+import com.nmarsollier.fitfat.model.measures.UnitType
+import com.nmarsollier.fitfat.model.userSettings.UserSettings
 import com.nmarsollier.fitfat.utils.formatString
-import com.nmarsollier.fitfat.utils.onProgressChangeListener
 import kotlinx.android.extensions.LayoutContainer
 
 class MeasuresAdapter internal constructor(
