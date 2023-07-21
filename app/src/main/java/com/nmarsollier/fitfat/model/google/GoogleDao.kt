@@ -5,6 +5,7 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
+import com.google.android.gms.auth.api.identity.BeginSignInRequest
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
@@ -37,7 +38,7 @@ object GoogleDao {
 
     fun login(fragment: Fragment): Flow<GoogleLoginResult> = channelFlow {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(fragment.getString(R.string.default_web_client_id))
+            .requestIdToken(fragment.getString(R.string.web_client_id))
             .build()
 
         val intent = GoogleSignIn.getClient(
@@ -45,8 +46,8 @@ object GoogleDao {
             gso
         ).signInIntent
 
-        loginCallback = { _ ->
-            val task = GoogleSignIn.getSignedInAccountFromIntent(intent)
+        loginCallback = { result ->
+            val task = GoogleSignIn.getSignedInAccountFromIntent(result!!.data)
             try {
                 task.getResult(ApiException::class.java)?.idToken?.let { token ->
                     launch {
@@ -64,6 +65,6 @@ object GoogleDao {
         }
 
         registration?.launch(intent)
-        awaitClose { }
+        awaitClose()
     }
 }

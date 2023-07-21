@@ -23,6 +23,7 @@ import com.nmarsollier.fitfat.utils.*
 import kotlinx.coroutines.launch
 
 class OptionsFragment : Fragment() {
+    private var closeDialog: (() -> Unit)? = null
     private val binding: MainOptionsFragmentBinding by lazy {
         MainOptionsFragmentBinding.inflate(layoutInflater)
     }
@@ -48,12 +49,13 @@ class OptionsFragment : Fragment() {
 
         viewModel.state.observe(viewModel.viewModelScope) { state ->
             when (state) {
+                OptionsState.GoogleLoginError -> {
+                    requireContext().showToast(R.string.google_error)
+                }
                 is OptionsState.Ready -> {
                     binding.birthDate.setOnClickListener {
-                        state.userSettings.let {
-                            showDatePicker(state.userSettings.birthDate) { date ->
-                                viewModel.updateBirthDate(date)
-                            }
+                        showDatePicker(state.userSettings.birthDate) { date ->
+                            viewModel.updateBirthDate(date)
                         }
                     }
 
@@ -67,10 +69,13 @@ class OptionsFragment : Fragment() {
 
                     refreshUI(state)
                 }
-                else -> Unit
+                else -> {
+                    closeDialog?.invoke().also {
+                        closeDialog = null
+                    }
+                }
             }
         }
-
 
         binding.displayName.doOnTextChanged { text, _, _, _ ->
             viewModel.updateDisplayName(text.toString())
@@ -106,26 +111,14 @@ class OptionsFragment : Fragment() {
         viewModel.load(requireContext())
     }
 
-    private fun loginWithGoogle() = lifecycleScope.launch {
-        val closeDialog = showProgressDialog()
-        val context = this@OptionsFragment.context ?: return@launch
-
-        GoogleRepository.login(this@OptionsFragment).collect {
-            when (it) {
-                is GoogleLoginResult.Error -> context.showToast(R.string.google_error)
-                is GoogleLoginResult.Success -> {
-                    UserSettingsRepository.load(context)
-                    MeasuresRepository.loadAll(context)
-                }
-            }
-            closeDialog()
-        }
+    private fun loginWithGoogle() {
+        closeDialog = showProgressDialog()
+        viewModel.loginWithGoogle(this)
     }
 
     private fun disableSaveData() {
         FirebaseAuth.getInstance().signOut()
-        viewModel.disableFirebase()
-        viewModel.saveSettings(requireContext())
+        viewModel.disableFirebase(requireContext())
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

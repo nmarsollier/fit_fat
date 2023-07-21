@@ -42,9 +42,8 @@ class HomeViewModel : BaseViewModel<HomeState>(HomeState.Initial) {
 
     fun deleteMeasure(context: Context, measure: Measure) = viewModelScope.launch {
         mutableState.update { HomeState.Loading }
-        MeasuresRepository.delete(context, measure).collect {
-            loadSettings(context)
-        }
+        MeasuresRepository.delete(context, measure)
+        loadSettings(context)
     }
 
     private fun updateState() = runInForeground {

@@ -4,10 +4,10 @@ import android.content.Context
 import com.google.firebase.firestore.DocumentSnapshot
 import com.nmarsollier.fitfat.model.db.getRoomDatabase
 import com.nmarsollier.fitfat.model.firebase.FirebaseRepository
+import com.nmarsollier.fitfat.utils.nullIfEmpty
 import com.nmarsollier.fitfat.utils.parseIso8601
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.launch
@@ -22,44 +22,32 @@ object UserSettingsRepository {
                     UserSettings(1).also { userSettings ->
                         dao.insert(userSettings)
                         send(userSettings)
-                        close()
                     }
                 } else {
                     send(it)
-                    close()
                 }
             }
         }
-        awaitClose()
     }
 
     fun save(context: Context, userSettings: UserSettings): Flow<UserSettings> = channelFlow {
         withContext(Dispatchers.IO) {
             getRoomDatabase(context).userDao().update(userSettings)
         }
-        FirebaseRepository.uploadPendingMeasures(context)
+        FirebaseRepository.uploadUserSettings(userSettings)
         send(userSettings)
+        close()
     }
 
-    fun updateFirebaseToken(context: Context, token: String): Flow<UserSettings?> = channelFlow {
+    fun updateFirebaseToken(context: Context, token: String?) = GlobalScope.launch(Dispatchers.IO) {
         val dao = getRoomDatabase(context).userDao()
-        withContext(Dispatchers.IO) {
-            dao.findCurrent().collect {
-                (it ?: UserSettings(1).also { userSettings ->
-                    dao.insert(userSettings)
-                }).let { userSettings ->
-                    userSettings.firebaseToken = token
-
-                    dao.update(userSettings)
-                    send(userSettings)
-                    close()
-                }
-            }
+        load(context).collect { userSettings ->
+            userSettings.firebaseToken = token
+            dao.update(userSettings)
         }
-        awaitClose()
     }
 
-    fun updateFirebaseData(
+    fun updateFromFirebase(
         context: Context,
         document: DocumentSnapshot?
     ) = GlobalScope.launch(Dispatchers.IO) {
@@ -69,29 +57,32 @@ object UserSettingsRepository {
 
         val dao = getRoomDatabase(context).userDao()
         withContext(Dispatchers.IO) {
-            dao.findCurrent().collect {
-                (it ?: UserSettings(1).also { userSettings ->
-                    dao.insert(userSettings)
-                }).let { userSettings ->
-                    userSettings.birthDate =
-                        document.getString("birthDate")?.parseIso8601()
-                            ?: userSettings.birthDate
-                    userSettings.displayName =
-                        document.getString("displayName") ?: userSettings.displayName
-                    userSettings.height =
-                        document.getDouble("height") ?: userSettings.height
-                    userSettings.weight =
-                        document.getDouble("weight") ?: userSettings.weight
-                    userSettings.measureSystem = MeasureType.valueOf(
-                        document.getString("measureSystem")
-                            ?: userSettings.measureSystem.toString()
-                    )
-                    userSettings.sex = SexType.valueOf(
-                        document.getString("sex") ?: userSettings.sex.toString()
-                    )
-
-                    dao.update(userSettings)
+            load(context).collect { userSettings ->
+                document.getString("birthDate").nullIfEmpty()?.parseIso8601()?.let {
+                    userSettings.birthDate = it
                 }
+
+                document.getString("displayName").nullIfEmpty()?.let {
+                    userSettings.displayName = it
+                }
+
+                document.getDouble("height")?.takeIf { it > 0.0 }?.let {
+                    userSettings.height = it
+                }
+
+                document.getDouble("weight")?.takeIf { it > 0.0 }?.let {
+                    userSettings.weight = it
+                }
+
+                document.getString("measureSystem")?.nullIfEmpty()?.let {
+                    userSettings.measureSystem = MeasureType.valueOf(it)
+                }
+
+                document.getString("sex")?.nullIfEmpty()?.let {
+                    userSettings.sex = SexType.valueOf(it)
+                }
+
+                dao.update(userSettings)
             }
         }
     }

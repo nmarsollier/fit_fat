@@ -3,6 +3,7 @@ package com.nmarsollier.fitfat.model.measures
 import android.content.Context
 import com.google.firebase.firestore.QueryDocumentSnapshot
 import com.nmarsollier.fitfat.model.db.getRoomDatabase
+import com.nmarsollier.fitfat.model.firebase.FirebaseRepository
 import com.nmarsollier.fitfat.model.userSettings.SexType
 import com.nmarsollier.fitfat.model.userSettings.UserSettings
 import com.nmarsollier.fitfat.utils.parseIso8601
@@ -14,33 +15,53 @@ import kotlinx.coroutines.launch
 import java.util.*
 
 object MeasuresRepository {
-    fun loadAll(context: Context): Flow<List<Measure>> =
-        getRoomDatabase(context).measureDao().findAll()
+    fun loadAll(context: Context): Flow<List<Measure>> = channelFlow {
+        getRoomDatabase(context).measureDao().findAll().collect {
+            send(it)
+        }
+    }
 
-    fun findLast(context: Context): Flow<Measure?> =
-        getRoomDatabase(context).measureDao().findLast()
+    fun findLast(context: Context): Flow<Measure?> = channelFlow {
+        getRoomDatabase(context).measureDao().findLast().collect {
+            send(it)
+        }
+    }
 
-    fun update(context: Context, measure: Measure) =
+    fun update(context: Context, measure: Measure) = GlobalScope.launch(Dispatchers.IO) {
+        measure.cloudSync = false
         getRoomDatabase(context).measureDao().update(measure)
+        FirebaseRepository.uploadPendingMeasures(context)
+    }
 
-    fun findUnsynced(context: Context): Flow<List<Measure>?> =
-        getRoomDatabase(context).measureDao().findUnsynced()
+    fun findUnsynced(context: Context): Flow<List<Measure>?> = channelFlow {
+        getRoomDatabase(context).measureDao().findUnsynced().collect {
+            send(it)
+            close()
+        }
+    }
+
+    fun findById(context: Context, id: String): Flow<Measure?> = channelFlow {
+        getRoomDatabase(context).measureDao().findById(id).collect {
+            send(it)
+            close()
+        }
+    }
 
     fun delete(
         context: Context, measure: Measure
-    ): Flow<Unit> = channelFlow {
+    ) = GlobalScope.launch(Dispatchers.IO) {
         getRoomDatabase(context).measureDao().delete(measure)
-        send(Unit)
+        FirebaseRepository.deleteMeasure(measure)
     }
 
-    fun updateFirebaseData(
+    fun updateFromFirebase(
         context: Context,
         userSettings: UserSettings,
         document: QueryDocumentSnapshot?
     ) = GlobalScope.launch(Dispatchers.IO) {
         document ?: return@launch
         getRoomDatabase(context).measureDao().let { dao ->
-            dao.findById(document.id).collect {
+            findById(context, document.id).collect {
                 dao.insert(Measure.newMeasure(document.id).apply {
                     bodyWeight = document.getDouble("bodyWeight") ?: 0.0
                     fatPercent = document.getDouble("fatPercent") ?: 0.0
@@ -73,5 +94,6 @@ object MeasuresRepository {
 
     fun insert(context: Context, measure: Measure) = GlobalScope.launch(Dispatchers.IO) {
         getRoomDatabase(context).measureDao().insert(measure)
+        FirebaseRepository.uploadPendingMeasures(context)
     }
 }

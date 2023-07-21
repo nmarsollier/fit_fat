@@ -16,15 +16,16 @@ object GoogleRepository {
             when (result) {
                 is GoogleLoginResult.Error -> {
                     send(result)
+                    UserSettingsRepository.updateFirebaseToken(fragment.requireContext(), null)
                     close()
                 }
                 is GoogleLoginResult.Success -> {
                     val context = fragment.requireContext()
-                    UserSettingsRepository.updateFirebaseToken(context, result.token)
 
                     fragment.lifecycleScope.launch {
                         FirebaseRepository.googleAuth(result.token).collect { fbResult ->
                             if (fbResult == true) {
+                                UserSettingsRepository.updateFirebaseToken(context, result.token)
                                 FirebaseRepository.downloadUserSettings(context, result.token)
                                 FirebaseRepository.downloadMeasurements(context)
                                 send(result)

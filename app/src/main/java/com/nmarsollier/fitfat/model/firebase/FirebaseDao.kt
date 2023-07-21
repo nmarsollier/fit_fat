@@ -1,14 +1,12 @@
 package com.nmarsollier.fitfat.model.firebase
 
 import android.content.Context
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
-import com.nmarsollier.fitfat.R
 import com.nmarsollier.fitfat.model.measures.MeasuresRepository
 import com.nmarsollier.fitfat.model.userSettings.UserSettings
 import com.nmarsollier.fitfat.utils.logger
@@ -16,27 +14,21 @@ import com.nmarsollier.fitfat.utils.runInBackground
 import com.nmarsollier.fitfat.utils.toIso8601
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.launch
 
 object FirebaseDao {
     private val logger by logger()
-    private lateinit var gso: GoogleSignInOptions
     private lateinit var auth: FirebaseAuth
     private var currentUser: FirebaseUser? = null
 
-    fun init(context: Context): FirebaseAuth {
-        gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(context.getString(R.string.default_web_client_id))
-            .requestEmail()
-            .build()
-
+    fun init(): FirebaseAuth {
         return FirebaseAuth.getInstance().also {
             auth = it
         }
     }
-
 
     fun googleAuth(token: String): Flow<Boolean?> = channelFlow {
         val credential = GoogleAuthProvider.getCredential(token, null)
@@ -45,13 +37,23 @@ object FirebaseDao {
                 currentUser = auth.currentUser
                 launch {
                     send(true)
+                    close()
                 }
             } else {
                 currentUser = null
+                launch {
+                    send(true)
+                    close()
+                }
             }
         }.addOnCanceledListener {
+            launch {
+                send(true)
+                close()
+            }
             currentUser = null
         }
+        awaitClose()
     }
 
     fun uploadUserSettings(userSettings: UserSettings) {

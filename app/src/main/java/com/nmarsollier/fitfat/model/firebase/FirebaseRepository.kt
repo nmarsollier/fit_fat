@@ -1,7 +1,9 @@
 package com.nmarsollier.fitfat.model.firebase
 
 import android.content.Context
+import com.nmarsollier.fitfat.model.measures.Measure
 import com.nmarsollier.fitfat.model.measures.MeasuresRepository
+import com.nmarsollier.fitfat.model.userSettings.UserSettings
 import com.nmarsollier.fitfat.model.userSettings.UserSettingsRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -12,7 +14,7 @@ import kotlinx.coroutines.launch
 
 object FirebaseRepository {
     fun init(context: Context): Flow<Boolean?> = channelFlow {
-        FirebaseDao.init(context).let {
+        FirebaseDao.init().let {
             UserSettingsRepository.load(context).collect {
                 it.firebaseToken?.let { token ->
                     FirebaseDao.googleAuth(token).collect { status ->
@@ -22,7 +24,7 @@ object FirebaseRepository {
                 } ?: close()
             }
         }
-        awaitClose { }
+        awaitClose()
     }
 
     fun googleAuth(token: String): Flow<Boolean?> = FirebaseDao.googleAuth(token)
@@ -33,7 +35,7 @@ object FirebaseRepository {
     ) = GlobalScope.launch(Dispatchers.IO) {
         FirebaseDao.downloadUserSettings().collect {
             it?.let {
-                UserSettingsRepository.updateFirebaseData(context, it)
+                UserSettingsRepository.updateFromFirebase(context, it)
             }
         }
     }
@@ -45,7 +47,7 @@ object FirebaseRepository {
             it.let { userSettings ->
                 FirebaseDao.downloadMeasurements(context).collect { data ->
                     data?.forEach { document ->
-                        MeasuresRepository.updateFirebaseData(context, userSettings, document)
+                        MeasuresRepository.updateFromFirebase(context, userSettings, document)
                     }
                 }
             }
@@ -56,5 +58,13 @@ object FirebaseRepository {
 
     fun uploadPendingMeasures(context: Context) {
         FirebaseDao.uploadPendingMeasures(context)
+    }
+
+    fun uploadUserSettings(userSettings: UserSettings) {
+        FirebaseDao.uploadUserSettings(userSettings)
+    }
+
+    fun deleteMeasure(measure: Measure) {
+        FirebaseDao.deleteMeasure(measure.uid)
     }
 }

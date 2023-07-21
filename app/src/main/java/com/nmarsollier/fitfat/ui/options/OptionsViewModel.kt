@@ -2,6 +2,8 @@ package com.nmarsollier.fitfat.ui.options
 
 import android.content.Context
 import androidx.lifecycle.viewModelScope
+import com.nmarsollier.fitfat.model.google.GoogleLoginResult
+import com.nmarsollier.fitfat.model.google.GoogleRepository
 import com.nmarsollier.fitfat.model.userSettings.MeasureType
 import com.nmarsollier.fitfat.model.userSettings.SexType
 import com.nmarsollier.fitfat.model.userSettings.UserSettings
@@ -14,6 +16,7 @@ import java.util.*
 sealed class OptionsState {
     object Initial : OptionsState()
     object Loading : OptionsState()
+    object GoogleLoginError : OptionsState()
 
     data class Ready(
         val userSettings: UserSettings,
@@ -139,7 +142,7 @@ class OptionsViewModel : BaseViewModel<OptionsState>(OptionsState.Initial) {
         }
     }
 
-    fun disableFirebase() {
+    fun disableFirebase(context: Context) {
         currentUserSettings?.takeIf { it.firebaseToken != null }?.let { us ->
             mutableState.update {
                 OptionsState.Ready(
@@ -148,6 +151,24 @@ class OptionsViewModel : BaseViewModel<OptionsState>(OptionsState.Initial) {
                         firebaseToken = null
                     )
                 )
+            }
+            saveSettings(context)
+        }
+    }
+
+    fun loginWithGoogle(fragment: OptionsFragment) = viewModelScope.launch {
+        val context = fragment.requireContext()
+        GoogleRepository.login(fragment).collect {
+            when (it) {
+                is GoogleLoginResult.Error -> {
+                    val currentState = state.value
+                    mutableState.update { OptionsState.GoogleLoginError }
+                    mutableState.update { currentState }
+                    
+                }
+                is GoogleLoginResult.Success -> {
+                    load(context)
+                }
             }
         }
     }

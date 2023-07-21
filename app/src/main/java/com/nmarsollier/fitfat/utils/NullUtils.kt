@@ -26,3 +26,8 @@ fun <A, B, C, D, R> ifNotNull(a: A?, b: B?, c: C?, d: D?, code: (A, B, C, D) -> 
         null
     }
 }
+
+fun String?.nullIfEmpty(): String? {
+    if (this.isNullOrEmpty()) return null
+    return this
+}
