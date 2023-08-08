@@ -1,9 +1,9 @@
 package com.nmarsollier.fitfat.model.db
 
+import android.content.Context
 import androidx.room.*
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.nmarsollier.fitfat.App
 import com.nmarsollier.fitfat.model.measures.Measure
 import com.nmarsollier.fitfat.model.measures.MeasureDao
 import com.nmarsollier.fitfat.model.measures.MeasureMethod
@@ -23,9 +23,9 @@ abstract class FitFatDatabase : RoomDatabase() {
     abstract fun measureDao(): MeasureDao
 }
 
-fun getRoomDatabase(): FitFatDatabase {
+fun getRoomDatabase(context: Context): FitFatDatabase {
     return INSTANCE ?: Room.databaseBuilder(
-        App.appContext,
+        context,
         FitFatDatabase::class.java,
         DATABASE_NAME
     )

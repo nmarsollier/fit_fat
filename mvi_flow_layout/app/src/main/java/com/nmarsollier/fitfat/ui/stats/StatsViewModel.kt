@@ -7,11 +7,12 @@ import com.nmarsollier.fitfat.model.measures.MeasuresRepository
 import com.nmarsollier.fitfat.model.userSettings.UserSettings
 import com.nmarsollier.fitfat.model.userSettings.UserSettingsRepository
 import com.nmarsollier.fitfat.utils.BaseViewModel
-import com.nmarsollier.fitfat.utils.collectOnce
 import com.nmarsollier.fitfat.utils.ifNotNull
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 sealed class StatsState(
     val selectedMethod: MeasureMethod
@@ -27,10 +28,11 @@ sealed class StatsState(
     ) : StatsState(method)
 }
 
-class StatsViewModel : BaseViewModel<StatsState>(StatsState.Loading(MeasureMethod.WEIGHT_ONLY)) {
-    private var userSettings: UserSettings? = null
-    private var measures: List<Measure>? = null
-
+@HiltViewModel
+class StatsViewModel @Inject constructor(
+    val userSettingsRepository: UserSettingsRepository,
+    val measuresRepository: MeasuresRepository
+) : BaseViewModel<StatsState>(StatsState.Loading(MeasureMethod.WEIGHT_ONLY)) {
     private val measureMethod: MeasureMethod
         get() = state.value.selectedMethod
 
@@ -40,17 +42,9 @@ class StatsViewModel : BaseViewModel<StatsState>(StatsState.Loading(MeasureMetho
         }
 
         viewModelScope.launch(Dispatchers.IO) {
-            UserSettingsRepository.load().collectOnce {
-                userSettings = it
-                updateState()
-            }
-        }
-
-        viewModelScope.launch(Dispatchers.IO) {
-            MeasuresRepository.loadAll().collectOnce {
-                measures = it
-                updateState()
-            }
+            val userSettings = userSettingsRepository.load()
+            val measures = measuresRepository.loadAll()
+            updateState(userSettings, measures)
         }
     }
 
@@ -63,15 +57,16 @@ class StatsViewModel : BaseViewModel<StatsState>(StatsState.Loading(MeasureMetho
         }
     }
 
-    private fun updateState() = viewModelScope.launch {
-        ifNotNull(
-            userSettings, measures
-        ) { userSettings, measures ->
-            mutableState.update {
-                StatsState.Ready(
-                    method = measureMethod, userSettings = userSettings, measures = measures
-                )
+    private fun updateState(userSettings: UserSettings, measures: List<Measure>) =
+        viewModelScope.launch {
+            ifNotNull(
+                userSettings, measures
+            ) { userSettings, measures ->
+                mutableState.update {
+                    StatsState.Ready(
+                        method = measureMethod, userSettings = userSettings, measures = measures
+                    )
+                }
             }
         }
-    }
 }

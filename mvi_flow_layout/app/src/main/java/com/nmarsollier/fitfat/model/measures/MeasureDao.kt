@@ -16,7 +16,7 @@ abstract class MeasureDao {
     @Query("SELECT * FROM measures WHERE uid=:id")
     abstract fun findById(id: String): Measure?
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     protected abstract fun internalInsert(measure: Measure)
 
     @Delete

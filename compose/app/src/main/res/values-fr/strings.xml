@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Traqueur de graisse corporelle</string>
+    <string name="home_menu_options">Options</string>
+    <string name="home_menu_progress">Le progrès</string>
+    <string name="home_menu_main">Mesure</string>
+    <string name="options_system_of_measurement">Système métrique</string>
+    <string name="options_system_of_measurement_metric">Métrique</string>
+    <string name="options_system_of_measurement_imperial">Impérial</string>
+    <string name="options_sex">Sexe</string>
+    <string name="options_sex_male">Mâle</string>
+    <string name="options_sex_female">Femme</string>
+    <string name="options_weight">Poids</string>
+    <string name="options_height">Hauteur</string>
+    <string name="options_display_name">Nom d\'affichage</string>
+    <string name="options_birth_date">Date de naissance</string>
+    <string name="measure_chest">Coffre</string>
+    <string name="measure_abdominal">Abdominale</string>
+    <string name="measure_thigh">Cuisse</string>
+    <string name="measure_tricep">Triceps</string>
+    <string name="measure_subscapular">Sous-scapulaire</string>
+    <string name="measure_suprailiac">Suprailiac</string>
+    <string name="measure_midaxillary">Midaxillary</string>
+    <string name="measure_bicep">Biceps</string>
+    <string name="measure_lower_back">Bas du dos</string>
+    <string name="measure_calf">Veaux</string>
+    <string name="new_measure_title">Votre mesure</string>
+    <string name="save_dialog_title">Sauvegarder</string>
+    <string name="save_dialog_message">Voulez-vous enregistrer les modifications?</string>
+    <string name="measure_fat">Graisse du corps</string>
+    <string name="measure_method_weight">Poids</string>
+    <string name="home_options_title">Préférences</string>
+    <string name="home_measure_title">Mesures</string>
+    <string name="home_progress_title">Vos progrès</string>
+    <string name="measure_delete_title">Supprimer la mesure</string>
+    <string name="measure_delete_message">Voulez-vous supprimer cette mesure?</string>
+    <string name="new_measure_error">Remplissez toutes les valeurs</string>
+    <string name="new_measure_method_title">Méthode de mesure</string>
+    <string name="measure_method_manual_scale">Manuel / Balance</string>
+    <string name="new_measure_date">Date de mesure</string>
+    <string name="measure_weight">Poids</string>
+    <string name="main_setup_app_text">N\'oubliez pas de configurer d\'abord l\'application</string>
+    <string name="save_my_data_in_cloud">Sauvegarder mes données dans le cloud</string>
+    <string name="loading">Chargement. S\'il vous plaît, attendez...</string>
+    <string name="free_fat_mass">Masse grasse libre</string>
+</resources>

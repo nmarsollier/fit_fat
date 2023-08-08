@@ -14,9 +14,9 @@ import androidx.lifecycle.lifecycleScope
 import com.google.firebase.auth.FirebaseAuth
 import com.nmarsollier.fitfat.R
 import com.nmarsollier.fitfat.databinding.MainOptionsFragmentBinding
-import com.nmarsollier.fitfat.model.google.GoogleRepository
 import com.nmarsollier.fitfat.model.userSettings.MeasureType
 import com.nmarsollier.fitfat.model.userSettings.SexType
+import com.nmarsollier.fitfat.useCases.GoogleUseCase
 import com.nmarsollier.fitfat.utils.closeProgressDialog
 import com.nmarsollier.fitfat.utils.formatDate
 import com.nmarsollier.fitfat.utils.formatString
@@ -25,18 +25,24 @@ import com.nmarsollier.fitfat.utils.showDatePicker
 import com.nmarsollier.fitfat.utils.showProgressDialog
 import com.nmarsollier.fitfat.utils.showToast
 import com.nmarsollier.fitfat.utils.updateMenuItemColor
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class OptionsFragment : Fragment() {
     private val binding by lazy {
         MainOptionsFragmentBinding.inflate(layoutInflater)
     }
 
+    @Inject
+    lateinit var googleUseCase: GoogleUseCase
+
     private val viewModel by viewModels<OptionsViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        GoogleRepository.registerForLogin(this)
+        googleUseCase.registerForLogin(this)
     }
 
     override fun onCreateView(

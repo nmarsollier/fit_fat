@@ -15,7 +15,9 @@ import com.nmarsollier.fitfat.R
 import com.nmarsollier.fitfat.databinding.MainHomeFragmentBinding
 import com.nmarsollier.fitfat.ui.measures.NewMeasureActivity
 import com.nmarsollier.fitfat.utils.openDbInspector
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class HomeFragment : Fragment() {
     val binding by lazy {
         MainHomeFragmentBinding.inflate(layoutInflater)

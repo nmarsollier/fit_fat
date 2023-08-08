@@ -13,9 +13,11 @@ import com.nmarsollier.fitfat.databinding.NewMeasureActivityBinding
 import com.nmarsollier.fitfat.model.measures.Measure
 import com.nmarsollier.fitfat.utils.formatDateTime
 import com.nmarsollier.fitfat.utils.formatString
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class ViewMeasureActivity : AppCompatActivity() {
     private val binding by lazy {
         NewMeasureActivityBinding.inflate(layoutInflater)

@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "823698859435",
+    "firebase_url": "https://fit-fat-tracker-debug.firebaseio.com",
+    "project_id": "fit-fat-tracker-debug",
+    "storage_bucket": "fit-fat-tracker-debug.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:823698859435:android:84d76e6c83058a46",
+        "android_client_info": {
+          "package_name": "com.nmarsollier.fitfat.debug"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "823698859435-kmvos4pmo3npo0f383tco7iet249s6v7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.nmarsollier.fitfat.debug",
+            "certificate_hash": "04af59d6dedae5bf382660275ac9f6d5c9a336b5"
+          }
+        },
+        {
+          "client_id": "823698859435-a2r0a6d7migoop4a9r8qa5s8connu7l8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyChe-yp33u39pfUQLAi80crF2N-6CZGnkI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "823698859435-a2r0a6d7migoop4a9r8qa5s8connu7l8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

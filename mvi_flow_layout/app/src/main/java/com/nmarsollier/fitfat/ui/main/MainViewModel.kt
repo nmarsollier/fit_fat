@@ -4,10 +4,11 @@ import androidx.lifecycle.viewModelScope
 import com.nmarsollier.fitfat.model.userSettings.UserSettings
 import com.nmarsollier.fitfat.model.userSettings.UserSettingsRepository
 import com.nmarsollier.fitfat.utils.BaseViewModel
-import com.nmarsollier.fitfat.utils.collectOnce
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 enum class Screen {
     OPTIONS, HOME, PROGRESS
@@ -23,10 +24,13 @@ sealed class MainState(
     ) : MainState(tab)
 }
 
-class MainViewModel : BaseViewModel<MainState>(MainState.Loading(Screen.HOME)) {
+@HiltViewModel
+class MainViewModel @Inject constructor(
+    private val userSettingsRepository: UserSettingsRepository
+) : BaseViewModel<MainState>(MainState.Loading(Screen.HOME)) {
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            UserSettingsRepository.load().collectOnce { data ->
+            userSettingsRepository.load().let { data ->
                 mutableState.update {
                     MainState.Ready(
                         tab = if (data.isNew()) {

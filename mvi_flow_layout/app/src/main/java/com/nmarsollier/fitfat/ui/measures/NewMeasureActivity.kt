@@ -21,9 +21,11 @@ import com.nmarsollier.fitfat.model.measures.MeasureMethod
 import com.nmarsollier.fitfat.utils.formatDateTime
 import com.nmarsollier.fitfat.utils.formatString
 import com.nmarsollier.fitfat.utils.updateMenuItemColor
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.util.Calendar
 
+@AndroidEntryPoint
 class NewMeasureActivity : AppCompatActivity() {
     private val binding by lazy {
         NewMeasureActivityBinding.inflate(layoutInflater)

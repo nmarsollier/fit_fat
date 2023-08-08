@@ -1,17 +1,20 @@
 package com.nmarsollier.fitfat.ui.options
 
 import androidx.lifecycle.viewModelScope
-import com.nmarsollier.fitfat.model.google.GoogleLoginResult
-import com.nmarsollier.fitfat.model.google.GoogleRepository
+import com.nmarsollier.fitfat.model.firebase.FirebaseRepository
 import com.nmarsollier.fitfat.model.userSettings.MeasureType
 import com.nmarsollier.fitfat.model.userSettings.SexType
 import com.nmarsollier.fitfat.model.userSettings.UserSettings
 import com.nmarsollier.fitfat.model.userSettings.UserSettingsRepository
+import com.nmarsollier.fitfat.useCases.FirebaseUseCase
+import com.nmarsollier.fitfat.useCases.GoogleLoginResult
 import com.nmarsollier.fitfat.utils.BaseViewModel
-import com.nmarsollier.fitfat.utils.collectOnce
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.Date
+import javax.inject.Inject
 
 sealed class OptionsState {
     object Loading : OptionsState()
@@ -23,10 +26,15 @@ sealed class OptionsState {
     ) : OptionsState()
 }
 
-class OptionsViewModel : BaseViewModel<OptionsState>(OptionsState.Loading) {
+@HiltViewModel
+class OptionsViewModel @Inject constructor(
+    private val userSettingsRepository: UserSettingsRepository,
+    private val firebaseRepository: FirebaseRepository,
+    private val firebaseUseCase: FirebaseUseCase
+) : BaseViewModel<OptionsState>(OptionsState.Loading) {
     fun load() {
-        viewModelScope.launch {
-            UserSettingsRepository.load().collectOnce { state ->
+        viewModelScope.launch(Dispatchers.IO) {
+            userSettingsRepository.load().let { state ->
                 mutableState.update {
                     OptionsState.Ready(
                         hasChanged = false, userSettings = state
@@ -47,7 +55,8 @@ class OptionsViewModel : BaseViewModel<OptionsState>(OptionsState.Loading) {
         val userSettings = currentUserSettings ?: return
 
         viewModelScope.launch {
-            UserSettingsRepository.save(userSettings).collectOnce { state ->
+            userSettingsRepository.update(userSettings)
+            firebaseRepository.save(userSettings).let { state ->
                 mutableState.update {
                     OptionsState.Ready(
                         userSettings = state, hasChanged = false
@@ -139,7 +148,7 @@ class OptionsViewModel : BaseViewModel<OptionsState>(OptionsState.Loading) {
                 )
             }
             viewModelScope.launch {
-                UserSettingsRepository.updateFirebaseToken(null)
+                userSettingsRepository.updateFirebaseToken(null)
             }
         }
     }
@@ -148,7 +157,7 @@ class OptionsViewModel : BaseViewModel<OptionsState>(OptionsState.Loading) {
         val currentState = state.value
 
         mutableState.update { OptionsState.Loading }
-        GoogleRepository.login(fragment).collectOnce {
+        firebaseUseCase.googleLoginAndSync(fragment).let {
             when (it) {
                 is GoogleLoginResult.Error -> {
                     mutableState.update { OptionsState.GoogleLoginError }

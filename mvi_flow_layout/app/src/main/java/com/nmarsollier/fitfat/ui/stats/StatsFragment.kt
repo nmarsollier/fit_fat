@@ -12,8 +12,10 @@ import com.nmarsollier.fitfat.R
 import com.nmarsollier.fitfat.databinding.MainStatsFragmentBinding
 import com.nmarsollier.fitfat.model.measures.MeasureMethod
 import com.nmarsollier.fitfat.model.measures.MeasureValue
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class StatsFragment : Fragment() {
     private val binding by lazy {
         MainStatsFragmentBinding.inflate(layoutInflater)

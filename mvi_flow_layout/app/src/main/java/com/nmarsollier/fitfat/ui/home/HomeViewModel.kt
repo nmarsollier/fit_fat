@@ -6,11 +6,12 @@ import com.nmarsollier.fitfat.model.measures.MeasuresRepository
 import com.nmarsollier.fitfat.model.userSettings.UserSettings
 import com.nmarsollier.fitfat.model.userSettings.UserSettingsRepository
 import com.nmarsollier.fitfat.utils.BaseViewModel
-import com.nmarsollier.fitfat.utils.collectOnce
 import com.nmarsollier.fitfat.utils.ifNotNull
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 sealed class HomeState {
     object Loading : HomeState()
@@ -20,42 +21,36 @@ sealed class HomeState {
     ) : HomeState()
 }
 
-class HomeViewModel : BaseViewModel<HomeState>(HomeState.Loading) {
-    private var userSettings: UserSettings? = null
-    private var measures: List<Measure>? = null
-
+@HiltViewModel
+class HomeViewModel @Inject constructor(
+    val measuresRepository: MeasuresRepository,
+    val userSettingsRepository: UserSettingsRepository
+) : BaseViewModel<HomeState>(HomeState.Loading) {
     fun load() {
         viewModelScope.launch(Dispatchers.IO) {
-            UserSettingsRepository.load().collectOnce {
-                userSettings = it
-                updateState()
-            }
-        }
+            val userSettings = userSettingsRepository.load()
+            val measures = measuresRepository.loadAll()
 
-        viewModelScope.launch(Dispatchers.IO) {
-            MeasuresRepository.loadAll().collectOnce {
-                measures = it
-                updateState()
-            }
+            updateState(userSettings, measures)
         }
     }
 
     fun deleteMeasure(measure: Measure) {
         mutableState.update { HomeState.Loading }
         viewModelScope.launch(Dispatchers.IO) {
-            MeasuresRepository.delete(measure)
-            MeasuresRepository.loadAll()
+            measuresRepository.delete(measure)
+            measuresRepository.loadAll()
         }
     }
 
-    private fun updateState() = viewModelScope.launch(Dispatchers.IO) {
-        ifNotNull(measures, userSettings) { measures, userSettings ->
-            mutableState.update {
-                HomeState.Ready(
-                    userSettings = userSettings, measures = measures
-                )
+    private fun updateState(userSettings: UserSettings, measures: List<Measure>) =
+        viewModelScope.launch(Dispatchers.IO) {
+            ifNotNull(measures, userSettings) { measures, userSettings ->
+                mutableState.update {
+                    HomeState.Ready(
+                        userSettings = userSettings, measures = measures
+                    )
+                }
             }
-            MeasuresRepository.loadAll()
         }
-    }
 }

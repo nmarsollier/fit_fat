@@ -7,9 +7,16 @@ import androidx.lifecycle.lifecycleScope
 import androidx.viewpager.widget.ViewPager
 import com.nmarsollier.fitfat.R
 import com.nmarsollier.fitfat.databinding.MainActivityBinding
+import com.nmarsollier.fitfat.model.firebase.FirebaseRepository
+import com.nmarsollier.fitfat.useCases.FirebaseUseCase
 import com.nmarsollier.fitfat.utils.closeKeyboard
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private val binding by lazy {
         MainActivityBinding.inflate(layoutInflater)
@@ -19,8 +26,18 @@ class MainActivity : AppCompatActivity() {
 
     private var lastState: MainState? = null
 
+    @Inject
+    lateinit var firebaseRepository: FirebaseRepository
+
+    @Inject
+    lateinit var firebaseUseCase: FirebaseUseCase
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        MainScope().launch(Dispatchers.IO) {
+            firebaseRepository.checkAlreadyLoggedIn(firebaseUseCase)
+        }
 
         setContentView(binding.root)
 

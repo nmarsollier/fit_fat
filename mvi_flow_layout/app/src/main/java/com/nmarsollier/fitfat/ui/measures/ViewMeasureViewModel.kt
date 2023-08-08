@@ -5,10 +5,11 @@ import com.nmarsollier.fitfat.model.measures.Measure
 import com.nmarsollier.fitfat.model.userSettings.UserSettings
 import com.nmarsollier.fitfat.model.userSettings.UserSettingsRepository
 import com.nmarsollier.fitfat.utils.BaseViewModel
-import com.nmarsollier.fitfat.utils.collectOnce
 import com.nmarsollier.fitfat.utils.ifNotNull
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 sealed class ViewMeasureState {
     abstract val measure: Measure?
@@ -23,12 +24,15 @@ sealed class ViewMeasureState {
     ) : ViewMeasureState()
 }
 
-class ViewMeasureViewModel : BaseViewModel<ViewMeasureState>(ViewMeasureState.Loading()) {
+@HiltViewModel
+class ViewMeasureViewModel @Inject constructor(
+    private val userSettingsRepository: UserSettingsRepository
+) : BaseViewModel<ViewMeasureState>(ViewMeasureState.Loading()) {
     private var userSettings: UserSettings? = null
     private var measure: Measure? = null
 
     fun initialize(newMeasure: Measure) = viewModelScope.launch {
-        UserSettingsRepository.load().collectOnce {
+        userSettingsRepository.load().let {
             userSettings = it
             updateState()
         }
