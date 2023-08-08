@@ -145,15 +145,19 @@ class OptionsViewModel : BaseViewModel<OptionsState>(OptionsState.Loading) {
     }
 
     fun loginWithGoogle(fragment: OptionsFragment) = viewModelScope.launch {
+        val currentState = state.value
+
+        mutableState.update { OptionsState.Loading }
         GoogleRepository.login(fragment).collectOnce {
             when (it) {
                 is GoogleLoginResult.Error -> {
-                    val currentState = state.value
                     mutableState.update { OptionsState.GoogleLoginError }
                     mutableState.update { currentState }
                 }
 
-                else -> Unit
+                else -> {
+                    mutableState.update { currentState }
+                }
             }
         }
     }

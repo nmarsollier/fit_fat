@@ -113,11 +113,13 @@ object FirebaseDao {
                         "fatPercent" to measure.fatPercent
                     )
                 ).addOnCompleteListener { status ->
-                    if (status.isSuccessful) {
-                        measure.cloudSync = true
-                        MeasuresRepository.update(measure)
-                    } else {
-                        logger.severe("Error saving UserSettings ${status.exception}")
+                    MainScope().launch(Dispatchers.IO) {
+                        if (status.isSuccessful) {
+                            measure.cloudSync = true
+                            MeasuresRepository.update(measure)
+                        } else {
+                            logger.severe("Error saving UserSettings ${status.exception}")
+                        }
                     }
                 }
             }

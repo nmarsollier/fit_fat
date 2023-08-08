@@ -21,8 +21,6 @@ object GoogleRepository {
                 }
 
                 is GoogleLoginResult.Success -> {
-                    val context = fragment.requireContext()
-
                     fragment.lifecycleScope.launch {
                         FirebaseRepository.googleAuth(result.token).collect { fbResult ->
                             if (fbResult == true) {

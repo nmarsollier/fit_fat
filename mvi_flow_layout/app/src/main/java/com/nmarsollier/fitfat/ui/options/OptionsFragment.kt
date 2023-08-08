@@ -18,11 +18,11 @@ import com.nmarsollier.fitfat.model.google.GoogleRepository
 import com.nmarsollier.fitfat.model.userSettings.MeasureType
 import com.nmarsollier.fitfat.model.userSettings.SexType
 import com.nmarsollier.fitfat.utils.closeProgressDialog
-import com.nmarsollier.fitfat.utils.showDatePicker
-import com.nmarsollier.fitfat.utils.showProgressDialog
 import com.nmarsollier.fitfat.utils.formatDate
 import com.nmarsollier.fitfat.utils.formatString
 import com.nmarsollier.fitfat.utils.parseDouble
+import com.nmarsollier.fitfat.utils.showDatePicker
+import com.nmarsollier.fitfat.utils.showProgressDialog
 import com.nmarsollier.fitfat.utils.showToast
 import com.nmarsollier.fitfat.utils.updateMenuItemColor
 import kotlinx.coroutines.launch
@@ -40,9 +40,7 @@ class OptionsFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         setHasOptionsMenu(true)
         return binding.root
@@ -55,7 +53,8 @@ class OptionsFragment : Fragment() {
             viewModel.state.collect { state ->
                 when (state) {
                     OptionsState.GoogleLoginError -> {
-                        requireContext().showToast(R.string.google_error)
+                        showToast(R.string.google_error)
+                        closeProgressDialog()
                     }
 
                     is OptionsState.Ready -> {
@@ -77,7 +76,9 @@ class OptionsFragment : Fragment() {
                         closeProgressDialog()
                     }
 
-                    else -> Unit
+                    OptionsState.Loading -> {
+                        showProgressDialog()
+                    }
                 }
             }
         }
@@ -117,7 +118,6 @@ class OptionsFragment : Fragment() {
     }
 
     private fun loginWithGoogle() {
-        showProgressDialog()
         viewModel.loginWithGoogle(this)
     }
 

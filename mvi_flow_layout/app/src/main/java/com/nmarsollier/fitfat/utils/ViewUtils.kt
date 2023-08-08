@@ -47,8 +47,8 @@ fun Fragment.openDbInspector() {
     }
 }
 
-fun Context.showToast(text: Int) {
+fun Fragment.showToast(text: Int) {
     Toast.makeText(
-        applicationContext, text, Toast.LENGTH_LONG
+        this.requireContext().applicationContext, text, Toast.LENGTH_LONG
     ).show()
 }
