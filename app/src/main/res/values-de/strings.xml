@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Körperfettkontrolle</string>
+    <string name="home_menu_options">Optionen</string>
+    <string name="home_menu_progress">Fortschritt</string>
+    <string name="home_menu_main">Messen</string>
+    <string name="options_sex_male">Männlich</string>
+    <string name="options_sex_female">Weiblich</string>
+    <string name="options_weight">Gewicht</string>
+    <string name="options_height">Höhe</string>
+    <string name="options_display_name">Anzeigename</string>
+    <string name="options_birth_date">Geburtsdatum</string>
+    <string name="measure_chest">Brust</string>
+    <string name="measure_abdominal">Abdominal</string>
+    <string name="measure_thigh">Oberschenkel</string>
+    <string name="measure_tricep">Trizeps</string>
+    <string name="measure_subscapular">Subscapular</string>
+    <string name="measure_suprailiac">Suprailiac</string>
+    <string name="measure_midaxillary">Midaxillare</string>
+    <string name="measure_bicep">Bizeps</string>
+    <string name="measure_lower_back">Low zurück</string>
+    <string name="measure_calf">Kälber</string>
+    <string name="new_measure_title">Ihre Messung</string>
+    <string name="save_dialog_title">Speichern</string>
+    <string name="measure_fat">Körperfett</string>
+    <string name="measure_method_weight">Gewicht</string>
+    <string name="home_options_title">Einstellungen</string>
+    <string name="home_measure_title">Maßnahmen</string>
+    <string name="home_progress_title">Dein Fortschritt</string>
+    <string name="new_measure_error">Füllen Sie alle Werte aus</string>
+    <string name="measure_method_manual_scale">Manuell / Maßstab</string>
+    <string name="new_measure_date">Datum der Messung</string>
+    <string name="measure_weight">Gewicht</string>
+    <string name="options_system_of_measurement_metric">Metrisch</string>
+    <string name="save_my_data_in_cloud">Speichern Sie meine Daten in der Cloud</string>
+    <string name="free_fat_mass">Freie fette Masse</string>
+</resources>

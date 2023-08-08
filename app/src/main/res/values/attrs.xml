@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="PrefixSuffixEditText">
+        <attr name="prefix" format="string" />
+        <attr name="suffix" format="string" />
+        <attr name="innerPadding" format="dimension" />
+    </declare-styleable>
+</resources>
