@@ -1,0 +1,21 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        google()
+        mavenCentral()
+    }
+}
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        maven { url 'https://maven.google.com' }
+        mavenCentral()
+    }
+}
+rootProject.name = "FitFat"
+include ':app:utils'
+include ':app:firebase'
+include ':app:userSettings'
+include ':app:measures'
+include ':app:stats'
+include ':app:fitfat'

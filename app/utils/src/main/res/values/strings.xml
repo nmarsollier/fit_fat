@@ -1,0 +1,3 @@
+<resources>
+    <string name="google_error" translatable="false">Could not connect.</string>
+</resources>

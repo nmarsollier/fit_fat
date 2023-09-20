@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Control Grasa Corporal</string>
+    <string name="home_menu_options">Opciones</string>
+    <string name="home_menu_progress">Progreso</string>
+    <string name="home_menu_main">Medida</string>
+    <string name="options_system_of_measurement_metric">Métrico</string>
+    <string name="options_sex_male">Masculino</string>
+    <string name="options_sex_female">Femenino</string>
+    <string name="options_weight">Peso</string>
+    <string name="options_height">Altura</string>
+    <string name="options_display_name">Su Nombre</string>
+    <string name="options_birth_date">Fecha de nacimiento</string>
+    <string name="measure_chest">Pecho</string>
+    <string name="measure_abdominal">Abdominal</string>
+    <string name="measure_thigh">Muslo</string>
+    <string name="measure_tricep">Tricep</string>
+    <string name="measure_subscapular">Subescapular</string>
+    <string name="measure_suprailiac">Suprailíaco</string>
+    <string name="measure_midaxillary">Midaxilar</string>
+    <string name="measure_bicep">Bíceps</string>
+    <string name="measure_lower_back">Espalda baja</string>
+    <string name="measure_calf">Pantorrillas</string>
+    <string name="new_measure_title">Su medida</string>
+    <string name="save_dialog_title">Guardar</string>
+    <string name="measure_fat">Grasa corporal</string>
+    <string name="measure_method_weight">Peso</string>
+    <string name="home_options_title">Preferencias</string>
+    <string name="home_measure_title">Medidas</string>
+    <string name="home_progress_title">Su progreso</string>
+    <string name="new_measure_error">Rellena todos los valores</string>
+    <string name="measure_method_manual_scale">Manual / Balanza</string>
+    <string name="new_measure_date">Fecha de la medida</string>
+    <string name="measure_weight">Peso</string>
+    <string name="save_my_data_in_cloud">Guardar mis datos en la nube</string>
+    <string name="free_fat_mass">Grasa Libre</string>
+</resources>
