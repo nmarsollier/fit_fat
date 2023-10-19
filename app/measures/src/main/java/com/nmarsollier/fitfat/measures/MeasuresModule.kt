@@ -2,6 +2,7 @@ package com.nmarsollier.fitfat.measures
 
 import com.nmarsollier.fitfat.measures.model.DownloadMeasuresFirebaseService
 import com.nmarsollier.fitfat.measures.model.MeasuresRepository
+import com.nmarsollier.fitfat.measures.model.SaveMeasureAndUserSettingsService
 import com.nmarsollier.fitfat.measures.model.UploadMeasuresFirebaseService
 import com.nmarsollier.fitfat.measures.model.api.MeasuresFirebaseApi
 import com.nmarsollier.fitfat.measures.model.db.MeasuresDatabase
@@ -24,6 +25,7 @@ val measuresModule = module {
         database.measureDao()
     }
 
+    factoryOf(::SaveMeasureAndUserSettingsService)
     factoryOf(::MeasuresRepository)
     factoryOf(::MeasuresFirebaseApi)
     singleOf(::DownloadMeasuresFirebaseService) withOptions { createdAtStart() }

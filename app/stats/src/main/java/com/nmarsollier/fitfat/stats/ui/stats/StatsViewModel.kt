@@ -32,7 +32,7 @@ interface StatsReducer {
 }
 
 class StatsViewModel(
-    val userSettingsRepository: UserSettingsRepository,
+    private val userSettingsRepository: UserSettingsRepository,
     private val measuresRepository: MeasuresRepository
 ) : BaseViewModel<StatsState>(StatsState.Loading(MeasureMethod.WEIGHT_ONLY)), StatsReducer {
     private val measureMethod: MeasureMethod

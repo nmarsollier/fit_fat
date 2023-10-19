@@ -2,17 +2,17 @@ package com.nmarsollier.fitfat.measures.ui.editMeasure
 
 import androidx.lifecycle.viewModelScope
 import com.nmarsollier.fitfat.measures.model.Measure
+import com.nmarsollier.fitfat.measures.model.MeasuresRepository
+import com.nmarsollier.fitfat.measures.model.SaveMeasureAndUserSettingsService
 import com.nmarsollier.fitfat.measures.model.db.MeasureData
 import com.nmarsollier.fitfat.measures.model.db.MeasureMethod
 import com.nmarsollier.fitfat.measures.model.db.MeasureValue
-import com.nmarsollier.fitfat.measures.model.MeasuresRepository
 import com.nmarsollier.fitfat.userSettings.model.UserSettings
-import com.nmarsollier.fitfat.userSettings.model.db.UserSettingsData
 import com.nmarsollier.fitfat.userSettings.model.UserSettingsRepository
+import com.nmarsollier.fitfat.userSettings.model.db.UserSettingsData
 import com.nmarsollier.fitfat.utils.ui.viewModel.BaseViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.util.Date
 
 sealed class EditMeasureState {
@@ -56,7 +56,8 @@ interface EditMeasureReducer {
 
 class EditMeasureViewModel(
     private val measuresRepository: MeasuresRepository,
-    private val userSettingsRepository: UserSettingsRepository
+    private val userSettingsRepository: UserSettingsRepository,
+    private val saveMeasureAndUserSettingsService: SaveMeasureAndUserSettingsService
 ) : BaseViewModel<EditMeasureState>(EditMeasureState.Loading(null, false)), EditMeasureReducer {
     private var userSettings: UserSettings? = null
     private var measure: Measure? = null
@@ -70,18 +71,7 @@ class EditMeasureViewModel(
 
             EditMeasureState.Loading(null, readOnly).sendToState()
 
-            if (measure.isValid()) {
-                withContext(Dispatchers.IO) {
-                    userSettings.updateWeight(measure.value.bodyWeight)
-
-                    measure.updateCloudSync(false)
-                    measuresRepository.update(measure)
-
-                    if (measure.value.bodyWeight > 0) {
-                        userSettingsRepository.update(userSettings)
-                    }
-                }
-
+            if(saveMeasureAndUserSettingsService.saveMeasure(measure, userSettings)) {
                 EditMeasureState.Close.sendToState()
             } else {
                 EditMeasureState.Invalid.sendToState()
