@@ -18,8 +18,11 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -38,6 +41,8 @@ import com.nmarsollier.fitfat.utils.converters.formatString
 import com.nmarsollier.fitfat.utils.ui.dialogs.showDatePicker
 import com.nmarsollier.fitfat.utils.ui.preview.KoinPreview
 import com.nmarsollier.fitfat.utils.ui.theme.AppColors
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 
 @Composable
 fun OptionsContentDetail(
@@ -115,12 +120,17 @@ fun OptionsContentDetail(
                 Text(stringResource(R.string.options_sex_female))
             }
         }
+
+        var weight by remember(userSettings.measureSystem) { mutableStateOf(userSettings.displayWeight().formatString()) }
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
             TextField(
-                value = userSettings.displayWeight().formatString(),
-                onValueChange = { reducer.updateWeight(it.toDoubleOrNull() ?: 0.0) },
+                modifier = Modifier.onFocusChanged {
+                    reducer.updateWeight(weight.toDoubleOrNull() ?: 0.0)
+                },
+                value = weight,
+                onValueChange = { weight = it },
                 label = { Text(stringResource(R.string.options_weight)) },
                 colors = TextFieldDefaults.textFieldColors(backgroundColor = Color.Transparent)
             )
@@ -130,12 +140,17 @@ fun OptionsContentDetail(
                 color = AppColors.primary
             )
         }
+
+        var height by remember(userSettings.measureSystem) { mutableStateOf(userSettings.displayHeight().formatString()) }
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
             TextField(
-                value = userSettings.displayHeight().formatString(),
-                onValueChange = { reducer.updateHeight(it.toDoubleOrNull() ?: 0.0) },
+                modifier = Modifier.onFocusChanged {
+                    reducer.updateHeight(height.toDoubleOrNull() ?: 0.0)
+                },
+                value = height,
+                onValueChange = { height = it },
                 label = { Text(stringResource(R.string.options_height)) },
                 colors = TextFieldDefaults.textFieldColors(backgroundColor = Color.Transparent)
             )

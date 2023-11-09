@@ -1,6 +1,8 @@
 package com.nmarsollier.fitfat.userSettings.model
 
 import com.nmarsollier.fitfat.userSettings.model.db.UserSettingsData
+import com.nmarsollier.fitfat.utils.converters.toCm
+import com.nmarsollier.fitfat.utils.converters.toKg
 import java.util.Date
 
 data class UserSettings internal constructor(
@@ -14,7 +16,13 @@ data class UserSettings internal constructor(
     }
 
     fun updateWeight(bodyWeight: Double?) {
-        bodyWeight?.let { rootEntity = rootEntity.copy(weight = it) }
+        bodyWeight?.let {
+            val value =
+                if (rootEntity.measureSystem == UserSettingsData.MeasureType.IMPERIAL) it.toKg()
+                else it
+
+            rootEntity = rootEntity.copy(weight = value)
+        }
     }
 
     fun updateBirthDate(newBirthDate: Date?) {
@@ -26,7 +34,12 @@ data class UserSettings internal constructor(
     }
 
     fun updateHeight(newHeight: Double?) {
-        newHeight?.let { rootEntity = rootEntity.copy(height = it) }
+        newHeight?.let {
+            val value =
+                if (rootEntity.measureSystem == UserSettingsData.MeasureType.IMPERIAL) it.toCm()
+                else it
+            rootEntity = rootEntity.copy(height = value)
+        }
     }
 
     fun updateMeasureSystem(system: UserSettingsData.MeasureType?) =

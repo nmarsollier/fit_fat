@@ -6,6 +6,8 @@ fun Double.toPounds() = this * 2.20462
 
 fun Double.toKg() = this * 0.453592
 
+fun Double.toCm() = this * 2.54
+
 fun Double.toInch() = this * 0.393701
 
 fun Double.formatString(default: String = ""): String {
