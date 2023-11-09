@@ -3,11 +3,14 @@ package com.nmarsollier.fitfat.userSettings.ui.options
 import android.annotation.SuppressLint
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
@@ -60,7 +63,9 @@ fun OptionsContent(
     state: OptionsState,
     reducer: OptionsReducer
 ) {
-    Scaffold(topBar = { OptionsMenu(reducer) }) {
+    Scaffold(
+        topBar = { OptionsMenu(reducer) }
+    ) {
         Column {
             when (state) {
                 OptionsState.GoogleLoginError -> {

@@ -23,7 +23,7 @@ internal class UploadMeasuresFirebaseService(
         }
     }
 
-    fun uploadPendingMeasures() = MainScope().launch(Dispatchers.IO) {
+    private fun uploadPendingMeasures() = MainScope().launch(Dispatchers.IO) {
         val measures = measuresRepository.findUnSynced() ?: return@launch
 
         measuresFirebaseApi.update(measures)?.let { status ->

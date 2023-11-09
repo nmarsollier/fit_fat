@@ -52,7 +52,8 @@ fun OptionsContentDetail(
         Modifier
             .padding(16.dp)
             .background(AppColors.background)
-            .verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(5.dp)
+            .verticalScroll(rememberScrollState(), enabled = true),
+        verticalArrangement = Arrangement.spacedBy(5.dp)
     ) {
         TextField(
             value = userSettings.displayName,

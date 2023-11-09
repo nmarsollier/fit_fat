@@ -24,18 +24,19 @@ object ProjectVersions {
 object LibraryVersions {
     const val composeBom = "2023.08.00"
 
-    const val compose = "1.5.1"
+    const val compose = "1.5.4"
     const val lifecycleViewModel = "2.6.2"
     const val koinCompose = "3.4.6"
+    const val poolingContainer = "1.0.0"
 
-    const val activityKtx = "1.7.2"
+    const val activityKtx = "1.8.0"
     const val coreKtx = "1.12.0"
     const val coreRuntime = "2.2.0"
     const val errorProneAnnotations = "2.15.0"
 
     const val room = "2.5.2"
 
-    const val material = "1.9.0"
+    const val material = "1.10.0"
     const val gson = "2.10.1"
     const val helloCharts = "1.5.8@aar"
 
@@ -47,7 +48,7 @@ object LibraryVersions {
 
     const val dbInspector = "3.4.1@aar"
 
-    const val coroutinesTest = "1.6.4"
+    const val coroutinesTest = "1.7.3"
     const val jUnit = "4.13.2"
 
     const val mockk = "1.13.7"

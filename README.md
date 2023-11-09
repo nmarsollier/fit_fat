@@ -9,16 +9,18 @@ master branch is usually the last work in progress
 
 ## Domain Driven Design Architecture
 
-Main branch is architecture as DDD, with many modules, to check how it behaves with modules sharing.
+Architecture is DDD, with many modules.
 
-Also it uses Koin as dependency injection framework.
+On the UI side, this is a custom MVI/Redux Architecture.
 
+Uses Koin as dependency injection framework.
+Firebase to store data in cloud.
 
 It stores everything locally, but also uses Firebase to backup data.
+
 ### Main Aggregates :
 
 UserSettings and Measures
-
 
 ### Services 
 

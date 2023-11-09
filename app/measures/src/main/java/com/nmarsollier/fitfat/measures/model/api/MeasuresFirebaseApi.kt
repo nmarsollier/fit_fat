@@ -53,8 +53,8 @@ class MeasuresFirebaseApi internal constructor(
 
         measures.forEach {
             val measure = it.value
-            instance.collection("measures")
-                .document(measure.uid).set(
+            instance.collection("measures").document(measure.uid)
+                .set(
                     it.toDocumentMap(key)
                 ).addOnCompleteListener {
                     MainScope().launch(Dispatchers.Main) {

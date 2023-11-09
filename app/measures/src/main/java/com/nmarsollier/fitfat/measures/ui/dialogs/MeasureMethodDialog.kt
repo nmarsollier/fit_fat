@@ -27,8 +27,10 @@ fun MeasureMethodDialog(
 ) {
     val context = LocalContext.current
 
-    val measureMethods =
-        MeasureMethod.values().map { it to context.getString(it.labelRes) }.toTypedArray()
+    val measureMethods = MeasureMethod.values()
+        .map { it to context.getString(it.labelRes) }
+        .toTypedArray()
+
     val selected = measureMethod.ordinal
 
     Dialog(onDismissRequest = { onChange(null) }) {
