@@ -13,9 +13,4 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "FitFat"
-include ':app:utils'
-include ':app:firebase'
-include ':app:userSettings'
-include ':app:measures'
-include ':app:stats'
-include ':app:fitfat'
+include ':app'
