@@ -32,13 +32,14 @@ import com.nmarsollier.fitfat.common.converters.formatDateTime
 import com.nmarsollier.fitfat.common.converters.formatString
 import com.nmarsollier.fitfat.common.ui.preview.KoinPreview
 import com.nmarsollier.fitfat.common.ui.theme.AppColors
+import com.nmarsollier.fitfat.common.ui.viewModel.Reducer
 
 @Composable
 @ExperimentalFoundationApi
 fun MeasureItemView(
     userSettings: UserSettingsData,
     measure: MeasureData,
-    reducer: MeasuresListReducer
+    reducer: Reducer<MeasuresListEvent>
 ) {
     val fontSize = 14.sp
 
@@ -47,9 +48,9 @@ fun MeasureItemView(
             .padding(top = 16.dp, bottom = 16.dp)
             .fillMaxWidth()
             .combinedClickable(onClick = {
-                reducer.openViewMeasure(measure)
+                reducer.reduce(MeasuresListEvent.OpenViewMeasure(measure))
             }, onLongClick = {
-                reducer.deleteMeasure(measure)
+                reducer.reduce(MeasuresListEvent.DeleteMeasure(measure))
             }),
         verticalArrangement = Arrangement.spacedBy(5.dp),
     ) {
@@ -174,7 +175,7 @@ fun MeasureItemViewPreview() {
             MeasureItemView(
                 UserSettings.Samples.simpleData.value,
                 Measure.Samples.simpleData[0].value,
-                MeasuresListViewModel.Samples.reducer()
+                MeasuresListView.Samples.reducer()
             )
         }
     }

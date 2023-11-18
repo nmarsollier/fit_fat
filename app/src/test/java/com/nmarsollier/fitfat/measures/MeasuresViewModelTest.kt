@@ -5,7 +5,7 @@ import com.nmarsollier.fitfat.measures.model.Measure
 import com.nmarsollier.fitfat.measures.model.db.MeasureMethod
 import com.nmarsollier.fitfat.measures.model.db.MeasureValue
 import com.nmarsollier.fitfat.measures.ui.edit.EditMeasureState
-import com.nmarsollier.fitfat.measures.ui.edit.EditMeasureViewModel
+import com.nmarsollier.fitfat.measures.ui.edit.EditMeasureView
 import com.nmarsollier.fitfat.measures.samples.Samples
 import com.nmarsollier.fitfat.userSettings.model.UserSettings
 import com.nmarsollier.fitfat.userSettings.samples.Samples
@@ -30,7 +30,7 @@ class MeasuresViewModelTest : BaseTest() {
 
     @Test
     fun loadNewTest(): Unit = runBlocking {
-        EditMeasureViewModel(get(), get()).apply {
+        EditMeasureView(get(), get()).apply {
             state.test {
                 assertEquals(
                     EditMeasureState.Loading(
@@ -55,7 +55,7 @@ class MeasuresViewModelTest : BaseTest() {
 
     @Test
     fun loadExistingTest(): Unit = runBlocking {
-        EditMeasureViewModel(get(), get()).apply {
+        EditMeasureView(get(), get()).apply {
             state.test {
                 assertEquals(
                     EditMeasureState.Loading(
@@ -89,7 +89,7 @@ class MeasuresViewModelTest : BaseTest() {
 
     @Test
     fun closeTest(): Unit = runBlocking {
-        EditMeasureViewModel(get(), get()).apply {
+        EditMeasureView(get(), get()).apply {
             state.test {
                 assertEquals(
                     EditMeasureState.Loading(
@@ -117,7 +117,7 @@ class MeasuresViewModelTest : BaseTest() {
             false
         )
 
-        EditMeasureViewModel(get(), get()).apply {
+        EditMeasureView(get(), get()).apply {
             state.test {
                 assertEquals(
                     EditMeasureState.Loading(
@@ -164,7 +164,7 @@ class MeasuresViewModelTest : BaseTest() {
             false
         )
 
-        EditMeasureViewModel(get(), get()).apply {
+        EditMeasureView(get(), get()).apply {
             state.test {
                 assertEquals(
                     EditMeasureState.Loading(

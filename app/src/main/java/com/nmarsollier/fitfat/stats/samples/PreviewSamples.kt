@@ -1,20 +1,16 @@
 package com.nmarsollier.fitfat.stats.samples
 
-import com.nmarsollier.fitfat.measures.model.db.MeasureMethod
-import com.nmarsollier.fitfat.stats.ui.StatsReducer
-import com.nmarsollier.fitfat.stats.ui.StatsViewModel
+import com.nmarsollier.fitfat.common.ui.viewModel.Reducer
+import com.nmarsollier.fitfat.stats.ui.StatsEvent
+import com.nmarsollier.fitfat.stats.ui.StatsView
 
 interface StatsViewModelSamples {
-    fun reducer(): StatsReducer
+    fun reducer(): Reducer<StatsEvent>
 }
 
-val StatsViewModel.Companion.Samples: StatsViewModelSamples
+val StatsView.Companion.Samples: StatsViewModelSamples
     get() = object : StatsViewModelSamples {
-        override fun reducer() = object : StatsReducer {
-            override fun init() = Unit
-            override fun updateMethod(selectedMethod: MeasureMethod) =
-                Unit
-
-            override fun toggleShowMethod() = Unit
+        override fun reducer() = object : Reducer<StatsEvent> {
+            override fun reduce(event: StatsEvent) = Unit
         }
     }

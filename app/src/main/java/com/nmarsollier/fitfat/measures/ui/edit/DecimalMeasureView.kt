@@ -33,13 +33,14 @@ import com.nmarsollier.fitfat.userSettings.ui.weightResId
 import com.nmarsollier.fitfat.common.converters.formatString
 import com.nmarsollier.fitfat.common.ui.preview.KoinPreview
 import com.nmarsollier.fitfat.common.ui.theme.AppColors
+import com.nmarsollier.fitfat.common.ui.viewModel.Reducer
 
 @Composable
 fun DecimalMeasureView(
     userSettings: UserSettingsData,
     measure: MeasureData,
     measureValue: MeasureValue,
-    reducer: EditMeasureReducer
+    reducer: Reducer<EditMeasureEvent>
 ) {
     Column(
         modifier = Modifier.background(AppColors.background)
@@ -70,7 +71,7 @@ fun DecimalMeasureView(
                 colorFilter = ColorFilter.tint(colorResource(R.color.colorPrimary)),
                 modifier = Modifier.clickable {
                     measureValue.helpRes?.let {
-                        reducer.toggleHelp(it)
+                        reducer.reduce(EditMeasureEvent.ToggleHelp(it))
                     }
                 })
         }
@@ -79,17 +80,22 @@ fun DecimalMeasureView(
         Slider(value = currentValue.toInt().toFloat(),
             valueRange = 0f..measureValue.maxScale.toFloat(),
             onValueChange = {
-                reducer.updateMeasureValue(
-                    measureValue, measure.calculateIntPart(it.toInt(), measureValue, userSettings)
+                reducer.reduce(
+                    EditMeasureEvent.UpdateMeasureValue(
+                        measureValue,
+                        measure.calculateIntPart(it.toInt(), measureValue, userSettings)
+                    )
                 )
             })
 
         Slider(value = ((currentValue - currentValue.toInt()) * 10).toFloat(),
             valueRange = 0f..10f,
             onValueChange = {
-                reducer.updateMeasureValue(
-                    measureValue,
-                    measure.calculateDecimalPart(it.toInt(), measureValue, userSettings)
+                reducer.reduce(
+                    EditMeasureEvent.UpdateMeasureValue(
+                        measureValue,
+                        measure.calculateDecimalPart(it.toInt(), measureValue, userSettings)
+                    )
                 )
             })
     }
@@ -103,7 +109,7 @@ fun DecimalMeasureViewPreview() {
             UserSettings.Samples.simpleData.value,
             Measure.Samples.bodyFat.value,
             MeasureValue.BODY_FAT,
-            EditMeasureViewModel.Samples.reducer()
+            EditMeasureView.Samples.reducer()
         )
     }
 }

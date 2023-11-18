@@ -1,13 +1,12 @@
 package com.nmarsollier.fitfat.userSettings.samples
 
-import androidx.activity.ComponentActivity
+import com.nmarsollier.fitfat.common.converters.dateOf
+import com.nmarsollier.fitfat.common.ui.viewModel.Reducer
 import com.nmarsollier.fitfat.userSettings.model.UserSettings
 import com.nmarsollier.fitfat.userSettings.model.asUserSettings
 import com.nmarsollier.fitfat.userSettings.model.db.UserSettingsData
-import com.nmarsollier.fitfat.userSettings.ui.OptionsReducer
-import com.nmarsollier.fitfat.userSettings.ui.OptionsViewModel
-import com.nmarsollier.fitfat.common.converters.dateOf
-import java.util.Date
+import com.nmarsollier.fitfat.userSettings.ui.OptionsEvent
+import com.nmarsollier.fitfat.userSettings.ui.OptionsView
 
 interface UserSettingsSamples {
     val simpleData: UserSettings
@@ -28,31 +27,12 @@ val UserSettings.Companion.Samples
     }
 
 interface OptionsViewModelSamples {
-    fun reducer(): OptionsReducer
+    fun reducer(): Reducer<OptionsEvent>
 }
 
-val OptionsViewModel.Companion.Samples: OptionsViewModelSamples
+val OptionsView.Companion.Samples: OptionsViewModelSamples
     get() = object : OptionsViewModelSamples {
-        override fun reducer() = object : OptionsReducer {
-            override fun loginWithGoogle(activity: ComponentActivity) = Unit
-
-            override fun disableFirebase() = Unit
-
-            override fun updateSex(newSex: UserSettingsData.SexType) = Unit
-
-            override fun updateMeasureSystem(system: UserSettingsData.MeasureType) = Unit
-
-            override fun updateWeight(newWeight: Double) = Unit
-
-            override fun updateHeight(newHeight: Double) = Unit
-
-            override fun updateDisplayName(newName: String) = Unit
-
-            override fun updateBirthDate(newBirthDate: Date) = Unit
-
-            override fun saveSettings() = Unit
-
-            override fun load() = Unit
-
+        override fun reducer() = object : Reducer<OptionsEvent> {
+            override fun reduce(event: OptionsEvent) = Unit
         }
     }

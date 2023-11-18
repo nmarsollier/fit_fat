@@ -22,44 +22,57 @@ sealed class OptionsState {
     ) : OptionsState()
 }
 
-interface OptionsReducer {
-    fun loginWithGoogle(activity: ComponentActivity)
-    fun disableFirebase()
-    fun updateSex(newSex: UserSettingsData.SexType)
-    fun updateMeasureSystem(system: UserSettingsData.MeasureType)
-    fun updateWeight(newWeight: Double)
-    fun updateHeight(newHeight: Double)
-    fun updateDisplayName(newName: String)
-    fun updateBirthDate(newBirthDate: Date)
-    fun saveSettings()
-    fun load()
+sealed class OptionsEvent {
+    data class LoginWithGoogle(val activity: ComponentActivity) : OptionsEvent()
+    data object DisableFirebase : OptionsEvent()
+    data class UpdateSex(val newSex: UserSettingsData.SexType) : OptionsEvent()
+    data class UpdateMeasureSystem(val system: UserSettingsData.MeasureType) : OptionsEvent()
+    data class UpdateWeight(val newWeight: Double) : OptionsEvent()
+    data class UpdateHeight(val newHeight: Double) : OptionsEvent()
+    data class UpdateDisplayName(val newName: String) : OptionsEvent()
+    data class UpdateBirthDate(val newBirthDate: Date) : OptionsEvent()
+    data object SaveSettings : OptionsEvent()
+    data object Initialize : OptionsEvent()
 }
 
-class OptionsViewModel internal constructor(
+class OptionsView internal constructor(
     private val userSettingsRepository: UserSettingsRepository,
     private val uploadSyncFirebaseService: UploadSyncFirebaseService,
     private val firebaseConnection: FirebaseConnection
-) : com.nmarsollier.fitfat.common.ui.viewModel.BaseViewModel<OptionsState>(OptionsState.Loading),
-    OptionsReducer {
+) : com.nmarsollier.fitfat.common.ui.viewModel.BaseView<OptionsState, OptionsEvent>(OptionsState.Loading){
     private var userSettings: UserSettings? = null
 
     val dataChanged: Boolean
         get() = (state.value as? OptionsState.Ready)?.hasChanged == true
 
-    override fun load() {
-        OptionsState.Loading.sendToState()
+
+    override fun reduce(event: OptionsEvent) = when (event) {
+        OptionsEvent.DisableFirebase ->disableFirebase()
+        OptionsEvent.Initialize -> load()
+        is OptionsEvent.LoginWithGoogle -> loginWithGoogle(event)
+        OptionsEvent.SaveSettings -> saveSettings()
+        is OptionsEvent.UpdateBirthDate -> updateBirthDate(event)
+        is OptionsEvent.UpdateDisplayName -> updateDisplayName(event)
+        is OptionsEvent.UpdateHeight -> updateHeight(event)
+        is OptionsEvent.UpdateMeasureSystem -> updateMeasureSystem(event)
+        is OptionsEvent.UpdateSex -> updateSex(event)
+        is OptionsEvent.UpdateWeight -> updateWeight(event)
+    }
+
+    private fun load() {
+        OptionsState.Loading.toState()
         viewModelScope.launch(Dispatchers.IO) {
             userSettingsRepository.findCurrent().let {
                 userSettings = it
                 OptionsState.Ready(
                     userSettings = it.value,
                     hasChanged = false
-                ).sendToState()
+                ).toState()
             }
         }
     }
 
-    override fun saveSettings() {
+    private fun saveSettings() {
         if (!dataChanged) return
         val userSettings = userSettings ?: return
 
@@ -69,86 +82,86 @@ class OptionsViewModel internal constructor(
             OptionsState.Ready(
                 userSettings = userSettings.value,
                 hasChanged = false
-            ).sendToState()
+            ).toState()
         }
     }
 
-    override fun updateBirthDate(newBirthDate: Date) {
+    private fun updateBirthDate(event: OptionsEvent.UpdateBirthDate) {
         userSettings?.apply {
-            updateBirthDate(newBirthDate)
+            updateBirthDate(event.newBirthDate)
             OptionsState.Ready(
                 hasChanged = true,
                 userSettings = value
-            ).sendToState()
+            ).toState()
         }
     }
 
-    override fun updateDisplayName(newName: String) {
-        userSettings?.takeIf { it.value.displayName != newName }?.apply {
-            updateDisplayName(newName)
+    private fun updateDisplayName(event: OptionsEvent.UpdateDisplayName) {
+        userSettings?.takeIf { it.value.displayName != event.newName }?.apply {
+            updateDisplayName(event.newName)
             OptionsState.Ready(
                 hasChanged = true,
                 userSettings = value
-            ).sendToState()
+            ).toState()
         }
     }
 
-    override fun updateHeight(newHeight: Double) {
-        userSettings?.takeIf { it.value.height != newHeight }?.apply {
-            updateHeight(newHeight)
+    private fun updateHeight(event: OptionsEvent.UpdateHeight) {
+        userSettings?.takeIf { it.value.height != event.newHeight }?.apply {
+            updateHeight(event.newHeight)
             OptionsState.Ready(
                 hasChanged = true,
                 userSettings = value
-            ).sendToState()
+            ).toState()
         }
     }
 
-    override fun updateWeight(newWeight: Double) {
-        userSettings?.takeIf { it.value.weight != newWeight }?.apply {
-            updateWeight(newWeight)
+    private fun updateWeight(event: OptionsEvent.UpdateWeight) {
+        userSettings?.takeIf { it.value.weight != event.newWeight }?.apply {
+            updateWeight(event.newWeight)
             OptionsState.Ready(
                 hasChanged = true,
                 userSettings = value
-            ).sendToState()
+            ).toState()
         }
     }
 
-    override fun updateMeasureSystem(system: UserSettingsData.MeasureType) {
-        userSettings?.takeIf { it.value.measureSystem != system }?.apply {
-            updateMeasureSystem(system)
+    private fun updateMeasureSystem(event: OptionsEvent.UpdateMeasureSystem) {
+        userSettings?.takeIf { it.value.measureSystem != event.system }?.apply {
+            updateMeasureSystem(event.system)
             OptionsState.Ready(
                 hasChanged = true,
                 userSettings = value
-            ).sendToState()
+            ).toState()
         }
     }
 
-    override fun updateSex(newSex: UserSettingsData.SexType) {
-        userSettings?.takeIf { it.value.sex != newSex }?.apply {
-            updateSex(newSex)
+    private fun updateSex(event: OptionsEvent.UpdateSex) {
+        userSettings?.takeIf { it.value.sex != event.newSex }?.apply {
+            updateSex(event.newSex)
             OptionsState.Ready(
                 hasChanged = true,
                 userSettings = value
-            ).sendToState()
+            ).toState()
         }
     }
 
-    override fun disableFirebase() {
+    private fun disableFirebase() {
         userSettings?.apply {
             updateFirebaseToken(null)
             OptionsState.Ready(
                 hasChanged = true,
                 userSettings = value
-            ).sendToState()
+            ).toState()
         }
     }
 
-    override fun loginWithGoogle(activity: ComponentActivity) {
+    private fun loginWithGoogle(event: OptionsEvent.LoginWithGoogle) {
         viewModelScope.launch(Dispatchers.IO) {
-            OptionsState.Loading.sendToState()
-            firebaseConnection.signInWithGoogle(activity).let {
+            OptionsState.Loading.toState()
+            firebaseConnection.signInWithGoogle(event.activity).let {
                 when (it) {
-                    GoogleAuthResult.Error -> OptionsState.GoogleLoginError.sendToState()
+                    GoogleAuthResult.Error -> OptionsState.GoogleLoginError.toState()
                     is GoogleAuthResult.Success -> {
                         userSettingsRepository.findCurrent().apply {
                             updateFirebaseToken(it.token)

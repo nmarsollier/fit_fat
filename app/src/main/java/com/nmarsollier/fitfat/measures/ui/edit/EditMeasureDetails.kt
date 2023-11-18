@@ -38,10 +38,11 @@ import com.nmarsollier.fitfat.common.converters.formatString
 import com.nmarsollier.fitfat.common.ui.dialogs.showDatePicker
 import com.nmarsollier.fitfat.common.ui.preview.KoinPreview
 import com.nmarsollier.fitfat.common.ui.theme.AppColors
+import com.nmarsollier.fitfat.common.ui.viewModel.Reducer
 
 @Composable
 fun EditMeasureDetails(
-    userSettings: UserSettingsData, measure: MeasureData, reducer: EditMeasureReducer
+    userSettings: UserSettingsData, measure: MeasureData, reducer: Reducer<EditMeasureEvent>
 ) {
     val context = LocalContext.current
 
@@ -54,7 +55,7 @@ fun EditMeasureDetails(
         Row(modifier = Modifier
             .padding(top = 12.dp, bottom = 12.dp)
             .clickable {
-                reducer.toggleShowMethod()
+                reducer.reduce(EditMeasureEvent.ToggleShowMethod)
             }) {
             Text(stringResource(measure.measureMethod.labelRes))
 
@@ -77,7 +78,7 @@ fun EditMeasureDetails(
                     .fillMaxWidth(0.5f)
                     .clickable {
                         showDatePicker(context, userSettings.birthDate) {
-                            reducer.updateDate(it)
+                            reducer.reduce(EditMeasureEvent.UpdateDate(it))
                         }
                     },
                 colors = TextFieldDefaults.textFieldColors(
@@ -131,7 +132,7 @@ fun EditMeasureDetailsPreview() {
             EditMeasureDetails(
                 UserSettings.Samples.simpleData.value,
                 Measure.Samples.simpleData[0].value,
-                EditMeasureViewModel.Samples.reducer()
+                EditMeasureView.Samples.reducer()
             )
         }
     }

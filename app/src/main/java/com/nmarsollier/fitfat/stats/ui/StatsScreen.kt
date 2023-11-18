@@ -12,6 +12,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.viewModelScope
+import com.nmarsollier.fitfat.common.ui.viewModel.Reducer
 import com.nmarsollier.fitfat.measures.model.Measure
 import com.nmarsollier.fitfat.measures.model.db.MeasureMethod
 import com.nmarsollier.fitfat.measures.ui.dialog.MeasureMethodDialog
@@ -23,7 +24,7 @@ import org.koin.androidx.compose.koinViewModel
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun StatsScreen(viewModel: StatsViewModel = koinViewModel()) {
+fun StatsScreen(viewModel: StatsView = koinViewModel()) {
     val lifecycleOwner = LocalLifecycleOwner.current
 
     val state by viewModel.state.collectAsState(viewModel.viewModelScope.coroutineContext)
@@ -32,7 +33,7 @@ fun StatsScreen(viewModel: StatsViewModel = koinViewModel()) {
         val observer = LifecycleEventObserver { _, event ->
             when (event) {
                 Lifecycle.Event.ON_RESUME -> {
-                    viewModel.init()
+                    viewModel.reduce(StatsEvent.Initialize)
                 }
 
                 else -> Unit
@@ -51,7 +52,7 @@ fun StatsScreen(viewModel: StatsViewModel = koinViewModel()) {
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun StatsContent(state: StatsState, reducer: StatsReducer) {
+fun StatsContent(state: StatsState, reducer: Reducer<StatsEvent>) {
     Scaffold(topBar = {
         StatsMenu()
     }) {
@@ -64,9 +65,9 @@ fun StatsContent(state: StatsState, reducer: StatsReducer) {
                     if (state.showMethod) {
                         MeasureMethodDialog(state.selectedMethod) {
                             if (it != null) {
-                                reducer.updateMethod(it)
+                                reducer.reduce(StatsEvent.UpdateMethod(it))
                             } else {
-                                reducer.toggleShowMethod()
+                                reducer.reduce(StatsEvent.ToggleShowMethod)
                             }
                         }
                     }
@@ -86,7 +87,7 @@ fun StatsScreenPreview() {
                 UserSettings.Samples.simpleData.value,
                 Measure.Samples.simpleData.map { it.value },
                 showMethod = false
-            ), StatsViewModel.Samples.reducer()
+            ), StatsView.Samples.reducer()
         )
     }
 }

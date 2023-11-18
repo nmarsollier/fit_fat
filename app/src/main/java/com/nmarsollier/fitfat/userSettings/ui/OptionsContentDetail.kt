@@ -36,10 +36,11 @@ import com.nmarsollier.fitfat.common.converters.formatString
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import com.nmarsollier.fitfat.R
+import com.nmarsollier.fitfat.common.ui.viewModel.Reducer
 
 @Composable
 fun OptionsContentDetail(
-    state: OptionsState.Ready, reducer: OptionsReducer
+    state: OptionsState.Ready, reducer: Reducer<OptionsEvent>
 ) {
     val activity = LocalContext.current as? ComponentActivity
     val userSettings = state.userSettings
@@ -55,7 +56,7 @@ fun OptionsContentDetail(
     ) {
         TextField(
             value = userSettings.displayName,
-            onValueChange = { reducer.updateDisplayName(it) },
+            onValueChange = { reducer.reduce(OptionsEvent.UpdateDisplayName(it)) },
             label = { Text(stringResource(R.string.options_display_name)) },
             modifier = Modifier.fillMaxWidth(),
             colors = TextFieldDefaults.textFieldColors(
@@ -77,7 +78,7 @@ fun OptionsContentDetail(
                         context,
                         userSettings.birthDate
                     ) {
-                        reducer.updateBirthDate(it)
+                        reducer.reduce(OptionsEvent.UpdateBirthDate(it))
                     }
                 },
             colors = TextFieldDefaults.textFieldColors(
@@ -92,11 +93,11 @@ fun OptionsContentDetail(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 RadioButton(selected = userSettings.measureSystem == UserSettingsData.MeasureType.METRIC,
-                    onClick = { reducer.updateMeasureSystem(UserSettingsData.MeasureType.METRIC) })
+                    onClick = { reducer.reduce(OptionsEvent.UpdateMeasureSystem(UserSettingsData.MeasureType.METRIC)) })
                 Text("Metric")
                 Spacer(modifier = Modifier.width(16.dp))
                 RadioButton(selected = userSettings.measureSystem == UserSettingsData.MeasureType.IMPERIAL,
-                    onClick = { reducer.updateMeasureSystem(UserSettingsData.MeasureType.IMPERIAL) })
+                    onClick = { reducer.reduce(OptionsEvent.UpdateMeasureSystem(UserSettingsData.MeasureType.IMPERIAL)) })
                 Text("Imperial")
             }
         }
@@ -108,22 +109,26 @@ fun OptionsContentDetail(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 RadioButton(selected = userSettings.sex == UserSettingsData.SexType.MALE,
-                    onClick = { reducer.updateSex(UserSettingsData.SexType.MALE) })
+                    onClick = { reducer.reduce(OptionsEvent.UpdateSex(UserSettingsData.SexType.MALE)) })
                 Text(stringResource(R.string.options_sex_male))
                 Spacer(modifier = Modifier.width(16.dp))
                 RadioButton(selected = userSettings.sex == UserSettingsData.SexType.FEMALE,
-                    onClick = { reducer.updateSex(UserSettingsData.SexType.FEMALE) })
+                    onClick = { reducer.reduce(OptionsEvent.UpdateSex(UserSettingsData.SexType.FEMALE)) })
                 Text(stringResource(R.string.options_sex_female))
             }
         }
 
-        var weight by remember(userSettings.measureSystem) { mutableStateOf(userSettings.displayWeight().formatString()) }
+        var weight by remember(userSettings.measureSystem) {
+            mutableStateOf(
+                userSettings.displayWeight().formatString()
+            )
+        }
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
             TextField(
                 modifier = Modifier.onFocusChanged {
-                    reducer.updateWeight(weight.toDoubleOrNull() ?: 0.0)
+                    reducer.reduce(OptionsEvent.UpdateWeight(weight.toDoubleOrNull() ?: 0.0))
                 },
                 value = weight,
                 onValueChange = { weight = it },
@@ -137,13 +142,17 @@ fun OptionsContentDetail(
             )
         }
 
-        var height by remember(userSettings.measureSystem) { mutableStateOf(userSettings.displayHeight().formatString()) }
+        var height by remember(userSettings.measureSystem) {
+            mutableStateOf(
+                userSettings.displayHeight().formatString()
+            )
+        }
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
             TextField(
                 modifier = Modifier.onFocusChanged {
-                    reducer.updateHeight(height.toDoubleOrNull() ?: 0.0)
+                    reducer.reduce(OptionsEvent.UpdateHeight(height.toDoubleOrNull() ?: 0.0))
                 },
                 value = height,
                 onValueChange = { height = it },
@@ -165,10 +174,10 @@ fun OptionsContentDetail(
             Switch(checked = !userSettings.firebaseToken.isNullOrEmpty(), onCheckedChange = {
                 if (it) {
                     activity?.let {
-                        reducer.loginWithGoogle(activity)
+                        reducer.reduce(OptionsEvent.LoginWithGoogle(activity))
                     }
                 } else {
-                    reducer.disableFirebase()
+                    reducer.reduce(OptionsEvent.DisableFirebase)
                 }
             })
         }
@@ -183,7 +192,7 @@ fun OptionsContentDetailPreview() {
             OptionsState.Ready(
                 userSettings = UserSettings.Samples.simpleData.value,
                 hasChanged = false,
-            ), OptionsViewModel.Samples.reducer()
+            ), OptionsView.Samples.reducer()
         )
     }
 }

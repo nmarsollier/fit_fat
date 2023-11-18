@@ -2,7 +2,7 @@ package com.nmarsollier.fitfat.userSettings
 
 import app.cash.turbine.test
 import com.nmarsollier.fitfat.userSettings.ui.OptionsState
-import com.nmarsollier.fitfat.userSettings.ui.OptionsViewModel
+import com.nmarsollier.fitfat.userSettings.ui.OptionsView
 import com.nmarsollier.fitfat.userSettings.samples.Samples
 import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -20,7 +20,7 @@ import org.koin.test.get
 class OptionsViewModelTest : BaseTest() {
     @Test
     fun loadTest(): Unit = runBlocking {
-        OptionsViewModel(get(), get(), get()).apply {
+        OptionsView(get(), get(), get()).apply {
             state.test {
                 assertEquals(OptionsState.Loading, awaitItem())
 

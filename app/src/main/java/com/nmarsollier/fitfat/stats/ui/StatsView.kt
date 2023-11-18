@@ -22,25 +22,33 @@ sealed class StatsState(
     ) : StatsState(method)
 }
 
-interface StatsReducer {
-    fun init()
-    fun updateMethod(selectedMethod: MeasureMethod)
-    fun toggleShowMethod()
+sealed class StatsEvent {
+    data object Initialize : StatsEvent()
+    data class UpdateMethod(val selectedMethod: MeasureMethod) : StatsEvent()
+    data object ToggleShowMethod : StatsEvent()
 }
 
-class StatsViewModel(
+class StatsView(
     private val userSettingsRepository: com.nmarsollier.fitfat.userSettings.model.UserSettingsRepository,
     private val measuresRepository: MeasuresRepository
-) : com.nmarsollier.fitfat.common.ui.viewModel.BaseViewModel<StatsState>(
+) : com.nmarsollier.fitfat.common.ui.viewModel.BaseView<StatsState, StatsEvent>(
     StatsState.Loading(
         MeasureMethod.WEIGHT_ONLY
     )
-), StatsReducer {
+) {
     private val measureMethod: MeasureMethod
         get() = state.value.selectedMethod
 
-    override fun init() {
-        StatsState.Loading(measureMethod).sendToState()
+
+
+    override fun reduce(event: StatsEvent) = when (event) {
+        StatsEvent.Initialize -> init()
+        StatsEvent.ToggleShowMethod -> toggleShowMethod()
+        is StatsEvent.UpdateMethod -> updateMethod(event)
+    }
+
+    private fun init() {
+        StatsState.Loading(measureMethod).toState()
 
         viewModelScope.launch(Dispatchers.IO) {
             val userSettings = userSettingsRepository.findCurrent()
@@ -52,21 +60,21 @@ class StatsViewModel(
                     userSettings = userSettings.value,
                     measures = measures.map { it.value },
                     showMethod = false
-                ).sendToState()
+                ).toState()
             }
         }
     }
 
-    override fun updateMethod(selectedMethod: MeasureMethod) {
+    private fun updateMethod(event: StatsEvent.UpdateMethod) {
         when (val value = state.value) {
-            is StatsState.Loading -> value.copy(method = selectedMethod)
-            is StatsState.Ready -> value.copy(method = selectedMethod, showMethod = false)
-        }.sendToState()
+            is StatsState.Loading -> value.copy(method = event.selectedMethod)
+            is StatsState.Ready -> value.copy(method = event.selectedMethod, showMethod = false)
+        }.toState()
     }
 
-    override fun toggleShowMethod() {
+    private fun toggleShowMethod() {
         val st = (state.value as? StatsState.Ready) ?: return
-        st.copy(showMethod = !st.showMethod).sendToState()
+        st.copy(showMethod = !st.showMethod).toState()
     }
 
     companion object

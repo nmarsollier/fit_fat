@@ -6,16 +6,20 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
-abstract class BaseViewModel<T : Any>(initial: T) : ViewModel() {
-    private val mutableState: MutableStateFlow<T> by lazy {
+interface Reducer<E : Any> {
+    fun reduce(event: E)
+}
+
+abstract class BaseView<S : Any, E : Any>(initial: S) : Reducer<E>, ViewModel() {
+    private val mutableState: MutableStateFlow<S> by lazy {
         MutableStateFlow(initial)
     }
 
-    val state: StateFlow<T> by lazy {
+    val state: StateFlow<S> by lazy {
         mutableState.asStateFlow()
     }
 
-    fun T.sendToState() {
+    fun S.toState() {
         val value = this
         mutableState.update {
             value

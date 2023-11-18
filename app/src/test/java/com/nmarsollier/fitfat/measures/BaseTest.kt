@@ -7,8 +7,8 @@ import com.nmarsollier.fitfat.measures.model.db.MeasureDao
 import com.nmarsollier.fitfat.measures.model.db.MeasureDao_Impl
 import com.nmarsollier.fitfat.measures.model.MeasuresRepository
 import com.nmarsollier.fitfat.measures.model.api.MeasuresFirebaseApi
-import com.nmarsollier.fitfat.measures.ui.edit.EditMeasureViewModel
-import com.nmarsollier.fitfat.measures.ui.list.MeasuresListViewModel
+import com.nmarsollier.fitfat.measures.ui.edit.EditMeasureView
+import com.nmarsollier.fitfat.measures.ui.list.MeasuresListView
 import com.nmarsollier.fitfat.measures.samples.Samples
 import com.nmarsollier.fitfat.userSettings.model.UserSettings
 import com.nmarsollier.fitfat.userSettings.model.UserSettingsRepository
@@ -66,8 +66,8 @@ open class BaseTest : KoinTest {
 
         factory { firebaseConnectionMock }
 
-        viewModelOf(::MeasuresListViewModel)
-        viewModelOf(::EditMeasureViewModel)
+        viewModelOf(::MeasuresListView)
+        viewModelOf(::EditMeasureView)
     }
 
     @get:Rule

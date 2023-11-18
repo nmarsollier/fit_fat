@@ -16,13 +16,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.nmarsollier.fitfat.R
-import com.nmarsollier.fitfat.dashboard.samples.Samples
 import com.nmarsollier.fitfat.common.ui.preview.KoinPreview
 import com.nmarsollier.fitfat.common.ui.theme.AppColors
+import com.nmarsollier.fitfat.common.ui.viewModel.Reducer
+import com.nmarsollier.fitfat.dashboard.samples.Samples
 
 @Composable
 fun DashboardNavigationMenu(
-    state: DashboardState, reducer: DashboardReducer
+    state: DashboardState, reducer: Reducer<DashboardEvent>
 ) {
 
     BottomNavigation(
@@ -48,7 +49,7 @@ fun DashboardNavigationMenu(
             alwaysShowLabel = true,
             selected = state.selectedTab == Screen.OPTIONS,
             onClick = {
-                reducer.setCurrentSelectedTab(Screen.OPTIONS)
+                reducer.reduce(DashboardEvent.CurrentSelectedTab(Screen.OPTIONS))
             })
 
         BottomNavigationItem(icon = {
@@ -67,7 +68,7 @@ fun DashboardNavigationMenu(
             alwaysShowLabel = true,
             selected = state.selectedTab == Screen.MEASURES_LIST,
             onClick = {
-                reducer.setCurrentSelectedTab(Screen.MEASURES_LIST)
+                reducer.reduce(DashboardEvent.CurrentSelectedTab(Screen.MEASURES_LIST))
             })
 
         BottomNavigationItem(icon = {
@@ -86,7 +87,7 @@ fun DashboardNavigationMenu(
             alwaysShowLabel = true,
             selected = state.selectedTab == Screen.STATS,
             onClick = {
-                reducer.setCurrentSelectedTab(Screen.STATS)
+                reducer.reduce(DashboardEvent.CurrentSelectedTab(Screen.STATS))
             })
     }
 }
@@ -100,7 +101,7 @@ fun DashboardNavigationMenuPreview() {
                 DashboardState.Ready(
                     tab = Screen.MEASURES_LIST
                 ),
-                DashboardViewModel.Samples.reducer()
+                DashboardView.Samples.reducer()
             )
         }
     }

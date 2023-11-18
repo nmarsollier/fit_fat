@@ -11,15 +11,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.nmarsollier.fitfat.R
+import com.nmarsollier.fitfat.common.ui.viewModel.Reducer
 import com.nmarsollier.fitfat.userSettings.samples.Samples
 
 @Composable
 fun OptionsMenu(
-    reducer: OptionsReducer
+    reducer: Reducer<OptionsEvent>
 ) {
     TopAppBar(title = { Text(stringResource(R.string.home_options_title)) }, actions = {
         IconButton(onClick = {
-            reducer.saveSettings()
+            reducer.reduce(OptionsEvent.SaveSettings)
         }) {
             Icon(Icons.Default.Check, stringResource(id = R.string.save_dialog_title))
         }
@@ -31,7 +32,7 @@ fun OptionsMenu(
 fun OptionsMenuPreview() {
     com.nmarsollier.fitfat.common.ui.preview.KoinPreview {
         Column {
-            OptionsMenu(OptionsViewModel.Samples.reducer())
+            OptionsMenu(OptionsView.Samples.reducer())
         }
     }
 }

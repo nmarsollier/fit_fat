@@ -35,13 +35,14 @@ import com.nmarsollier.fitfat.userSettings.model.UserSettings
 import com.nmarsollier.fitfat.userSettings.samples.Samples
 import com.nmarsollier.fitfat.common.ui.preview.KoinPreview
 import com.nmarsollier.fitfat.common.ui.theme.AppColors
+import com.nmarsollier.fitfat.common.ui.viewModel.Reducer
 import com.nmarsollier.fitfat.common.ui.views.LoadingView
 import org.koin.androidx.compose.koinViewModel
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun MeasuresListScreen(
-    viewModel: MeasuresListViewModel = koinViewModel()
+    viewModel: MeasuresListView = koinViewModel()
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
     val state by viewModel.state.collectAsState(viewModel.viewModelScope.coroutineContext)
@@ -50,7 +51,7 @@ fun MeasuresListScreen(
         val observer = LifecycleEventObserver { _, event ->
             when (event) {
                 Lifecycle.Event.ON_RESUME -> {
-                    viewModel.load()
+                    viewModel.reduce(MeasuresListEvent.Initialize)
                 }
 
                 else -> Unit
@@ -71,7 +72,7 @@ fun MeasuresListScreen(
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun MeasuresListContent(
-    state: MeasuresListState, reducer: MeasuresListReducer
+    state: MeasuresListState, reducer: Reducer<MeasuresListEvent>
 ) {
     val context = LocalContext.current
 
@@ -80,7 +81,7 @@ fun MeasuresListContent(
     }, floatingActionButton = {
         FloatingActionButton(
             onClick = {
-                reducer.openNewMeasure()
+                reducer.reduce(MeasuresListEvent.OpenNewMeasure)
             },
             shape = CircleShape,
         ) {
@@ -123,7 +124,7 @@ fun MeasuresListScreenPreview() {
             MeasuresListState.Ready(
                 UserSettings.Samples.simpleData.value,
                 Measure.Samples.simpleData.map { it.value }
-            ), MeasuresListViewModel.Samples.reducer()
+            ), MeasuresListView.Samples.reducer()
         )
     }
 }

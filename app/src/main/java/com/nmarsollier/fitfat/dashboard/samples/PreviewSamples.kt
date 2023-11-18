@@ -1,16 +1,16 @@
 package com.nmarsollier.fitfat.dashboard.samples
 
-import com.nmarsollier.fitfat.dashboard.ui.DashboardReducer
-import com.nmarsollier.fitfat.dashboard.ui.DashboardViewModel
-import com.nmarsollier.fitfat.dashboard.ui.Screen
+import com.nmarsollier.fitfat.common.ui.viewModel.Reducer
+import com.nmarsollier.fitfat.dashboard.ui.DashboardEvent
+import com.nmarsollier.fitfat.dashboard.ui.DashboardView
 
 interface DashboardViewModelSamples {
-    fun reducer(): DashboardReducer
+    fun reducer(): Reducer<DashboardEvent>
 }
 
-val DashboardViewModel.Companion.Samples: DashboardViewModelSamples
+val DashboardView.Companion.Samples: DashboardViewModelSamples
     get() = object : DashboardViewModelSamples {
-        override fun reducer() = object : DashboardReducer {
-            override fun setCurrentSelectedTab(screen: Screen) = Unit
+        override fun reducer() = object : Reducer<DashboardEvent> {
+            override fun reduce(event: DashboardEvent) = Unit
         }
     }

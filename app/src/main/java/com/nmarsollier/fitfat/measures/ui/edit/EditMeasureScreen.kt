@@ -26,6 +26,7 @@ import com.nmarsollier.fitfat.userSettings.model.UserSettings
 import com.nmarsollier.fitfat.userSettings.samples.Samples
 import com.nmarsollier.fitfat.common.ui.dialogs.HelpDialog
 import com.nmarsollier.fitfat.common.ui.preview.KoinPreview
+import com.nmarsollier.fitfat.common.ui.viewModel.Reducer
 import com.nmarsollier.fitfat.common.ui.views.LoadingView
 import org.koin.androidx.compose.koinViewModel
 
@@ -33,7 +34,7 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun EditMeasureScreen(
     initialMeasure: MeasureData? = null,
-    viewModel: EditMeasureViewModel = koinViewModel()
+    viewModel: EditMeasureView = koinViewModel()
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
     val state by viewModel.state.collectAsState(viewModel.viewModelScope.coroutineContext)
@@ -42,7 +43,7 @@ fun EditMeasureScreen(
         val observer = LifecycleEventObserver { _, event ->
             when (event) {
                 Lifecycle.Event.ON_RESUME -> {
-                    viewModel.init(initialMeasure)
+                    viewModel.reduce(EditMeasureEvent.Initialize(initialMeasure))
                 }
 
                 else -> Unit
@@ -62,7 +63,7 @@ fun EditMeasureScreen(
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun EditMeasureContent(
-    state: EditMeasureState, reducer: EditMeasureReducer
+    state: EditMeasureState, reducer: Reducer<EditMeasureEvent>
 ) {
     val context = LocalContext.current as? Activity
 
@@ -80,16 +81,16 @@ fun EditMeasureContent(
 
                     if (state.showHelp != null) {
                         HelpDialog(helpRes = state.showHelp) {
-                            reducer.toggleHelp(null)
+                            reducer.reduce(EditMeasureEvent.ToggleHelp(null))
                         }
                     }
 
                     if (state.showMethod) {
                         MeasureMethodDialog(state.measure.measureMethod) {
                             if (it != null) {
-                                reducer.updateMeasureMethod(it)
+                                reducer.reduce(EditMeasureEvent.UpdateMeasureMethod(it))
                             } else {
-                                reducer.toggleShowMethod()
+                                reducer.reduce(EditMeasureEvent.ToggleShowMethod)
                             }
                         }
                     }
@@ -120,7 +121,7 @@ fun EditMeasureContentPreview() {
                 showMethod = false,
                 readOnly = false
             ),
-            EditMeasureViewModel.Samples.reducer()
+            EditMeasureView.Samples.reducer()
         )
     }
 }

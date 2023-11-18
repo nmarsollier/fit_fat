@@ -1,17 +1,16 @@
 package com.nmarsollier.fitfat.measures.samples
 
+import com.nmarsollier.fitfat.common.converters.dateOf
+import com.nmarsollier.fitfat.common.ui.viewModel.Reducer
 import com.nmarsollier.fitfat.measures.model.Measure
 import com.nmarsollier.fitfat.measures.model.asMeasure
 import com.nmarsollier.fitfat.measures.model.db.MeasureData
 import com.nmarsollier.fitfat.measures.model.db.MeasureMethod
-import com.nmarsollier.fitfat.measures.model.db.MeasureValue
-import com.nmarsollier.fitfat.measures.ui.edit.EditMeasureReducer
-import com.nmarsollier.fitfat.measures.ui.edit.EditMeasureViewModel
-import com.nmarsollier.fitfat.measures.ui.list.MeasuresListReducer
-import com.nmarsollier.fitfat.measures.ui.list.MeasuresListViewModel
+import com.nmarsollier.fitfat.measures.ui.edit.EditMeasureEvent
+import com.nmarsollier.fitfat.measures.ui.edit.EditMeasureView
+import com.nmarsollier.fitfat.measures.ui.list.MeasuresListEvent
+import com.nmarsollier.fitfat.measures.ui.list.MeasuresListView
 import com.nmarsollier.fitfat.userSettings.model.db.UserSettingsData
-import com.nmarsollier.fitfat.common.converters.dateOf
-import java.util.Date
 
 interface MeasureSamples {
     val simpleData: List<Measure>
@@ -90,50 +89,24 @@ val Measure.Companion.Samples
 
 
 interface MeasuresListViewModelSamples {
-    fun reducer(): MeasuresListReducer
+    fun reducer(): Reducer<MeasuresListEvent>
 }
 
-val MeasuresListViewModel.Companion.Samples: MeasuresListViewModelSamples
+val MeasuresListView.Companion.Samples: MeasuresListViewModelSamples
     get() = object : MeasuresListViewModelSamples {
-        override fun reducer() = object :
-            MeasuresListReducer {
-            override fun load() = Unit
-            override fun deleteMeasure(measure: MeasureData) =
-                Unit
-
-            override fun openNewMeasure() = Unit
-            override fun openViewMeasure(measure: MeasureData) =
-                Unit
+        override fun reducer() = object : Reducer<MeasuresListEvent> {
+            override fun reduce(event: MeasuresListEvent) = Unit
         }
     }
 
 
 interface EditMeasureViewModelSamples {
-    fun reducer(): EditMeasureReducer
+    fun reducer(): Reducer<EditMeasureEvent>
 }
 
-val EditMeasureViewModel.Companion.Samples: EditMeasureViewModelSamples
+val EditMeasureView.Companion.Samples: EditMeasureViewModelSamples
     get() = object : EditMeasureViewModelSamples {
-        override fun reducer() = object :
-            EditMeasureReducer {
-            override fun saveMeasure() = Unit
-
-            override fun updateDate(time: Date) = Unit
-
-            override fun updateMeasureMethod(measureMethod: MeasureMethod) =
-                Unit
-
-            override fun updateMeasureValue(
-                measureValue: MeasureValue,
-                value: Number
-            ) = Unit
-
-            override fun close() = Unit
-
-            override fun toggleHelp(res: Int?) = Unit
-
-            override fun toggleShowMethod() = Unit
-
-            override fun init(initialMeasure: MeasureData?) = Unit
+        override fun reducer() = object : Reducer<EditMeasureEvent> {
+            override fun reduce(event: EditMeasureEvent) = Unit
         }
     }

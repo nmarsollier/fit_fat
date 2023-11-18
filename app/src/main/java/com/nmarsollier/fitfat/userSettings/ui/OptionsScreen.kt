@@ -16,13 +16,14 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.viewModelScope
 import com.nmarsollier.fitfat.R
+import com.nmarsollier.fitfat.common.ui.viewModel.Reducer
 import com.nmarsollier.fitfat.userSettings.model.UserSettings
 import com.nmarsollier.fitfat.userSettings.samples.Samples
 import org.koin.androidx.compose.koinViewModel
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun OptionsScreen(viewModel: OptionsViewModel = koinViewModel()) {
+fun OptionsScreen(viewModel: OptionsView = koinViewModel()) {
     val lifecycleOwner = LocalLifecycleOwner.current
     val state by viewModel.state.collectAsState(viewModel.viewModelScope.coroutineContext)
 
@@ -30,11 +31,11 @@ fun OptionsScreen(viewModel: OptionsViewModel = koinViewModel()) {
         val observer = LifecycleEventObserver { _, event ->
             when (event) {
                 Lifecycle.Event.ON_RESUME -> {
-                    viewModel.load()
+                    viewModel.reduce(OptionsEvent.Initialize)
                 }
 
                 Lifecycle.Event.ON_STOP -> {
-                    viewModel.saveSettings()
+                    viewModel.reduce(OptionsEvent.SaveSettings)
                 }
 
                 else -> Unit
@@ -44,7 +45,7 @@ fun OptionsScreen(viewModel: OptionsViewModel = koinViewModel()) {
         }
 
         onDispose {
-            viewModel.saveSettings()
+            viewModel.reduce(OptionsEvent.SaveSettings)
             lifecycleOwner.lifecycle.removeObserver(observer)
         }
     }
@@ -56,7 +57,7 @@ fun OptionsScreen(viewModel: OptionsViewModel = koinViewModel()) {
 @Composable
 fun OptionsContent(
     state: OptionsState,
-    reducer: OptionsReducer
+    reducer: Reducer<OptionsEvent>
 ) {
     Scaffold(
         topBar = { OptionsMenu(reducer) }
@@ -88,7 +89,7 @@ fun OptionsScreenPreview() {
             OptionsState.Ready(
                 UserSettings.Samples.simpleData.value, false
             ),
-            OptionsViewModel.Samples.reducer()
+            OptionsView.Samples.reducer()
         )
     }
 }
