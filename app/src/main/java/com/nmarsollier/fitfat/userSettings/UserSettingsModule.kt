@@ -6,7 +6,7 @@ import com.nmarsollier.fitfat.userSettings.model.db.UserSettingsDatabase
 import com.nmarsollier.fitfat.userSettings.model.db.getRoomDatabase
 import com.nmarsollier.fitfat.userSettings.model.UserSettingsRepository
 import com.nmarsollier.fitfat.userSettings.model.api.UserSettingsFirebaseApi
-import com.nmarsollier.fitfat.userSettings.ui.options.OptionsViewModel
+import com.nmarsollier.fitfat.userSettings.ui.OptionsViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.core.module.dsl.createdAtStart

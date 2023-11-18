@@ -1,6 +1,6 @@
 package com.nmarsollier.fitfat.userSettings.model
 
-import com.nmarsollier.fitfat.firebase.FirebaseConnection
+import com.nmarsollier.fitfat.common.firebase.FirebaseConnection
 import com.nmarsollier.fitfat.userSettings.model.api.UserSettingsFirebaseApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope

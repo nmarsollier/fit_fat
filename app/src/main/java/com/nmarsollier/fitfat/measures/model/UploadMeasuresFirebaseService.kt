@@ -1,8 +1,8 @@
 package com.nmarsollier.fitfat.measures.model
 
-import com.nmarsollier.fitfat.firebase.FirebaseConnection
+import com.nmarsollier.fitfat.common.firebase.FirebaseConnection
 import com.nmarsollier.fitfat.measures.model.api.MeasuresFirebaseApi
-import com.nmarsollier.fitfat.utils.logger.Logger
+import com.nmarsollier.fitfat.common.logger.Logger
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch

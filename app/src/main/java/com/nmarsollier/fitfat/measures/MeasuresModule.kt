@@ -7,8 +7,8 @@ import com.nmarsollier.fitfat.measures.model.UploadMeasuresFirebaseService
 import com.nmarsollier.fitfat.measures.model.api.MeasuresFirebaseApi
 import com.nmarsollier.fitfat.measures.model.db.MeasuresDatabase
 import com.nmarsollier.fitfat.measures.model.db.getRoomDatabase
-import com.nmarsollier.fitfat.measures.ui.editMeasure.EditMeasureViewModel
-import com.nmarsollier.fitfat.measures.ui.measuresList.MeasuresListViewModel
+import com.nmarsollier.fitfat.measures.ui.edit.EditMeasureViewModel
+import com.nmarsollier.fitfat.measures.ui.list.MeasuresListViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModelOf
 import org.koin.core.module.dsl.createdAtStart

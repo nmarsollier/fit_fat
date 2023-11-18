@@ -12,7 +12,7 @@
         android:theme="@style/AppTheme"
         tools:targetApi="31">
         <activity
-            android:name="com.nmarsollier.fitfat.ui.dashboard.DashboardActivity"
+            android:name="com.nmarsollier.fitfat.dashboard.ui.DashboardActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -31,7 +31,7 @@
         </activity>
 
         <activity
-            android:name=".measures.ui.editMeasure.EditMeasureActivity"
+            android:name=".measures.ui.edit.EditMeasureActivity"
             android:screenOrientation="portrait" />
 
     </application>

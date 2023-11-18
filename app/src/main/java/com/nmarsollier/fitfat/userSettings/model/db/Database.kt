@@ -4,8 +4,8 @@ import android.content.Context
 import androidx.room.*
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.nmarsollier.fitfat.utils.converters.deserialize
-import com.nmarsollier.fitfat.utils.converters.serializedName
+import com.nmarsollier.fitfat.common.converters.deserialize
+import com.nmarsollier.fitfat.common.converters.serializedName
 import java.util.*
 
 private const val DATABASE_NAME = "userSettings"

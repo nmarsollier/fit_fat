@@ -4,11 +4,11 @@ import app.cash.turbine.test
 import com.nmarsollier.fitfat.measures.model.Measure
 import com.nmarsollier.fitfat.measures.model.db.MeasureMethod
 import com.nmarsollier.fitfat.measures.model.db.MeasureValue
-import com.nmarsollier.fitfat.measures.ui.editMeasure.EditMeasureState
-import com.nmarsollier.fitfat.measures.ui.editMeasure.EditMeasureViewModel
-import com.nmarsollier.fitfat.measures.ui.utils.preview.Samples
+import com.nmarsollier.fitfat.measures.ui.edit.EditMeasureState
+import com.nmarsollier.fitfat.measures.ui.edit.EditMeasureViewModel
+import com.nmarsollier.fitfat.measures.samples.Samples
 import com.nmarsollier.fitfat.userSettings.model.UserSettings
-import com.nmarsollier.fitfat.userSettings.ui.utils.preview.Samples
+import com.nmarsollier.fitfat.userSettings.samples.Samples
 import io.mockk.coVerify
 import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi

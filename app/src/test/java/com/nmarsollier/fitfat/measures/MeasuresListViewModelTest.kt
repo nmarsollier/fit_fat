@@ -2,12 +2,12 @@ package com.nmarsollier.fitfat.measures
 
 import app.cash.turbine.test
 import com.nmarsollier.fitfat.measures.model.Measure
-import com.nmarsollier.fitfat.measures.ui.measuresList.Destination
-import com.nmarsollier.fitfat.measures.ui.measuresList.MeasuresListState
-import com.nmarsollier.fitfat.measures.ui.measuresList.MeasuresListViewModel
-import com.nmarsollier.fitfat.measures.ui.utils.preview.Samples
+import com.nmarsollier.fitfat.measures.ui.list.Destination
+import com.nmarsollier.fitfat.measures.ui.list.MeasuresListState
+import com.nmarsollier.fitfat.measures.ui.list.MeasuresListViewModel
+import com.nmarsollier.fitfat.measures.samples.Samples
 import com.nmarsollier.fitfat.userSettings.model.UserSettings
-import com.nmarsollier.fitfat.userSettings.ui.utils.preview.Samples
+import com.nmarsollier.fitfat.userSettings.samples.Samples
 import io.mockk.coVerify
 import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi

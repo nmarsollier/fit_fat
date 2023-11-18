@@ -2,11 +2,9 @@ package com.nmarsollier.fitfat.stats
 
 import com.nmarsollier.fitfat.measures.model.Measure
 import com.nmarsollier.fitfat.measures.model.MeasuresRepository
-import com.nmarsollier.fitfat.measures.ui.utils.preview.Samples
-import com.nmarsollier.fitfat.stats.ui.stats.StatsViewModel
-import com.nmarsollier.fitfat.userSettings.model.UserSettings
-import com.nmarsollier.fitfat.userSettings.model.UserSettingsRepository
-import com.nmarsollier.fitfat.userSettings.ui.utils.preview.Samples
+import com.nmarsollier.fitfat.measures.samples.Samples
+import com.nmarsollier.fitfat.stats.ui.StatsViewModel
+import com.nmarsollier.fitfat.userSettings.samples.Samples
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers

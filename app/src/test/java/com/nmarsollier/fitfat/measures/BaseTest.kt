@@ -1,18 +1,18 @@
 package com.nmarsollier.fitfat.measures
 
-import com.nmarsollier.fitfat.firebase.FirebaseConnection
+import com.nmarsollier.fitfat.common.firebase.FirebaseConnection
 import com.nmarsollier.fitfat.measures.model.Measure
 import com.nmarsollier.fitfat.measures.model.UploadMeasuresFirebaseService
 import com.nmarsollier.fitfat.measures.model.db.MeasureDao
 import com.nmarsollier.fitfat.measures.model.db.MeasureDao_Impl
 import com.nmarsollier.fitfat.measures.model.MeasuresRepository
 import com.nmarsollier.fitfat.measures.model.api.MeasuresFirebaseApi
-import com.nmarsollier.fitfat.measures.ui.editMeasure.EditMeasureViewModel
-import com.nmarsollier.fitfat.measures.ui.measuresList.MeasuresListViewModel
-import com.nmarsollier.fitfat.measures.ui.utils.preview.Samples
+import com.nmarsollier.fitfat.measures.ui.edit.EditMeasureViewModel
+import com.nmarsollier.fitfat.measures.ui.list.MeasuresListViewModel
+import com.nmarsollier.fitfat.measures.samples.Samples
 import com.nmarsollier.fitfat.userSettings.model.UserSettings
 import com.nmarsollier.fitfat.userSettings.model.UserSettingsRepository
-import com.nmarsollier.fitfat.userSettings.ui.utils.preview.Samples
+import com.nmarsollier.fitfat.userSettings.samples.Samples
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk

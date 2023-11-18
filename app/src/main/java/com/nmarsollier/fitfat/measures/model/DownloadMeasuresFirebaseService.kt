@@ -1,6 +1,6 @@
 package com.nmarsollier.fitfat.measures.model
 
-import com.nmarsollier.fitfat.firebase.FirebaseConnection
+import com.nmarsollier.fitfat.common.firebase.FirebaseConnection
 import com.nmarsollier.fitfat.measures.model.api.MeasuresFirebaseApi
 import com.nmarsollier.fitfat.userSettings.model.UserSettingsRepository
 import kotlinx.coroutines.Dispatchers

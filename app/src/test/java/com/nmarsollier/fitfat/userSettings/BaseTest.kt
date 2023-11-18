@@ -1,17 +1,11 @@
 package com.nmarsollier.fitfat.userSettings
 
-import com.nmarsollier.fitfat.firebase.FirebaseConnection
+import com.nmarsollier.fitfat.common.firebase.FirebaseConnection
 import com.nmarsollier.fitfat.userSettings.model.UploadSyncFirebaseService
-import com.nmarsollier.fitfat.userSettings.model.UserSettings
-import com.nmarsollier.fitfat.userSettings.model.db.UserSettingsDao
 import com.nmarsollier.fitfat.userSettings.model.db.UserSettingsDao_Impl
-import com.nmarsollier.fitfat.userSettings.model.db.UserSettingsData
-import com.nmarsollier.fitfat.userSettings.model.api.FirebaseUserSettingsData
 import com.nmarsollier.fitfat.userSettings.model.UserSettingsRepository
-import com.nmarsollier.fitfat.userSettings.model.api.UserSettingsFirebaseApi
-import com.nmarsollier.fitfat.userSettings.ui.options.OptionsViewModel
-import com.nmarsollier.fitfat.userSettings.ui.utils.preview.Samples
-import com.nmarsollier.fitfat.utils.converters.dateOf
+import com.nmarsollier.fitfat.userSettings.ui.OptionsViewModel
+import com.nmarsollier.fitfat.userSettings.samples.Samples
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
@@ -36,7 +30,7 @@ open class BaseTest : KoinTest {
     val firebaseRepositoryMock = mockk<com.nmarsollier.fitfat.userSettings.model.api.UserSettingsFirebaseApi>(relaxed = true) {
         coEvery { findCurrent() } returns (com.nmarsollier.fitfat.userSettings.model.api.FirebaseUserSettingsData(
             displayName = "Test",
-            birthDate = com.nmarsollier.fitfat.utils.converters.dateOf(2021, 10, 10),
+            birthDate = com.nmarsollier.fitfat.common.converters.dateOf(2021, 10, 10),
             weight = 80.0,
             height = 180.0,
             sex = com.nmarsollier.fitfat.userSettings.model.db.UserSettingsData.SexType.FEMALE,

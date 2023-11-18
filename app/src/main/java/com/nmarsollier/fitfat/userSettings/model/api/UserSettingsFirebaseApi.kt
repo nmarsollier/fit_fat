@@ -2,14 +2,13 @@ package com.nmarsollier.fitfat.userSettings.model.api
 
 import android.os.Parcelable
 import com.google.firebase.firestore.DocumentSnapshot
-import com.nmarsollier.fitfat.firebase.FirebaseConnection
+import com.nmarsollier.fitfat.common.firebase.FirebaseConnection
 import com.nmarsollier.fitfat.userSettings.model.UserSettings
 import com.nmarsollier.fitfat.userSettings.model.db.UserSettingsData.MeasureType
 import com.nmarsollier.fitfat.userSettings.model.db.UserSettingsData.SexType
-import com.nmarsollier.fitfat.utils.converters.nullIfEmpty
-import com.nmarsollier.fitfat.utils.converters.parseIso8601
-import com.nmarsollier.fitfat.utils.converters.toIso8601
-import com.nmarsollier.fitfat.utils.logger.Logger
+import com.nmarsollier.fitfat.common.converters.nullIfEmpty
+import com.nmarsollier.fitfat.common.converters.parseIso8601
+import com.nmarsollier.fitfat.common.converters.toIso8601
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.coroutineScope
@@ -21,7 +20,7 @@ import kotlin.coroutines.suspendCoroutine
 
 class UserSettingsFirebaseApi internal constructor(
     private val firebaseConnection: FirebaseConnection,
-    private val logger: com.nmarsollier.fitfat.utils.logger.Logger
+    private val logger: com.nmarsollier.fitfat.common.logger.Logger
 ) {
     fun update(userSettings: UserSettings) {
         val key = firebaseConnection.userKey ?: return

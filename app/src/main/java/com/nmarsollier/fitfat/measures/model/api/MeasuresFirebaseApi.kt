@@ -2,15 +2,15 @@ package com.nmarsollier.fitfat.measures.model.api
 
 import com.google.android.gms.tasks.Task
 import com.google.firebase.firestore.QueryDocumentSnapshot
-import com.nmarsollier.fitfat.firebase.FirebaseConnection
+import com.nmarsollier.fitfat.common.firebase.FirebaseConnection
 import com.nmarsollier.fitfat.measures.model.Measure
 import com.nmarsollier.fitfat.measures.model.asMeasure
 import com.nmarsollier.fitfat.measures.model.db.MeasureData
 import com.nmarsollier.fitfat.measures.model.db.MeasureMethod
 import com.nmarsollier.fitfat.userSettings.model.UserSettings
 import com.nmarsollier.fitfat.userSettings.model.db.UserSettingsData
-import com.nmarsollier.fitfat.utils.converters.parseIso8601
-import com.nmarsollier.fitfat.utils.converters.toIso8601
+import com.nmarsollier.fitfat.common.converters.parseIso8601
+import com.nmarsollier.fitfat.common.converters.toIso8601
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch

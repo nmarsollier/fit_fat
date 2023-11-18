@@ -1,10 +1,9 @@
 package com.nmarsollier.fitfat.userSettings
 
 import app.cash.turbine.test
-import com.nmarsollier.fitfat.userSettings.model.UserSettings
-import com.nmarsollier.fitfat.userSettings.ui.options.OptionsState
-import com.nmarsollier.fitfat.userSettings.ui.options.OptionsViewModel
-import com.nmarsollier.fitfat.userSettings.ui.utils.preview.Samples
+import com.nmarsollier.fitfat.userSettings.ui.OptionsState
+import com.nmarsollier.fitfat.userSettings.ui.OptionsViewModel
+import com.nmarsollier.fitfat.userSettings.samples.Samples
 import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
@@ -21,13 +20,13 @@ import org.koin.test.get
 class OptionsViewModelTest : BaseTest() {
     @Test
     fun loadTest(): Unit = runBlocking {
-        com.nmarsollier.fitfat.userSettings.ui.options.OptionsViewModel(get(), get(), get()).apply {
+        OptionsViewModel(get(), get(), get()).apply {
             state.test {
-                assertEquals(com.nmarsollier.fitfat.userSettings.ui.options.OptionsState.Loading, awaitItem())
+                assertEquals(OptionsState.Loading, awaitItem())
 
                 load()
                 assertEquals(
-                    com.nmarsollier.fitfat.userSettings.ui.options.OptionsState.Ready(
+                    OptionsState.Ready(
                         com.nmarsollier.fitfat.userSettings.model.UserSettings.Samples.simpleData.value,
                         false
                     ), awaitItem()

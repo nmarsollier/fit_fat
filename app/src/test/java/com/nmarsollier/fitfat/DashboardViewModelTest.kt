@@ -1,12 +1,12 @@
 package com.nmarsollier.fitfat
 
 import app.cash.turbine.test
-import com.nmarsollier.fitfat.ui.dashboard.DashboardState
-import com.nmarsollier.fitfat.ui.dashboard.DashboardViewModel
-import com.nmarsollier.fitfat.ui.dashboard.Screen
+import com.nmarsollier.fitfat.dashboard.ui.DashboardState
+import com.nmarsollier.fitfat.dashboard.ui.DashboardViewModel
+import com.nmarsollier.fitfat.dashboard.ui.Screen
 import com.nmarsollier.fitfat.userSettings.model.UserSettings
-import com.nmarsollier.fitfat.userSettings.ui.utils.preview.Samples
-import com.nmarsollier.fitfat.utils.BaseTest
+import com.nmarsollier.fitfat.userSettings.samples.Samples
+import com.nmarsollier.fitfat.common.BaseTest
 import io.mockk.coEvery
 import io.mockk.coVerify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
