@@ -10,7 +10,7 @@ interface Reducer<E : Any> {
     fun reduce(event: E)
 }
 
-abstract class BaseView<S : Any, E : Any>(initial: S) : Reducer<E>, ViewModel() {
+abstract class BaseViewModel<S : Any, E : Any>(initial: S) : Reducer<E>, ViewModel() {
     private val mutableState: MutableStateFlow<S> by lazy {
         MutableStateFlow(initial)
     }
@@ -19,7 +19,7 @@ abstract class BaseView<S : Any, E : Any>(initial: S) : Reducer<E>, ViewModel() 
         mutableState.asStateFlow()
     }
 
-    fun S.toState() {
+    fun S.sendToState() {
         val value = this
         mutableState.update {
             value

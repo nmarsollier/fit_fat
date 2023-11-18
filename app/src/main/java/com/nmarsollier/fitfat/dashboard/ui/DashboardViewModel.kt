@@ -2,7 +2,7 @@ package com.nmarsollier.fitfat.dashboard.ui
 
 import androidx.lifecycle.viewModelScope
 import com.nmarsollier.fitfat.userSettings.model.UserSettingsRepository
-import com.nmarsollier.fitfat.common.ui.viewModel.BaseView
+import com.nmarsollier.fitfat.common.ui.viewModel.BaseViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -32,9 +32,9 @@ sealed class DashboardEvent {
     data class CurrentSelectedTab(val screen: Screen) : DashboardEvent()
 }
 
-class DashboardView(
+class DashboardViewModel(
     private val userSettingsRepository: UserSettingsRepository
-) : BaseView<DashboardState, DashboardEvent>(DashboardState.Loading(Screen.MEASURES_LIST)) {
+) : BaseViewModel<DashboardState, DashboardEvent>(DashboardState.Loading(Screen.MEASURES_LIST)) {
 
     override fun reduce(event: DashboardEvent) = when (event) {
         DashboardEvent.Initialize -> init()
@@ -42,7 +42,7 @@ class DashboardView(
     }
 
     private fun init() {
-        DashboardState.Loading(Screen.MEASURES_LIST).toState()
+        DashboardState.Loading(Screen.MEASURES_LIST).sendToState()
         viewModelScope.launch(Dispatchers.IO) {
             val isNew = userSettingsRepository.findCurrent().value.isNew()
             DashboardState.Ready(
@@ -51,12 +51,12 @@ class DashboardView(
                 } else {
                     Screen.MEASURES_LIST
                 }
-            ).toState()
+            ).sendToState()
         }
     }
 
     private fun setCurrentSelectedTab(event: DashboardEvent.CurrentSelectedTab) {
-        state.value.updateTab(event.screen).toState()
+        state.value.updateTab(event.screen).sendToState()
     }
 
     companion object

@@ -52,7 +52,7 @@ fun EditMeasureMenuPreview() {
                     showHelp = null,
                     showMethod = false,
                     readOnly = false
-                ), EditMeasureView.Samples.reducer()
+                ), EditMeasureViewModel.Samples.reducer()
             )
         }
     }

@@ -4,7 +4,7 @@ import app.cash.turbine.test
 import com.nmarsollier.fitfat.measures.model.Measure
 import com.nmarsollier.fitfat.measures.ui.list.Destination
 import com.nmarsollier.fitfat.measures.ui.list.MeasuresListState
-import com.nmarsollier.fitfat.measures.ui.list.MeasuresListView
+import com.nmarsollier.fitfat.measures.ui.list.MeasuresListViewModel
 import com.nmarsollier.fitfat.measures.samples.Samples
 import com.nmarsollier.fitfat.userSettings.model.UserSettings
 import com.nmarsollier.fitfat.userSettings.samples.Samples
@@ -27,7 +27,7 @@ class MeasuresListViewModelTest : BaseTest() {
 
     @Test
     fun loadTest(): Unit = runTest {
-        MeasuresListView(get(), get()).apply {
+        MeasuresListViewModel(get(), get()).apply {
             state.test {
                 assertEquals(MeasuresListState.Loading, awaitItem())
 
@@ -47,7 +47,7 @@ class MeasuresListViewModelTest : BaseTest() {
 
     @Test
     fun openNewMeasureTest(): Unit = runBlocking {
-        MeasuresListView(get(), get()).apply {
+        MeasuresListViewModel(get(), get()).apply {
             state.test {
                 assertEquals(MeasuresListState.Loading, awaitItem())
 
@@ -61,7 +61,7 @@ class MeasuresListViewModelTest : BaseTest() {
 
     @Test
     fun openViewMeasureTest(): Unit = runBlocking {
-        MeasuresListView(get(), get()).apply {
+        MeasuresListViewModel(get(), get()).apply {
             state.test {
                 assertEquals(MeasuresListState.Loading, awaitItem())
 
@@ -79,7 +79,7 @@ class MeasuresListViewModelTest : BaseTest() {
 
     @Test
     fun deleteTest(): Unit = runBlocking {
-        MeasuresListView(get(), get()).apply {
+        MeasuresListViewModel(get(), get()).apply {
             state.test {
                 assertEquals(MeasuresListState.Loading, awaitItem())
 

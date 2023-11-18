@@ -109,7 +109,7 @@ fun DecimalMeasureViewPreview() {
             UserSettings.Samples.simpleData.value,
             Measure.Samples.bodyFat.value,
             MeasureValue.BODY_FAT,
-            EditMeasureView.Samples.reducer()
+            EditMeasureViewModel.Samples.reducer()
         )
     }
 }

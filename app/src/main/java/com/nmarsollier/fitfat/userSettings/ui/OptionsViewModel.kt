@@ -35,11 +35,11 @@ sealed class OptionsEvent {
     data object Initialize : OptionsEvent()
 }
 
-class OptionsView internal constructor(
+class OptionsViewModel internal constructor(
     private val userSettingsRepository: UserSettingsRepository,
     private val uploadSyncFirebaseService: UploadSyncFirebaseService,
     private val firebaseConnection: FirebaseConnection
-) : com.nmarsollier.fitfat.common.ui.viewModel.BaseView<OptionsState, OptionsEvent>(OptionsState.Loading){
+) : com.nmarsollier.fitfat.common.ui.viewModel.BaseViewModel<OptionsState, OptionsEvent>(OptionsState.Loading){
     private var userSettings: UserSettings? = null
 
     val dataChanged: Boolean
@@ -60,14 +60,14 @@ class OptionsView internal constructor(
     }
 
     private fun load() {
-        OptionsState.Loading.toState()
+        OptionsState.Loading.sendToState()
         viewModelScope.launch(Dispatchers.IO) {
             userSettingsRepository.findCurrent().let {
                 userSettings = it
                 OptionsState.Ready(
                     userSettings = it.value,
                     hasChanged = false
-                ).toState()
+                ).sendToState()
             }
         }
     }
@@ -82,7 +82,7 @@ class OptionsView internal constructor(
             OptionsState.Ready(
                 userSettings = userSettings.value,
                 hasChanged = false
-            ).toState()
+            ).sendToState()
         }
     }
 
@@ -92,7 +92,7 @@ class OptionsView internal constructor(
             OptionsState.Ready(
                 hasChanged = true,
                 userSettings = value
-            ).toState()
+            ).sendToState()
         }
     }
 
@@ -102,7 +102,7 @@ class OptionsView internal constructor(
             OptionsState.Ready(
                 hasChanged = true,
                 userSettings = value
-            ).toState()
+            ).sendToState()
         }
     }
 
@@ -112,7 +112,7 @@ class OptionsView internal constructor(
             OptionsState.Ready(
                 hasChanged = true,
                 userSettings = value
-            ).toState()
+            ).sendToState()
         }
     }
 
@@ -122,7 +122,7 @@ class OptionsView internal constructor(
             OptionsState.Ready(
                 hasChanged = true,
                 userSettings = value
-            ).toState()
+            ).sendToState()
         }
     }
 
@@ -132,7 +132,7 @@ class OptionsView internal constructor(
             OptionsState.Ready(
                 hasChanged = true,
                 userSettings = value
-            ).toState()
+            ).sendToState()
         }
     }
 
@@ -142,7 +142,7 @@ class OptionsView internal constructor(
             OptionsState.Ready(
                 hasChanged = true,
                 userSettings = value
-            ).toState()
+            ).sendToState()
         }
     }
 
@@ -152,16 +152,16 @@ class OptionsView internal constructor(
             OptionsState.Ready(
                 hasChanged = true,
                 userSettings = value
-            ).toState()
+            ).sendToState()
         }
     }
 
     private fun loginWithGoogle(event: OptionsEvent.LoginWithGoogle) {
         viewModelScope.launch(Dispatchers.IO) {
-            OptionsState.Loading.toState()
+            OptionsState.Loading.sendToState()
             firebaseConnection.signInWithGoogle(event.activity).let {
                 when (it) {
-                    GoogleAuthResult.Error -> OptionsState.GoogleLoginError.toState()
+                    GoogleAuthResult.Error -> OptionsState.GoogleLoginError.sendToState()
                     is GoogleAuthResult.Success -> {
                         userSettingsRepository.findCurrent().apply {
                             updateFirebaseToken(it.token)

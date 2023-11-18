@@ -28,10 +28,10 @@ sealed class StatsEvent {
     data object ToggleShowMethod : StatsEvent()
 }
 
-class StatsView(
+class StatsViewModel(
     private val userSettingsRepository: com.nmarsollier.fitfat.userSettings.model.UserSettingsRepository,
     private val measuresRepository: MeasuresRepository
-) : com.nmarsollier.fitfat.common.ui.viewModel.BaseView<StatsState, StatsEvent>(
+) : com.nmarsollier.fitfat.common.ui.viewModel.BaseViewModel<StatsState, StatsEvent>(
     StatsState.Loading(
         MeasureMethod.WEIGHT_ONLY
     )
@@ -48,7 +48,7 @@ class StatsView(
     }
 
     private fun init() {
-        StatsState.Loading(measureMethod).toState()
+        StatsState.Loading(measureMethod).sendToState()
 
         viewModelScope.launch(Dispatchers.IO) {
             val userSettings = userSettingsRepository.findCurrent()
@@ -60,7 +60,7 @@ class StatsView(
                     userSettings = userSettings.value,
                     measures = measures.map { it.value },
                     showMethod = false
-                ).toState()
+                ).sendToState()
             }
         }
     }
@@ -69,12 +69,12 @@ class StatsView(
         when (val value = state.value) {
             is StatsState.Loading -> value.copy(method = event.selectedMethod)
             is StatsState.Ready -> value.copy(method = event.selectedMethod, showMethod = false)
-        }.toState()
+        }.sendToState()
     }
 
     private fun toggleShowMethod() {
         val st = (state.value as? StatsState.Ready) ?: return
-        st.copy(showMethod = !st.showMethod).toState()
+        st.copy(showMethod = !st.showMethod).sendToState()
     }
 
     companion object

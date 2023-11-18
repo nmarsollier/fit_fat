@@ -24,7 +24,7 @@ import org.koin.androidx.compose.koinViewModel
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun StatsScreen(viewModel: StatsView = koinViewModel()) {
+fun StatsScreen(viewModel: StatsViewModel = koinViewModel()) {
     val lifecycleOwner = LocalLifecycleOwner.current
 
     val state by viewModel.state.collectAsState(viewModel.viewModelScope.coroutineContext)
@@ -87,7 +87,7 @@ fun StatsScreenPreview() {
                 UserSettings.Samples.simpleData.value,
                 Measure.Samples.simpleData.map { it.value },
                 showMethod = false
-            ), StatsView.Samples.reducer()
+            ), StatsViewModel.Samples.reducer()
         )
     }
 }

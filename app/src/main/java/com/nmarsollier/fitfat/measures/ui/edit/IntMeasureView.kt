@@ -96,7 +96,7 @@ fun IntMeasureValuePreview() {
                 UserSettings.Samples.simpleData.value,
                 Measure.Samples.simpleData[0].value,
                 MeasureValue.ABDOMINAL,
-                EditMeasureView.Samples.reducer()
+                EditMeasureViewModel.Samples.reducer()
             )
         }
     }

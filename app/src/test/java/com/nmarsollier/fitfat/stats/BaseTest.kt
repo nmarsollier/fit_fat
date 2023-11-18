@@ -3,7 +3,7 @@ package com.nmarsollier.fitfat.stats
 import com.nmarsollier.fitfat.measures.model.Measure
 import com.nmarsollier.fitfat.measures.model.MeasuresRepository
 import com.nmarsollier.fitfat.measures.samples.Samples
-import com.nmarsollier.fitfat.stats.ui.StatsView
+import com.nmarsollier.fitfat.stats.ui.StatsViewModel
 import com.nmarsollier.fitfat.userSettings.samples.Samples
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -38,7 +38,7 @@ open class BaseTest : KoinTest {
     val measuresTestModule = module {
         factory { userRepositoryMock }
         factory { measureRepositoryMock }
-        viewModelOf(::StatsView)
+        viewModelOf(::StatsViewModel)
     }
 
     @get:Rule

@@ -175,7 +175,7 @@ fun MeasureItemViewPreview() {
             MeasureItemView(
                 UserSettings.Samples.simpleData.value,
                 Measure.Samples.simpleData[0].value,
-                MeasuresListView.Samples.reducer()
+                MeasuresListViewModel.Samples.reducer()
             )
         }
     }

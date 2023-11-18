@@ -87,7 +87,7 @@ fun StatsContentDetailPreview() {
                 measures = Measure.Samples.simpleData.map { it.value },
                 showMethod = false
             ),
-            StatsView.Samples.reducer()
+            StatsViewModel.Samples.reducer()
         )
     }
 }

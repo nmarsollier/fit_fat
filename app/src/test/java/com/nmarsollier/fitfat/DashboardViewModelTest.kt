@@ -2,7 +2,7 @@ package com.nmarsollier.fitfat
 
 import app.cash.turbine.test
 import com.nmarsollier.fitfat.dashboard.ui.DashboardState
-import com.nmarsollier.fitfat.dashboard.ui.DashboardView
+import com.nmarsollier.fitfat.dashboard.ui.DashboardViewModel
 import com.nmarsollier.fitfat.dashboard.ui.Screen
 import com.nmarsollier.fitfat.userSettings.model.UserSettings
 import com.nmarsollier.fitfat.userSettings.samples.Samples
@@ -24,7 +24,7 @@ import org.koin.test.get
 class DashboardViewModelTest : BaseTest() {
     @Test
     fun testExistingInitialTab(): Unit = runBlocking {
-        DashboardView(get()).apply {
+        DashboardViewModel(get()).apply {
             state.test {
                 assertEquals(DashboardState.Loading(Screen.MEASURES_LIST), awaitItem())
                 init()
@@ -42,7 +42,7 @@ class DashboardViewModelTest : BaseTest() {
             UserSettings.Samples.simpleData
         }
 
-        DashboardView(get()).apply {
+        DashboardViewModel(get()).apply {
             state.test {
                 assertEquals(DashboardState.Loading(Screen.MEASURES_LIST), awaitItem())
                 init()
@@ -56,7 +56,7 @@ class DashboardViewModelTest : BaseTest() {
 
     @Test
     fun testTabSwitch(): Unit = runBlocking {
-        DashboardView(get()).apply {
+        DashboardViewModel(get()).apply {
             state.test {
                 assertEquals(DashboardState.Loading(Screen.MEASURES_LIST), awaitItem())
                 init()

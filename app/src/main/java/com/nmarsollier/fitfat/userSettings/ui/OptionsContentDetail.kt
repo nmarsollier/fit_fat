@@ -192,7 +192,7 @@ fun OptionsContentDetailPreview() {
             OptionsState.Ready(
                 userSettings = UserSettings.Samples.simpleData.value,
                 hasChanged = false,
-            ), OptionsView.Samples.reducer()
+            ), OptionsViewModel.Samples.reducer()
         )
     }
 }

@@ -34,7 +34,7 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 fun EditMeasureScreen(
     initialMeasure: MeasureData? = null,
-    viewModel: EditMeasureView = koinViewModel()
+    viewModel: EditMeasureViewModel = koinViewModel()
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
     val state by viewModel.state.collectAsState(viewModel.viewModelScope.coroutineContext)
@@ -121,7 +121,7 @@ fun EditMeasureContentPreview() {
                 showMethod = false,
                 readOnly = false
             ),
-            EditMeasureView.Samples.reducer()
+            EditMeasureViewModel.Samples.reducer()
         )
     }
 }

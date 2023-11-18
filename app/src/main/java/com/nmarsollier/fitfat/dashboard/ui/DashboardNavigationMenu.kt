@@ -101,7 +101,7 @@ fun DashboardNavigationMenuPreview() {
                 DashboardState.Ready(
                     tab = Screen.MEASURES_LIST
                 ),
-                DashboardView.Samples.reducer()
+                DashboardViewModel.Samples.reducer()
             )
         }
     }

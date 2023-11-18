@@ -25,7 +25,7 @@ import com.nmarsollier.fitfat.userSettings.ui.OptionsScreen
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun DashboardScreen(viewModel: DashboardView = koinViewModel()) {
+fun DashboardScreen(viewModel: DashboardViewModel = koinViewModel()) {
     val state by viewModel.state.collectAsState(viewModel.viewModelScope.coroutineContext)
     val lifecycleOwner = LocalLifecycleOwner.current
 
@@ -85,7 +85,7 @@ fun DashboardContentPreview() {
         DashboardContent(
             DashboardState.Ready(
                 tab = Screen.MEASURES_LIST
-            ), DashboardView.Samples.reducer()
+            ), DashboardViewModel.Samples.reducer()
         )
     }
 }

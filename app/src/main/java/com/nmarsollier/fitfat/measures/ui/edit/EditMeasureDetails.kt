@@ -132,7 +132,7 @@ fun EditMeasureDetailsPreview() {
             EditMeasureDetails(
                 UserSettings.Samples.simpleData.value,
                 Measure.Samples.simpleData[0].value,
-                EditMeasureView.Samples.reducer()
+                EditMeasureViewModel.Samples.reducer()
             )
         }
     }

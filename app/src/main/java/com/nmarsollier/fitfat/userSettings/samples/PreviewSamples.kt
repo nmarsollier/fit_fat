@@ -6,7 +6,7 @@ import com.nmarsollier.fitfat.userSettings.model.UserSettings
 import com.nmarsollier.fitfat.userSettings.model.asUserSettings
 import com.nmarsollier.fitfat.userSettings.model.db.UserSettingsData
 import com.nmarsollier.fitfat.userSettings.ui.OptionsEvent
-import com.nmarsollier.fitfat.userSettings.ui.OptionsView
+import com.nmarsollier.fitfat.userSettings.ui.OptionsViewModel
 
 interface UserSettingsSamples {
     val simpleData: UserSettings
@@ -30,7 +30,7 @@ interface OptionsViewModelSamples {
     fun reducer(): Reducer<OptionsEvent>
 }
 
-val OptionsView.Companion.Samples: OptionsViewModelSamples
+val OptionsViewModel.Companion.Samples: OptionsViewModelSamples
     get() = object : OptionsViewModelSamples {
         override fun reducer() = object : Reducer<OptionsEvent> {
             override fun reduce(event: OptionsEvent) = Unit

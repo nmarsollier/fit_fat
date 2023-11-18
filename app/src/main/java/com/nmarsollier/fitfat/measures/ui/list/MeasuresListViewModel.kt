@@ -1,7 +1,7 @@
 package com.nmarsollier.fitfat.measures.ui.list
 
 import androidx.lifecycle.viewModelScope
-import com.nmarsollier.fitfat.common.ui.viewModel.BaseView
+import com.nmarsollier.fitfat.common.ui.viewModel.BaseViewModel
 import com.nmarsollier.fitfat.measures.model.MeasuresRepository
 import com.nmarsollier.fitfat.measures.model.db.MeasureData
 import com.nmarsollier.fitfat.userSettings.model.UserSettingsRepository
@@ -37,10 +37,10 @@ sealed class MeasuresListEvent {
     data class OpenViewMeasure(val measure: MeasureData) : MeasuresListEvent()
 }
 
-class MeasuresListView(
+class MeasuresListViewModel(
     private val measuresRepository: MeasuresRepository,
     private val userSettingsRepository: UserSettingsRepository
-) : BaseView<MeasuresListState, MeasuresListEvent>(MeasuresListState.Loading) {
+) : BaseViewModel<MeasuresListState, MeasuresListEvent>(MeasuresListState.Loading) {
 
     override fun reduce(event: MeasuresListEvent) = when (event) {
         is MeasuresListEvent.DeleteMeasure -> deleteMeasure(event)
@@ -50,7 +50,7 @@ class MeasuresListView(
     }
 
     private fun load() {
-        MeasuresListState.Loading.toState()
+        MeasuresListState.Loading.sendToState()
         viewModelScope.launch(Dispatchers.IO) {
             val userSettings = userSettingsRepository.findCurrent()
             val measures = measuresRepository.findAll()
@@ -58,13 +58,13 @@ class MeasuresListView(
             MeasuresListState.Ready(
                 userSettings = userSettings.value,
                 measures = measures.map { it.value }
-            ).toState()
+            ).sendToState()
         }
     }
 
     private fun deleteMeasure(event: MeasuresListEvent.DeleteMeasure) {
         viewModelScope.launch(Dispatchers.IO) {
-            MeasuresListState.Loading.toState()
+            MeasuresListState.Loading.sendToState()
             measuresRepository.findById(event.measure.uid)?.also {
                 measuresRepository.delete(it)
             }
@@ -73,12 +73,12 @@ class MeasuresListView(
     }
 
     private fun openNewMeasure() {
-        MeasuresListState.Redirect(Destination.NewMeasure).toState()
+        MeasuresListState.Redirect(Destination.NewMeasure).sendToState()
     }
 
     private fun openViewMeasure(event: MeasuresListEvent.OpenViewMeasure) {
         viewModelScope.launch(Dispatchers.IO) {
-            MeasuresListState.Redirect(Destination.ViewMeasure(event.measure)).toState()
+            MeasuresListState.Redirect(Destination.ViewMeasure(event.measure)).sendToState()
         }
     }
 

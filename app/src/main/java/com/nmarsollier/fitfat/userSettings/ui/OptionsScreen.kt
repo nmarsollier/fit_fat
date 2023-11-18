@@ -23,7 +23,7 @@ import org.koin.androidx.compose.koinViewModel
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun OptionsScreen(viewModel: OptionsView = koinViewModel()) {
+fun OptionsScreen(viewModel: OptionsViewModel = koinViewModel()) {
     val lifecycleOwner = LocalLifecycleOwner.current
     val state by viewModel.state.collectAsState(viewModel.viewModelScope.coroutineContext)
 
@@ -89,7 +89,7 @@ fun OptionsScreenPreview() {
             OptionsState.Ready(
                 UserSettings.Samples.simpleData.value, false
             ),
-            OptionsView.Samples.reducer()
+            OptionsViewModel.Samples.reducer()
         )
     }
 }

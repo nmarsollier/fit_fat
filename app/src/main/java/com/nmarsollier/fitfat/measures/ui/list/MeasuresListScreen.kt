@@ -42,7 +42,7 @@ import org.koin.androidx.compose.koinViewModel
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun MeasuresListScreen(
-    viewModel: MeasuresListView = koinViewModel()
+    viewModel: MeasuresListViewModel = koinViewModel()
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
     val state by viewModel.state.collectAsState(viewModel.viewModelScope.coroutineContext)
@@ -124,7 +124,7 @@ fun MeasuresListScreenPreview() {
             MeasuresListState.Ready(
                 UserSettings.Samples.simpleData.value,
                 Measure.Samples.simpleData.map { it.value }
-            ), MeasuresListView.Samples.reducer()
+            ), MeasuresListViewModel.Samples.reducer()
         )
     }
 }

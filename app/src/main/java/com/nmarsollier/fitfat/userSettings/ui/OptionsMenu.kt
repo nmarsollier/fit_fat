@@ -32,7 +32,7 @@ fun OptionsMenu(
 fun OptionsMenuPreview() {
     com.nmarsollier.fitfat.common.ui.preview.KoinPreview {
         Column {
-            OptionsMenu(OptionsView.Samples.reducer())
+            OptionsMenu(OptionsViewModel.Samples.reducer())
         }
     }
 }

@@ -10,7 +10,7 @@ import com.nmarsollier.fitfat.measures.model.db.MeasureValue
 import com.nmarsollier.fitfat.userSettings.model.UserSettings
 import com.nmarsollier.fitfat.userSettings.model.UserSettingsRepository
 import com.nmarsollier.fitfat.userSettings.model.db.UserSettingsData
-import com.nmarsollier.fitfat.common.ui.viewModel.BaseView
+import com.nmarsollier.fitfat.common.ui.viewModel.BaseViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.util.Date
@@ -55,11 +55,11 @@ sealed class EditMeasureEvent {
     data class Initialize(val initialMeasure: MeasureData?) : EditMeasureEvent()
 }
 
-class EditMeasureView(
+class EditMeasureViewModel(
     private val measuresRepository: MeasuresRepository,
     private val userSettingsRepository: UserSettingsRepository,
     private val saveMeasureAndUserSettingsService: SaveMeasureAndUserSettingsService
-) : BaseView<EditMeasureState, EditMeasureEvent>(EditMeasureState.Loading(null, false)) {
+) : BaseViewModel<EditMeasureState, EditMeasureEvent>(EditMeasureState.Loading(null, false)) {
     private var userSettings: UserSettings? = null
     private var measure: Measure? = null
 
@@ -82,13 +82,13 @@ class EditMeasureView(
             val readOnly = state.value.currentReadOnly
             val userSettings = userSettings ?: return@launch
 
-            EditMeasureState.Loading(null, readOnly).toState()
+            EditMeasureState.Loading(null, readOnly).sendToState()
 
             if (saveMeasureAndUserSettingsService.saveMeasure(measure, userSettings)) {
-                EditMeasureState.Close.toState()
+                EditMeasureState.Close.sendToState()
             } else {
-                EditMeasureState.Invalid.toState()
-                currentState.toState()
+                EditMeasureState.Invalid.sendToState()
+                currentState.sendToState()
             }
         }
     }
@@ -101,7 +101,7 @@ class EditMeasureView(
             measure.updateDate(event.time)
             copy(
                 measure = measure.value
-            ).toState()
+            ).sendToState()
         }
     }
 
@@ -114,7 +114,7 @@ class EditMeasureView(
             copy(
                 measure = measure.value,
                 showMethod = false
-            ).toState()
+            ).sendToState()
         }
     }
 
@@ -127,30 +127,30 @@ class EditMeasureView(
             copy(
                 measure = measure.value,
                 showMethod = false
-            ).toState()
+            ).sendToState()
         }
     }
 
     private fun close() {
-        EditMeasureState.Close.toState()
+        EditMeasureState.Close.sendToState()
     }
 
     private fun toggleHelp(event: EditMeasureEvent.ToggleHelp) {
         val newState = (state.value as? EditMeasureState.Ready) ?: return
-        newState.copy(showHelp = event.res).toState()
+        newState.copy(showHelp = event.res).sendToState()
     }
 
     private fun toggleShowMethod() {
         if (state.value.currentReadOnly) return
         val newState = (state.value as? EditMeasureState.Ready) ?: return
 
-        newState.copy(showMethod = !newState.showMethod).toState()
+        newState.copy(showMethod = !newState.showMethod).sendToState()
     }
 
     private fun init(event: EditMeasureEvent.Initialize) {
         EditMeasureState.Loading(
             event.initialMeasure, event.initialMeasure != null
-        ).toState()
+        ).sendToState()
 
         viewModelScope.launch(Dispatchers.IO) {
             val userSettingsLoaded = userSettingsRepository.findCurrent()
@@ -168,7 +168,7 @@ class EditMeasureView(
                 showHelp = null,
                 showMethod = false,
                 readOnly = event.initialMeasure != null
-            ).toState()
+            ).sendToState()
         }
     }
 

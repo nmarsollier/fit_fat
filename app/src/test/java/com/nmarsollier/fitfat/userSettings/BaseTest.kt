@@ -4,7 +4,7 @@ import com.nmarsollier.fitfat.common.firebase.FirebaseConnection
 import com.nmarsollier.fitfat.userSettings.model.UploadSyncFirebaseService
 import com.nmarsollier.fitfat.userSettings.model.db.UserSettingsDao_Impl
 import com.nmarsollier.fitfat.userSettings.model.UserSettingsRepository
-import com.nmarsollier.fitfat.userSettings.ui.OptionsView
+import com.nmarsollier.fitfat.userSettings.ui.OptionsViewModel
 import com.nmarsollier.fitfat.userSettings.samples.Samples
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -51,7 +51,7 @@ open class BaseTest : KoinTest {
 
         factoryOf(::UploadSyncFirebaseService)
         factoryOf(::UserSettingsRepository)
-        viewModelOf(::OptionsView)
+        viewModelOf(::OptionsViewModel)
     }
 
     @get:Rule

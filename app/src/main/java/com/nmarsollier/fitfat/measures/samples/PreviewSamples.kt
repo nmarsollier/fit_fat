@@ -7,9 +7,9 @@ import com.nmarsollier.fitfat.measures.model.asMeasure
 import com.nmarsollier.fitfat.measures.model.db.MeasureData
 import com.nmarsollier.fitfat.measures.model.db.MeasureMethod
 import com.nmarsollier.fitfat.measures.ui.edit.EditMeasureEvent
-import com.nmarsollier.fitfat.measures.ui.edit.EditMeasureView
+import com.nmarsollier.fitfat.measures.ui.edit.EditMeasureViewModel
 import com.nmarsollier.fitfat.measures.ui.list.MeasuresListEvent
-import com.nmarsollier.fitfat.measures.ui.list.MeasuresListView
+import com.nmarsollier.fitfat.measures.ui.list.MeasuresListViewModel
 import com.nmarsollier.fitfat.userSettings.model.db.UserSettingsData
 
 interface MeasureSamples {
@@ -92,7 +92,7 @@ interface MeasuresListViewModelSamples {
     fun reducer(): Reducer<MeasuresListEvent>
 }
 
-val MeasuresListView.Companion.Samples: MeasuresListViewModelSamples
+val MeasuresListViewModel.Companion.Samples: MeasuresListViewModelSamples
     get() = object : MeasuresListViewModelSamples {
         override fun reducer() = object : Reducer<MeasuresListEvent> {
             override fun reduce(event: MeasuresListEvent) = Unit
@@ -104,7 +104,7 @@ interface EditMeasureViewModelSamples {
     fun reducer(): Reducer<EditMeasureEvent>
 }
 
-val EditMeasureView.Companion.Samples: EditMeasureViewModelSamples
+val EditMeasureViewModel.Companion.Samples: EditMeasureViewModelSamples
     get() = object : EditMeasureViewModelSamples {
         override fun reducer() = object : Reducer<EditMeasureEvent> {
             override fun reduce(event: EditMeasureEvent) = Unit
