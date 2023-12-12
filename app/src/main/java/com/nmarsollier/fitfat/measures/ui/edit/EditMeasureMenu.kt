@@ -13,7 +13,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.nmarsollier.fitfat.R
 import com.nmarsollier.fitfat.common.ui.preview.KoinPreview
-import com.nmarsollier.fitfat.common.ui.viewModel.Reducer
 import com.nmarsollier.fitfat.measures.model.Measure
 import com.nmarsollier.fitfat.measures.samples.Samples
 import com.nmarsollier.fitfat.userSettings.model.UserSettings
@@ -21,18 +20,18 @@ import com.nmarsollier.fitfat.userSettings.samples.Samples
 
 @Composable
 fun EditMeasureMenu(
-    state: EditMeasureState, eventHandler: Reducer<EditMeasureEvent>
+    state: EditMeasureState, eventHandler: (EditMeasureEvent) -> Unit
 ) {
     TopAppBar(title = { Text(stringResource(R.string.new_measure_title)) }, navigationIcon = {
         IconButton(onClick = {
-            eventHandler.reduce(EditMeasureEvent.Close)
+            eventHandler(EditMeasureEvent.Close)
         }) {
             Icon(Icons.Default.ArrowBack, "")
         }
     }, actions = {
         if (!state.currentReadOnly) {
             IconButton(onClick = {
-                eventHandler.reduce(EditMeasureEvent.SaveMeasure)
+                eventHandler(EditMeasureEvent.SaveMeasure)
             }) {
                 Icon(Icons.Default.Check, "")
             }
@@ -52,7 +51,7 @@ fun EditMeasureMenuPreview() {
                     showHelp = null,
                     showMethod = false,
                     readOnly = false
-                ), EditMeasureViewModel.Samples.reducer()
+                ), EditMeasureViewModel.Samples::reduce
             )
         }
     }

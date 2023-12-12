@@ -6,11 +6,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
-interface Reducer<E : Any> {
-    fun reduce(event: E)
-}
-
-abstract class BaseViewModel<S : Any, E : Any>(initial: S) : Reducer<E>, ViewModel() {
+abstract class BaseViewModel<S : Any, E : Any>(initial: S) : ViewModel() {
     private val mutableState: MutableStateFlow<S> by lazy {
         MutableStateFlow(initial)
     }
@@ -25,4 +21,6 @@ abstract class BaseViewModel<S : Any, E : Any>(initial: S) : Reducer<E>, ViewMod
             value
         }
     }
+
+    abstract fun reduce(event: E)
 }

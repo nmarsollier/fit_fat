@@ -26,7 +26,6 @@ import com.nmarsollier.fitfat.userSettings.model.UserSettings
 import com.nmarsollier.fitfat.userSettings.samples.Samples
 import com.nmarsollier.fitfat.common.ui.dialogs.HelpDialog
 import com.nmarsollier.fitfat.common.ui.preview.KoinPreview
-import com.nmarsollier.fitfat.common.ui.viewModel.Reducer
 import com.nmarsollier.fitfat.common.ui.views.LoadingView
 import org.koin.androidx.compose.koinViewModel
 
@@ -57,18 +56,18 @@ fun EditMeasureScreen(
         }
     }
 
-    EditMeasureContent(state, viewModel)
+    EditMeasureContent(state, viewModel::reduce)
 }
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun EditMeasureContent(
-    state: EditMeasureState, reducer: Reducer<EditMeasureEvent>
+    state: EditMeasureState, reduce: (EditMeasureEvent) -> Unit
 ) {
     val context = LocalContext.current as? Activity
 
     Scaffold(topBar = {
-        EditMeasureMenu(state, reducer)
+        EditMeasureMenu(state, reduce)
     }) {
         Box(
             modifier = Modifier.fillMaxSize()
@@ -76,21 +75,21 @@ fun EditMeasureContent(
             when (state) {
                 is EditMeasureState.Ready -> {
                     EditMeasureDetails(
-                        state.userSettings, state.measure, reducer
+                        state.userSettings, state.measure, reduce
                     )
 
                     if (state.showHelp != null) {
                         HelpDialog(helpRes = state.showHelp) {
-                            reducer.reduce(EditMeasureEvent.ToggleHelp(null))
+                            reduce(EditMeasureEvent.ToggleHelp(null))
                         }
                     }
 
                     if (state.showMethod) {
                         MeasureMethodDialog(state.measure.measureMethod) {
                             if (it != null) {
-                                reducer.reduce(EditMeasureEvent.UpdateMeasureMethod(it))
+                                reduce(EditMeasureEvent.UpdateMeasureMethod(it))
                             } else {
-                                reducer.reduce(EditMeasureEvent.ToggleShowMethod)
+                                reduce(EditMeasureEvent.ToggleShowMethod)
                             }
                         }
                     }
@@ -121,7 +120,7 @@ fun EditMeasureContentPreview() {
                 showMethod = false,
                 readOnly = false
             ),
-            EditMeasureViewModel.Samples.reducer()
+            EditMeasureViewModel.Samples::reduce
         )
     }
 }

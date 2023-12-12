@@ -16,7 +16,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.viewModelScope
 import com.nmarsollier.fitfat.R
-import com.nmarsollier.fitfat.common.ui.viewModel.Reducer
 import com.nmarsollier.fitfat.userSettings.model.UserSettings
 import com.nmarsollier.fitfat.userSettings.samples.Samples
 import org.koin.androidx.compose.koinViewModel
@@ -50,17 +49,17 @@ fun OptionsScreen(viewModel: OptionsViewModel = koinViewModel()) {
         }
     }
 
-    OptionsContent(state, viewModel)
+    OptionsContent(state, viewModel::reduce)
 }
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun OptionsContent(
     state: OptionsState,
-    reducer: Reducer<OptionsEvent>
+    reduce: (OptionsEvent) -> Unit
 ) {
     Scaffold(
-        topBar = { OptionsMenu(reducer) }
+        topBar = { OptionsMenu(reduce) }
     ) {
         Column {
             when (state) {
@@ -74,7 +73,7 @@ fun OptionsContent(
 
                 OptionsState.Loading -> com.nmarsollier.fitfat.common.ui.views.LoadingView()
                 is OptionsState.Ready -> OptionsContentDetail(
-                    state = state, reducer
+                    state = state, reduce
                 )
             }
         }
@@ -89,7 +88,7 @@ fun OptionsScreenPreview() {
             OptionsState.Ready(
                 UserSettings.Samples.simpleData.value, false
             ),
-            OptionsViewModel.Samples.reducer()
+            OptionsViewModel.Samples::reduce
         )
     }
 }

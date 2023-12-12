@@ -17,7 +17,6 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.viewModelScope
 import com.nmarsollier.fitfat.common.ui.preview.KoinPreview
 import com.nmarsollier.fitfat.common.ui.theme.AppColors
-import com.nmarsollier.fitfat.common.ui.viewModel.Reducer
 import com.nmarsollier.fitfat.dashboard.samples.Samples
 import com.nmarsollier.fitfat.measures.ui.list.MeasuresListScreen
 import com.nmarsollier.fitfat.stats.ui.StatsScreen
@@ -47,11 +46,11 @@ fun DashboardScreen(viewModel: DashboardViewModel = koinViewModel()) {
         }
     }
 
-    DashboardContent(state, viewModel)
+    DashboardContent(state, viewModel::reduce)
 }
 
 @Composable
-fun DashboardContent(state: DashboardState, reducer: Reducer<DashboardEvent>) {
+fun DashboardContent(state: DashboardState, reduce: (DashboardEvent) -> Unit) {
     Column(
         Modifier
             .fillMaxWidth()
@@ -73,7 +72,7 @@ fun DashboardContent(state: DashboardState, reducer: Reducer<DashboardEvent>) {
         Row(
             verticalAlignment = Alignment.Bottom
         ) {
-            DashboardNavigationMenu(state, reducer)
+            DashboardNavigationMenu(state, reduce)
         }
     }
 }
@@ -85,7 +84,7 @@ fun DashboardContentPreview() {
         DashboardContent(
             DashboardState.Ready(
                 tab = Screen.MEASURES_LIST
-            ), DashboardViewModel.Samples.reducer()
+            ), DashboardViewModel.Samples::reduce
         )
     }
 }

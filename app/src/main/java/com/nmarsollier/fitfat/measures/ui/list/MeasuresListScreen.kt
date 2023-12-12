@@ -35,7 +35,6 @@ import com.nmarsollier.fitfat.userSettings.model.UserSettings
 import com.nmarsollier.fitfat.userSettings.samples.Samples
 import com.nmarsollier.fitfat.common.ui.preview.KoinPreview
 import com.nmarsollier.fitfat.common.ui.theme.AppColors
-import com.nmarsollier.fitfat.common.ui.viewModel.Reducer
 import com.nmarsollier.fitfat.common.ui.views.LoadingView
 import org.koin.androidx.compose.koinViewModel
 
@@ -65,14 +64,14 @@ fun MeasuresListScreen(
         }
     }
 
-    MeasuresListContent(state, viewModel)
+    MeasuresListContent(state, viewModel::reduce)
 }
 
 @OptIn(ExperimentalFoundationApi::class)
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun MeasuresListContent(
-    state: MeasuresListState, reducer: Reducer<MeasuresListEvent>
+    state: MeasuresListState, reduce: (MeasuresListEvent) -> Unit
 ) {
     val context = LocalContext.current
 
@@ -81,7 +80,7 @@ fun MeasuresListContent(
     }, floatingActionButton = {
         FloatingActionButton(
             onClick = {
-                reducer.reduce(MeasuresListEvent.OpenNewMeasure)
+                reduce(MeasuresListEvent.OpenNewMeasure)
             },
             shape = CircleShape,
         ) {
@@ -100,7 +99,7 @@ fun MeasuresListContent(
 
                 is MeasuresListState.Ready -> LazyColumn(Modifier.fillMaxSize()) {
                     items(state.measures) {
-                        MeasureItemView(state.userSettings, it, reducer)
+                        MeasureItemView(state.userSettings, it, reduce)
                         Divider(color = Color.LightGray, thickness = 1.dp)
                     }
                 }
@@ -124,7 +123,7 @@ fun MeasuresListScreenPreview() {
             MeasuresListState.Ready(
                 UserSettings.Samples.simpleData.value,
                 Measure.Samples.simpleData.map { it.value }
-            ), MeasuresListViewModel.Samples.reducer()
+            ), MeasuresListViewModel.Samples::reduce
         )
     }
 }
