@@ -1,7 +1,6 @@
 package com.nmarsollier.fitfat.measures.samples
 
 import com.nmarsollier.fitfat.common.converters.dateOf
-import com.nmarsollier.fitfat.common.ui.viewModel.Reducer
 import com.nmarsollier.fitfat.measures.model.Measure
 import com.nmarsollier.fitfat.measures.model.asMeasure
 import com.nmarsollier.fitfat.measures.model.db.MeasureData
@@ -89,24 +88,23 @@ val Measure.Companion.Samples
 
 
 interface MeasuresListViewModelSamples {
-    fun reducer(): Reducer<MeasuresListEvent>
+    fun reduce(e: MeasuresListEvent)
 }
 
 val MeasuresListViewModel.Companion.Samples: MeasuresListViewModelSamples
     get() = object : MeasuresListViewModelSamples {
-        override fun reducer() = object : Reducer<MeasuresListEvent> {
-            override fun reduce(event: MeasuresListEvent) = Unit
+        override fun reduce(e: MeasuresListEvent) {
+
         }
     }
 
 
 interface EditMeasureViewModelSamples {
-    fun reducer(): Reducer<EditMeasureEvent>
+    fun reduce(e: EditMeasureEvent)
 }
 
 val EditMeasureViewModel.Companion.Samples: EditMeasureViewModelSamples
     get() = object : EditMeasureViewModelSamples {
-        override fun reducer() = object : Reducer<EditMeasureEvent> {
-            override fun reduce(event: EditMeasureEvent) = Unit
+        override fun reduce(e: EditMeasureEvent) {
         }
     }

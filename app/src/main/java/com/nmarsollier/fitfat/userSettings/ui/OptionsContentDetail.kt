@@ -18,8 +18,10 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
@@ -28,19 +30,16 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.nmarsollier.fitfat.R
+import com.nmarsollier.fitfat.common.converters.formatDate
+import com.nmarsollier.fitfat.common.converters.formatString
 import com.nmarsollier.fitfat.userSettings.model.UserSettings
 import com.nmarsollier.fitfat.userSettings.model.db.UserSettingsData
 import com.nmarsollier.fitfat.userSettings.samples.Samples
-import com.nmarsollier.fitfat.common.converters.formatDate
-import com.nmarsollier.fitfat.common.converters.formatString
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
-import com.nmarsollier.fitfat.R
-import com.nmarsollier.fitfat.common.ui.viewModel.Reducer
 
 @Composable
 fun OptionsContentDetail(
-    state: OptionsState.Ready, reducer: Reducer<OptionsEvent>
+    state: OptionsState.Ready, reduce: (OptionsEvent) -> Unit
 ) {
     val activity = LocalContext.current as? ComponentActivity
     val userSettings = state.userSettings
@@ -56,7 +55,7 @@ fun OptionsContentDetail(
     ) {
         TextField(
             value = userSettings.displayName,
-            onValueChange = { reducer.reduce(OptionsEvent.UpdateDisplayName(it)) },
+            onValueChange = { reduce(OptionsEvent.UpdateDisplayName(it)) },
             label = { Text(stringResource(R.string.options_display_name)) },
             modifier = Modifier.fillMaxWidth(),
             colors = TextFieldDefaults.textFieldColors(
@@ -78,7 +77,7 @@ fun OptionsContentDetail(
                         context,
                         userSettings.birthDate
                     ) {
-                        reducer.reduce(OptionsEvent.UpdateBirthDate(it))
+                        reduce(OptionsEvent.UpdateBirthDate(it))
                     }
                 },
             colors = TextFieldDefaults.textFieldColors(
@@ -93,11 +92,11 @@ fun OptionsContentDetail(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 RadioButton(selected = userSettings.measureSystem == UserSettingsData.MeasureType.METRIC,
-                    onClick = { reducer.reduce(OptionsEvent.UpdateMeasureSystem(UserSettingsData.MeasureType.METRIC)) })
+                    onClick = { reduce(OptionsEvent.UpdateMeasureSystem(UserSettingsData.MeasureType.METRIC)) })
                 Text("Metric")
                 Spacer(modifier = Modifier.width(16.dp))
                 RadioButton(selected = userSettings.measureSystem == UserSettingsData.MeasureType.IMPERIAL,
-                    onClick = { reducer.reduce(OptionsEvent.UpdateMeasureSystem(UserSettingsData.MeasureType.IMPERIAL)) })
+                    onClick = { reduce(OptionsEvent.UpdateMeasureSystem(UserSettingsData.MeasureType.IMPERIAL)) })
                 Text("Imperial")
             }
         }
@@ -109,11 +108,11 @@ fun OptionsContentDetail(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 RadioButton(selected = userSettings.sex == UserSettingsData.SexType.MALE,
-                    onClick = { reducer.reduce(OptionsEvent.UpdateSex(UserSettingsData.SexType.MALE)) })
+                    onClick = { reduce(OptionsEvent.UpdateSex(UserSettingsData.SexType.MALE)) })
                 Text(stringResource(R.string.options_sex_male))
                 Spacer(modifier = Modifier.width(16.dp))
                 RadioButton(selected = userSettings.sex == UserSettingsData.SexType.FEMALE,
-                    onClick = { reducer.reduce(OptionsEvent.UpdateSex(UserSettingsData.SexType.FEMALE)) })
+                    onClick = { reduce(OptionsEvent.UpdateSex(UserSettingsData.SexType.FEMALE)) })
                 Text(stringResource(R.string.options_sex_female))
             }
         }
@@ -128,7 +127,7 @@ fun OptionsContentDetail(
         ) {
             TextField(
                 modifier = Modifier.onFocusChanged {
-                    reducer.reduce(OptionsEvent.UpdateWeight(weight.toDoubleOrNull() ?: 0.0))
+                    reduce(OptionsEvent.UpdateWeight(weight.toDoubleOrNull() ?: 0.0))
                 },
                 value = weight,
                 onValueChange = { weight = it },
@@ -152,7 +151,7 @@ fun OptionsContentDetail(
         ) {
             TextField(
                 modifier = Modifier.onFocusChanged {
-                    reducer.reduce(OptionsEvent.UpdateHeight(height.toDoubleOrNull() ?: 0.0))
+                    reduce(OptionsEvent.UpdateHeight(height.toDoubleOrNull() ?: 0.0))
                 },
                 value = height,
                 onValueChange = { height = it },
@@ -174,10 +173,10 @@ fun OptionsContentDetail(
             Switch(checked = !userSettings.firebaseToken.isNullOrEmpty(), onCheckedChange = {
                 if (it) {
                     activity?.let {
-                        reducer.reduce(OptionsEvent.LoginWithGoogle(activity))
+                        reduce(OptionsEvent.LoginWithGoogle(activity))
                     }
                 } else {
-                    reducer.reduce(OptionsEvent.DisableFirebase)
+                    reduce(OptionsEvent.DisableFirebase)
                 }
             })
         }
@@ -192,7 +191,7 @@ fun OptionsContentDetailPreview() {
             OptionsState.Ready(
                 userSettings = UserSettings.Samples.simpleData.value,
                 hasChanged = false,
-            ), OptionsViewModel.Samples.reducer()
+            ), OptionsViewModel.Samples::reduce
         )
     }
 }

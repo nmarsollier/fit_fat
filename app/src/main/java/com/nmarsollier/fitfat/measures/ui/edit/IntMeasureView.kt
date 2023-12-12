@@ -31,14 +31,13 @@ import com.nmarsollier.fitfat.userSettings.ui.weightResId
 import com.nmarsollier.fitfat.common.converters.formatString
 import com.nmarsollier.fitfat.common.ui.preview.KoinPreview
 import com.nmarsollier.fitfat.common.ui.theme.AppColors
-import com.nmarsollier.fitfat.common.ui.viewModel.Reducer
 
 @Composable
 fun IntMeasureView(
     userSettings: UserSettingsData,
     measure: MeasureData,
     measureValue: MeasureValue,
-    reducer: Reducer<EditMeasureEvent>
+    reduce: (EditMeasureEvent) -> Unit
 ) {
     Column(
         modifier = Modifier.background(AppColors.background)
@@ -70,7 +69,7 @@ fun IntMeasureView(
                 colorFilter = ColorFilter.tint(colorResource(R.color.colorPrimary)),
                 modifier = Modifier.clickable {
                     measureValue.helpRes?.let {
-                        reducer.reduce(EditMeasureEvent.ToggleHelp(it))
+                        reduce(EditMeasureEvent.ToggleHelp(it))
                     }
                 })
         }
@@ -78,7 +77,7 @@ fun IntMeasureView(
         Slider(value = measure.displayValue(measureValue, userSettings).toFloat(),
             valueRange = 0f..measureValue.maxScale.toFloat(),
             onValueChange = {
-                reducer.reduce(
+                reduce(
                     EditMeasureEvent.UpdateMeasureValue(
                         measureValue, it.toInt()
                     )
@@ -96,7 +95,7 @@ fun IntMeasureValuePreview() {
                 UserSettings.Samples.simpleData.value,
                 Measure.Samples.simpleData[0].value,
                 MeasureValue.ABDOMINAL,
-                EditMeasureViewModel.Samples.reducer()
+                EditMeasureViewModel.Samples::reduce
             )
         }
     }

@@ -22,13 +22,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.nmarsollier.fitfat.R
-import com.nmarsollier.fitfat.common.ui.viewModel.Reducer
 import com.nmarsollier.fitfat.measures.model.Measure
 import com.nmarsollier.fitfat.measures.model.db.MeasureMethod
 import com.nmarsollier.fitfat.measures.model.db.MeasureValue
 import com.nmarsollier.fitfat.measures.model.isRequiredForMethod
-import com.nmarsollier.fitfat.measures.ui.labelRes
 import com.nmarsollier.fitfat.measures.samples.Samples
+import com.nmarsollier.fitfat.measures.ui.labelRes
 import com.nmarsollier.fitfat.stats.samples.Samples
 import com.nmarsollier.fitfat.userSettings.model.UserSettings
 import com.nmarsollier.fitfat.userSettings.samples.Samples
@@ -36,12 +35,12 @@ import com.nmarsollier.fitfat.userSettings.samples.Samples
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun StatsContentDetail(
-    state: StatsState.Ready, reducer: Reducer<StatsEvent>
+    state: StatsState.Ready, reduce: (StatsEvent) -> Unit
 ) {
     Column(
         Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(5.dp)
     ) {
-        val values = MeasureValue.values().filter {
+        val values = MeasureValue.entries.filter {
             if (state.selectedMethod == MeasureMethod.WEIGHT_ONLY) {
                 it.isRequiredForMethod(state.selectedMethod)
             } else {
@@ -52,7 +51,7 @@ fun StatsContentDetail(
         Row(modifier = Modifier
             .padding(top = 12.dp, bottom = 12.dp)
             .clickable {
-                reducer.reduce(StatsEvent.ToggleShowMethod)
+                reduce(StatsEvent.ToggleShowMethod)
             }) {
             Text(stringResource(state.selectedMethod.labelRes))
 
@@ -87,7 +86,7 @@ fun StatsContentDetailPreview() {
                 measures = Measure.Samples.simpleData.map { it.value },
                 showMethod = false
             ),
-            StatsViewModel.Samples.reducer()
+            StatsViewModel.Samples::reduce
         )
     }
 }

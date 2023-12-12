@@ -1,7 +1,6 @@
 package com.nmarsollier.fitfat.userSettings.samples
 
 import com.nmarsollier.fitfat.common.converters.dateOf
-import com.nmarsollier.fitfat.common.ui.viewModel.Reducer
 import com.nmarsollier.fitfat.userSettings.model.UserSettings
 import com.nmarsollier.fitfat.userSettings.model.asUserSettings
 import com.nmarsollier.fitfat.userSettings.model.db.UserSettingsData
@@ -27,12 +26,11 @@ val UserSettings.Companion.Samples
     }
 
 interface OptionsViewModelSamples {
-    fun reducer(): Reducer<OptionsEvent>
+    fun reduce(e: OptionsEvent)
 }
 
 val OptionsViewModel.Companion.Samples: OptionsViewModelSamples
     get() = object : OptionsViewModelSamples {
-        override fun reducer() = object : Reducer<OptionsEvent> {
-            override fun reduce(event: OptionsEvent) = Unit
+        override fun reduce(e: OptionsEvent) {
         }
     }
