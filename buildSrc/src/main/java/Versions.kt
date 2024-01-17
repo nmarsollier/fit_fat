@@ -14,8 +14,8 @@ object ProjectVersions {
     const val compileSdk = 34
     const val targetSdk = 33
     const val minSdk = 28
-    const val versionCode = 1
-    const val versionName = "1.9"
+    const val versionCode = 11
+    const val versionName = "2.1"
     const val jvmTarget = "17"
     val sourceCompatibility = JavaVersion.VERSION_17
     const val kotlinCompilerExtensionVersion = "1.5.2"
