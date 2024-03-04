@@ -30,7 +30,7 @@ fun HelpDialog(helpRes: Int, onDismiss: () -> Unit) {
 
 @Preview
 @Composable
-fun HelpDialogPreview() {
+private fun HelpDialogPreview() {
     KoinPreview {
         HelpDialog(R.drawable.ic_media_rew) {}
     }

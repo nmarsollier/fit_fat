@@ -123,7 +123,7 @@ fun EditMeasureDetails(
 
 @Preview
 @Composable
-fun EditMeasureDetailsPreview() {
+private fun EditMeasureDetailsPreview() {
     KoinPreview {
         Column(
             modifier = Modifier.background(AppColors.background)

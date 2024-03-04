@@ -19,7 +19,7 @@ fun StatsMenu() {
 
 @Preview
 @Composable
-fun OptionsMenuPreview() {
+private fun OptionsMenuPreview() {
     com.nmarsollier.fitfat.common.ui.preview.KoinPreview {
         Column {
             StatsMenu()

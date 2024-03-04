@@ -88,7 +88,7 @@ fun IntMeasureView(
 
 @Preview
 @Composable
-fun IntMeasureValuePreview() {
+private fun IntMeasureValuePreview() {
     KoinPreview {
         Column {
             IntMeasureView(

@@ -77,7 +77,7 @@ fun StatsContentDetail(
 
 @Preview(showSystemUi = true)
 @Composable
-fun StatsContentDetailPreview() {
+private fun StatsContentDetailPreview() {
     com.nmarsollier.fitfat.common.ui.preview.KoinPreview {
         StatsContentDetail(
             StatsState.Ready(

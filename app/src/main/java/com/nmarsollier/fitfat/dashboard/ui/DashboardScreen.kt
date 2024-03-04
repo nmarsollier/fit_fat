@@ -79,7 +79,7 @@ fun DashboardContent(state: DashboardState, reduce: (DashboardEvent) -> Unit) {
 
 @Preview
 @Composable
-fun DashboardContentPreview() {
+private fun DashboardContentPreview() {
     KoinPreview {
         DashboardContent(
             DashboardState.Ready(

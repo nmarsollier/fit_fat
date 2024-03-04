@@ -18,6 +18,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.viewModelScope
 import com.nmarsollier.fitfat.R
+import com.nmarsollier.fitfat.common.navigation.NavigationProvider
 import com.nmarsollier.fitfat.measures.model.Measure
 import com.nmarsollier.fitfat.measures.model.db.MeasureData
 import com.nmarsollier.fitfat.measures.ui.dialog.MeasureMethodDialog
@@ -28,6 +29,7 @@ import com.nmarsollier.fitfat.common.ui.dialogs.HelpDialog
 import com.nmarsollier.fitfat.common.ui.preview.KoinPreview
 import com.nmarsollier.fitfat.common.ui.views.LoadingView
 import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.koinInject
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
@@ -62,7 +64,8 @@ fun EditMeasureScreen(
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun EditMeasureContent(
-    state: EditMeasureState, reduce: (EditMeasureEvent) -> Unit
+    state: EditMeasureState, reduce: (EditMeasureEvent) -> Unit,
+    navigationProvider: NavigationProvider = koinInject()
 ) {
     val context = LocalContext.current as? Activity
 
@@ -101,7 +104,10 @@ fun EditMeasureContent(
                     ).show()
                 }
 
-                EditMeasureState.Close -> context?.finish()
+                EditMeasureState.Close -> {
+                    navigationProvider.appNavActions?.navigateToHome()
+                }
+
                 is EditMeasureState.Loading -> LoadingView()
             }
         }
@@ -110,7 +116,7 @@ fun EditMeasureContent(
 
 @Preview
 @Composable
-fun EditMeasureContentPreview() {
+private fun EditMeasureContentPreview() {
     KoinPreview {
         EditMeasureContent(
             EditMeasureState.Ready(

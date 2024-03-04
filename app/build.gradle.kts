@@ -76,6 +76,7 @@ dependencies {
     implementation("androidx.arch.core:core-runtime:${LibraryVersions.coreRuntime}")
     implementation("com.google.errorprone:error_prone_annotations:${LibraryVersions.errorProneAnnotations}")
     implementation("com.google.code.gson:gson:${LibraryVersions.gson}")
+    implementation("com.google.accompanist:accompanist-navigation-material:${LibraryVersions.accompanist}")
 
     implementation("com.google.android.material:material:${LibraryVersions.material}")
 

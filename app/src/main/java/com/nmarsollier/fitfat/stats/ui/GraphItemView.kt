@@ -161,7 +161,7 @@ private fun updateGraph(
 
 @Preview(showSystemUi = true)
 @Composable
-fun GraphItemViewPreview() {
+private fun GraphItemViewPreview() {
     com.nmarsollier.fitfat.common.ui.preview.KoinPreview {
         GraphItemView(
             UserSettings.Samples.simpleData.value,

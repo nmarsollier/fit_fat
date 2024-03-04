@@ -78,7 +78,7 @@ fun StatsContent(state: StatsState, reduce: (StatsEvent) -> Unit) {
 
 @Preview
 @Composable
-fun StatsScreenPreview() {
+private fun StatsScreenPreview() {
     com.nmarsollier.fitfat.common.ui.preview.KoinPreview {
         StatsContent(
             StatsState.Ready(

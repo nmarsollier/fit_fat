@@ -50,7 +50,7 @@ private fun Activity.openDbInspector(logger: Logger) {
 
 @Preview
 @Composable
-fun MeasuresListMenuPreview() {
+private fun MeasuresListMenuPreview() {
     KoinPreview {
         Column {
             MeasuresListMenu()

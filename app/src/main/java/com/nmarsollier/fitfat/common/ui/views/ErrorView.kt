@@ -54,7 +54,7 @@ fun ErrorView() {
 
 @Preview
 @Composable
-fun ErrorViewPreview() {
+private fun ErrorViewPreview() {
     KoinPreview {
         ErrorView()
     }

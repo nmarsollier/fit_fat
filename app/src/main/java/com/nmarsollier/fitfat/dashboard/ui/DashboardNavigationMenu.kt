@@ -93,7 +93,7 @@ fun DashboardNavigationMenu(
 
 @Preview
 @Composable
-fun DashboardNavigationMenuPreview() {
+private fun DashboardNavigationMenuPreview() {
     KoinPreview {
         Column {
             DashboardNavigationMenu(

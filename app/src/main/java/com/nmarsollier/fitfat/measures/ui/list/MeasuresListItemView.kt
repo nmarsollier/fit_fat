@@ -166,7 +166,7 @@ val MeasureData.showFatPercent
 @ExperimentalFoundationApi
 @Preview
 @Composable
-fun MeasureItemViewPreview() {
+private fun MeasureItemViewPreview() {
     KoinPreview {
         Column(
             modifier = Modifier.background(AppColors.background)

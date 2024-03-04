@@ -30,7 +30,7 @@ fun LoadingView() {
 
 @Preview
 @Composable
-fun LoadingViewPreview() {
+private fun LoadingViewPreview() {
     KoinPreview {
         LoadingView()
     }

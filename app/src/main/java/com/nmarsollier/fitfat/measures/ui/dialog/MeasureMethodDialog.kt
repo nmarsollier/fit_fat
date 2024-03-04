@@ -27,7 +27,7 @@ fun MeasureMethodDialog(
 ) {
     val context = LocalContext.current
 
-    val measureMethods = MeasureMethod.values()
+    val measureMethods = MeasureMethod.entries
         .map { it to context.getString(it.labelRes) }
         .toTypedArray()
 
@@ -63,7 +63,7 @@ fun MeasureMethodDialog(
 
 @Preview
 @Composable
-fun MeasureMethodPreview() {
+private fun MeasureMethodPreview() {
     KoinPreview {
         MeasureMethodDialog(
             MeasureMethod.JACKSON_POLLOCK_7

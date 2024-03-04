@@ -28,20 +28,21 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.viewModelScope
 import com.nmarsollier.fitfat.R
-import com.nmarsollier.fitfat.measures.model.Measure
-import com.nmarsollier.fitfat.measures.ui.edit.EditMeasureActivity
-import com.nmarsollier.fitfat.measures.samples.Samples
-import com.nmarsollier.fitfat.userSettings.model.UserSettings
-import com.nmarsollier.fitfat.userSettings.samples.Samples
+import com.nmarsollier.fitfat.common.navigation.NavigationProvider
 import com.nmarsollier.fitfat.common.ui.preview.KoinPreview
 import com.nmarsollier.fitfat.common.ui.theme.AppColors
 import com.nmarsollier.fitfat.common.ui.views.LoadingView
+import com.nmarsollier.fitfat.measures.model.Measure
+import com.nmarsollier.fitfat.measures.samples.Samples
+import com.nmarsollier.fitfat.userSettings.model.UserSettings
+import com.nmarsollier.fitfat.userSettings.samples.Samples
 import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.koinInject
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun MeasuresListScreen(
-    viewModel: MeasuresListViewModel = koinViewModel()
+    viewModel: MeasuresListViewModel = koinViewModel(),
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
     val state by viewModel.state.collectAsState(viewModel.viewModelScope.coroutineContext)
@@ -71,7 +72,8 @@ fun MeasuresListScreen(
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun MeasuresListContent(
-    state: MeasuresListState, reduce: (MeasuresListEvent) -> Unit
+    state: MeasuresListState, reduce: (MeasuresListEvent) -> Unit,
+    navigationProvider: NavigationProvider = koinInject(),
 ) {
     val context = LocalContext.current
 
@@ -105,9 +107,10 @@ fun MeasuresListContent(
                 }
 
                 is MeasuresListState.Redirect -> when (val dst = state.destination) {
-                    is Destination.NewMeasure -> EditMeasureActivity.startActivity(context)
-                    is Destination.ViewMeasure -> EditMeasureActivity.startActivity(
-                        context, dst.measure
+                    is Destination.NewMeasure -> navigationProvider.appNavActions?.navigateNewMeasure()
+
+                    is Destination.ViewMeasure -> navigationProvider.appNavActions?.navigateEditMeasure(
+                        dst.measure
                     )
                 }
             }
@@ -117,7 +120,7 @@ fun MeasuresListContent(
 
 @Preview
 @Composable
-fun MeasuresListScreenPreview() {
+private fun MeasuresListScreenPreview() {
     KoinPreview {
         MeasuresListContent(
             MeasuresListState.Ready(

@@ -1,6 +1,6 @@
 package com.nmarsollier.fitfat.common
 
-import com.nmarsollier.fitfat.dashboardModule
+import com.nmarsollier.fitfat.applicationModule
 import com.nmarsollier.fitfat.userSettings.model.UserSettings
 import com.nmarsollier.fitfat.userSettings.model.UserSettingsRepository
 import com.nmarsollier.fitfat.userSettings.samples.Samples
@@ -33,7 +33,7 @@ open class BaseTest : KoinTest {
     val koinTestRule = KoinTestRule.create {
         // Your KoinApplication instance here
         modules(
-            dashboardModule, dashboardTestModule
+            applicationModule, dashboardTestModule
         )
     }
 

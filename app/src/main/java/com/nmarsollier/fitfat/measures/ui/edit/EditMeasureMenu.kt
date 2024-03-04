@@ -41,7 +41,7 @@ fun EditMeasureMenu(
 
 @Preview
 @Composable
-fun EditMeasureMenuPreview() {
+private fun EditMeasureMenuPreview() {
     KoinPreview {
         Column {
             EditMeasureMenu(

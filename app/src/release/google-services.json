@@ -58,7 +58,7 @@
           "client_id": "823698859435-np9pu32t24soies77nqn7ah987m1epid.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.nmarsollier.fitfat.debug",
+            "package_name": "com.nmarsollier.fitfat",
             "certificate_hash": "d923e9ddd636d004e96c1c3a20de9c3f1a309960"
           }
         },
@@ -66,7 +66,7 @@
           "client_id": "823698859435-ou77nam0bn13fs1ib4neje1frg727g8u.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.nmarsollier.fitfat.debug",
+            "package_name": "com.nmarsollier.fitfat",
             "certificate_hash": "9d50d6d6477c7120bdfeea54b3005f302b8713ec"
           }
         },

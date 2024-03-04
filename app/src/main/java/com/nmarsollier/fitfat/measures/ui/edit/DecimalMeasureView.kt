@@ -102,7 +102,7 @@ fun DecimalMeasureView(
 
 @Preview
 @Composable
-fun DecimalMeasureViewPreview() {
+private fun DecimalMeasureViewPreview() {
     KoinPreview {
         DecimalMeasureView(
             UserSettings.Samples.simpleData.value,

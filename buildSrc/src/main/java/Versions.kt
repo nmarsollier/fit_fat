@@ -14,8 +14,8 @@ object ProjectVersions {
     const val compileSdk = 34
     const val targetSdk = 33
     const val minSdk = 28
-    const val versionCode = 11
-    const val versionName = "2.1"
+    const val versionCode = 13
+    const val versionName = "2.3"
     const val jvmTarget = "17"
     val sourceCompatibility = JavaVersion.VERSION_17
     const val kotlinCompilerExtensionVersion = "1.5.2"
@@ -28,17 +28,19 @@ object LibraryVersions {
     const val lifecycleViewModel = "2.6.2"
     const val koinCompose = "3.4.6"
     const val poolingContainer = "1.0.0"
+    const val billing = "6.1.0"
 
-    const val activityKtx = "1.8.0"
+    const val activityKtx = "1.8.2"
     const val coreKtx = "1.12.0"
     const val coreRuntime = "2.2.0"
     const val errorProneAnnotations = "2.15.0"
 
-    const val room = "2.5.2"
+    const val room = "2.6.1"
 
-    const val material = "1.10.0"
+    const val material = "1.11.0"
     const val gson = "2.10.1"
     const val helloCharts = "1.5.8@aar"
+    const val accompanist = "0.34.0"
 
     const val playServicesAuth = "20.7.0"
     const val firebaseBom = "32.2.0"

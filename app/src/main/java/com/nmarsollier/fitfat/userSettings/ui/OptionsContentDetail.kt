@@ -185,7 +185,7 @@ fun OptionsContentDetail(
 
 @Preview
 @Composable
-fun OptionsContentDetailPreview() {
+private fun OptionsContentDetailPreview() {
     com.nmarsollier.fitfat.common.ui.preview.KoinPreview {
         OptionsContentDetail(
             OptionsState.Ready(

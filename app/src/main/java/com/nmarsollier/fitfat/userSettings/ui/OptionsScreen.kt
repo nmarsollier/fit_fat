@@ -82,7 +82,7 @@ fun OptionsContent(
 
 @Preview
 @Composable
-fun OptionsScreenPreview() {
+private fun OptionsScreenPreview() {
     com.nmarsollier.fitfat.common.ui.preview.KoinPreview {
         OptionsContent(
             OptionsState.Ready(

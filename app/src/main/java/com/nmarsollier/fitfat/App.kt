@@ -5,6 +5,7 @@ import com.nmarsollier.fitfat.common.firebase.koinFirebaseModule
 import com.nmarsollier.fitfat.stats.koinStatsModule
 import com.nmarsollier.fitfat.userSettings.userSettingsModule
 import com.nmarsollier.fitfat.common.koinUtilsModule
+import com.nmarsollier.fitfat.measures.measuresModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -17,8 +18,8 @@ class App : Application() {
             androidLogger()
             androidContext(this@App)
             modules(
-                com.nmarsollier.fitfat.measures.measuresModule,
-                dashboardModule,
+                measuresModule,
+                applicationModule,
                 koinUtilsModule,
                 koinFirebaseModule,
                 userSettingsModule,
