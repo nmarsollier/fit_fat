@@ -13,18 +13,14 @@ import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.viewModelScope
 import com.nmarsollier.fitfat.R
 import com.nmarsollier.fitfat.common.navigation.NavigationProvider
@@ -43,9 +39,12 @@ fun MeasuresListScreen(
     viewModel: MeasuresListViewModel = koinViewModel(),
     navigationProvider: NavigationProvider = koinInject(),
 ) {
-    val lifecycleOwner = LocalLifecycleOwner.current
     val state by viewModel.state.collectAsState(viewModel.viewModelScope.coroutineContext)
     val event by viewModel.event.collectAsState(null)
+
+    LaunchedEffect(viewModel) {
+        viewModel.reduce(MeasuresListAction.Initialize)
+    }
 
     LaunchedEffect(event) {
         when (val e = event) {
@@ -60,23 +59,6 @@ fun MeasuresListScreen(
             }
 
             else -> Unit
-        }
-    }
-    DisposableEffect(lifecycleOwner) {
-        val observer = LifecycleEventObserver { _, event ->
-            when (event) {
-                Lifecycle.Event.ON_RESUME -> {
-                    viewModel.reduce(MeasuresListAction.Initialize)
-                }
-
-                else -> Unit
-            }
-        }.also {
-            lifecycleOwner.lifecycle.addObserver(it)
-        }
-
-        onDispose {
-            lifecycleOwner.lifecycle.removeObserver(observer)
         }
     }
 
@@ -124,8 +106,10 @@ fun MeasuresListContent(
 @Composable
 private fun MeasuresListScreenPreview() {
     KoinPreview {
-        MeasuresListContent(MeasuresListState.Ready(UserSettings.Samples.simpleData.value,
-            Measure.Samples.simpleData.map { it.value }),
-            MeasuresListViewModel.Samples::reduce)
+        MeasuresListContent(
+            MeasuresListState.Ready(UserSettings.Samples.simpleData.value,
+                Measure.Samples.simpleData.map { it.value }),
+            MeasuresListViewModel.Samples::reduce
+        )
     }
 }

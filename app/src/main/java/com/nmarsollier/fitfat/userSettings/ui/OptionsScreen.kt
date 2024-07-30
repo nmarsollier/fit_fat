@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
@@ -28,14 +29,14 @@ fun OptionsScreen(viewModel: OptionsViewModel = koinViewModel()) {
     val lifecycleOwner = LocalLifecycleOwner.current
     val state by viewModel.state.collectAsState(viewModel.viewModelScope.coroutineContext)
 
+    LaunchedEffect(viewModel) {
+        viewModel.reduce(OptionsAction.Initialize)
+    }
+
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
             when (event) {
-                Lifecycle.Event.ON_RESUME -> {
-                    viewModel.reduce(OptionsAction.Initialize)
-                }
-
-                Lifecycle.Event.ON_STOP -> {
+                Lifecycle.Event.ON_PAUSE -> {
                     viewModel.reduce(OptionsAction.SaveSettings)
                 }
 
