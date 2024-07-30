@@ -24,20 +24,20 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.nmarsollier.fitfat.R
-import com.nmarsollier.fitfat.measures.model.Measure
-import com.nmarsollier.fitfat.measures.model.db.MeasureData
-import com.nmarsollier.fitfat.measures.model.db.MeasureValue
-import com.nmarsollier.fitfat.measures.model.isRequiredForMethod
-import com.nmarsollier.fitfat.measures.ui.labelRes
-import com.nmarsollier.fitfat.measures.samples.Samples
-import com.nmarsollier.fitfat.userSettings.model.UserSettings
-import com.nmarsollier.fitfat.userSettings.model.db.UserSettingsData
-import com.nmarsollier.fitfat.userSettings.samples.Samples
 import com.nmarsollier.fitfat.common.converters.formatDate
 import com.nmarsollier.fitfat.common.converters.formatString
 import com.nmarsollier.fitfat.common.ui.dialogs.showDatePicker
 import com.nmarsollier.fitfat.common.ui.preview.KoinPreview
 import com.nmarsollier.fitfat.common.ui.theme.AppColors
+import com.nmarsollier.fitfat.measures.model.Measure
+import com.nmarsollier.fitfat.measures.model.db.MeasureData
+import com.nmarsollier.fitfat.measures.model.db.MeasureValue
+import com.nmarsollier.fitfat.measures.model.isRequiredForMethod
+import com.nmarsollier.fitfat.measures.samples.Samples
+import com.nmarsollier.fitfat.measures.ui.labelRes
+import com.nmarsollier.fitfat.userSettings.model.UserSettings
+import com.nmarsollier.fitfat.userSettings.model.db.UserSettingsData
+import com.nmarsollier.fitfat.userSettings.samples.Samples
 
 @Composable
 fun EditMeasureDetails(
@@ -48,6 +48,7 @@ fun EditMeasureDetails(
     Column(
         Modifier
             .padding(16.dp)
+            .background(AppColors.surface)
             .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(5.dp)
     ) {

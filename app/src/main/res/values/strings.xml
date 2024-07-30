@@ -40,8 +40,10 @@
     <string name="options_height">Height</string>
     <string name="options_sex_female">Female</string>
     <string name="options_sex_male">Male</string>
-    <string name="options_system_of_measurement_metric">Metric</string>
+    <string name="options_system_of_measurement_metric">Metric System</string>
+    <string name="options_system_of_metric">Metric</string>
     <string name="options_weight">Weight</string>
+    <string name="options_system_of_imperial">Imperial</string>
 
     <string name="save_dialog_title">Save</string>
     <string name="save_my_data_in_cloud">Save my data in cloud</string>

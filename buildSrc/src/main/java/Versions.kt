@@ -24,25 +24,25 @@ object ProjectVersions {
 object LibraryVersions {
     const val composeBom = "2023.08.00"
 
-    const val compose = "1.6.2"
-    const val lifecycleViewModel = "2.7.0"
+    const val compose = "1.6.8"
+    const val lifecycleViewModel = "2.8.4"
     const val koinCompose = "3.5.3"
     const val poolingContainer = "1.0.0"
 
-    const val activityKtx = "1.8.2"
-    const val coreKtx = "1.12.0"
+    const val activityKtx = "1.9.1"
+    const val coreKtx = "1.13.1"
     const val coreRuntime = "2.2.0"
-    const val errorProneAnnotations = "2.15.0"
+    const val errorProneAnnotations = "2.18.0"
 
     const val room = "2.6.1"
 
-    const val material = "1.11.0"
+    const val material = "1.12.0"
     const val gson = "2.10.1"
     const val helloCharts = "1.5.8@aar"
     const val accompanist = "0.34.0"
 
-    const val playServicesAuth = "21.0.0"
-    const val firebaseBom = "32.2.0"
+    const val playServicesAuth = "21.2.0"
+    const val firebaseBom = "33.1.2"
 
     const val stdLib = "1.9.21"
     const val coroutines = "1.7.3"
@@ -57,6 +57,6 @@ object LibraryVersions {
 
     const val koinTest = "3.5.3"
 
-    const val extJunit = "1.1.5"
-    const val espresso = "3.5.1"
+    const val extJunit = "1.2.1"
+    const val espresso = "3.6.1"
 }

@@ -1,6 +1,7 @@
 package com.nmarsollier.fitfat.userSettings.ui
 
 import androidx.activity.ComponentActivity
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -49,6 +50,7 @@ fun OptionsContentDetail(
 
     Column(
         Modifier
+            .background(AppColors.surface)
             .padding(16.dp)
             .verticalScroll(rememberScrollState(), enabled = true),
         verticalArrangement = Arrangement.spacedBy(5.dp)
@@ -79,33 +81,45 @@ fun OptionsContentDetail(
             colors = TextFieldDefaults.textFieldColors(backgroundColor = Color.Transparent),
         )
         Column {
-            Text(stringResource(R.string.options_system_of_measurement_metric))
+            Text(
+                stringResource(R.string.options_system_of_measurement_metric),
+                color = AppColors.onSurface
+            )
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 RadioButton(selected = userSettings.measureSystem == UserSettingsData.MeasureType.METRIC,
                     onClick = { reduce(OptionsEvent.UpdateMeasureSystem(UserSettingsData.MeasureType.METRIC)) })
-                Text("Metric")
+                Text(
+                    stringResource(R.string.options_system_of_metric), color = AppColors.onSurface
+                )
                 Spacer(modifier = Modifier.width(16.dp))
                 RadioButton(selected = userSettings.measureSystem == UserSettingsData.MeasureType.IMPERIAL,
                     onClick = { reduce(OptionsEvent.UpdateMeasureSystem(UserSettingsData.MeasureType.IMPERIAL)) })
-                Text("Imperial")
+                Text(
+                    stringResource(R.string.options_system_of_imperial), color = AppColors.onSurface
+                )
             }
         }
         Column {
             Text(
-                "Sex"
+                "Sex",
+                color = AppColors.onSurface
             )
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 RadioButton(selected = userSettings.sex == UserSettingsData.SexType.MALE,
                     onClick = { reduce(OptionsEvent.UpdateSex(UserSettingsData.SexType.MALE)) })
-                Text(stringResource(R.string.options_sex_male))
+                Text(
+                    stringResource(R.string.options_sex_male), color = AppColors.onSurface
+                )
                 Spacer(modifier = Modifier.width(16.dp))
                 RadioButton(selected = userSettings.sex == UserSettingsData.SexType.FEMALE,
                     onClick = { reduce(OptionsEvent.UpdateSex(UserSettingsData.SexType.FEMALE)) })
-                Text(stringResource(R.string.options_sex_female))
+                Text(
+                    stringResource(R.string.options_sex_female), color = AppColors.onSurface
+                )
             }
         }
 
@@ -160,7 +174,9 @@ fun OptionsContentDetail(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                stringResource(R.string.save_my_data_in_cloud), modifier = Modifier.weight(1f)
+                stringResource(R.string.save_my_data_in_cloud),
+                modifier = Modifier.weight(1f),
+                color = AppColors.onSurface
             )
             Switch(checked = !userSettings.firebaseToken.isNullOrEmpty(), onCheckedChange = {
                 if (it) {
