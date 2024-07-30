@@ -1,13 +1,17 @@
 package com.nmarsollier.fitfat.measures.model.db
 
 import android.content.Context
-import androidx.room.*
+import androidx.room.Database
+import androidx.room.Room
+import androidx.room.RoomDatabase
+import androidx.room.TypeConverter
+import androidx.room.TypeConverters
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.nmarsollier.fitfat.userSettings.model.db.UserSettingsData
 import com.nmarsollier.fitfat.common.converters.deserialize
 import com.nmarsollier.fitfat.common.converters.serializedName
-import java.util.*
+import com.nmarsollier.fitfat.userSettings.model.db.UserSettingsData
+import java.util.Date
 
 private const val DATABASE_NAME = "measures"
 

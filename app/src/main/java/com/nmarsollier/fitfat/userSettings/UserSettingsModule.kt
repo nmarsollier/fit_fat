@@ -2,10 +2,10 @@ package com.nmarsollier.fitfat.userSettings
 
 import com.nmarsollier.fitfat.userSettings.model.DownloadSyncFirebaseService
 import com.nmarsollier.fitfat.userSettings.model.UploadSyncFirebaseService
-import com.nmarsollier.fitfat.userSettings.model.db.UserSettingsDatabase
-import com.nmarsollier.fitfat.userSettings.model.db.getRoomDatabase
 import com.nmarsollier.fitfat.userSettings.model.UserSettingsRepository
 import com.nmarsollier.fitfat.userSettings.model.api.UserSettingsFirebaseApi
+import com.nmarsollier.fitfat.userSettings.model.db.UserSettingsDatabase
+import com.nmarsollier.fitfat.userSettings.model.db.getRoomDatabase
 import com.nmarsollier.fitfat.userSettings.ui.OptionsViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModelOf

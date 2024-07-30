@@ -15,10 +15,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import com.nmarsollier.fitfat.measures.model.db.MeasureMethod
-import com.nmarsollier.fitfat.measures.ui.labelRes
 import com.nmarsollier.fitfat.common.ui.preview.KoinPreview
 import com.nmarsollier.fitfat.common.ui.theme.AppColors
+import com.nmarsollier.fitfat.measures.model.db.MeasureMethod
+import com.nmarsollier.fitfat.measures.ui.labelRes
 
 @Composable
 fun MeasureMethodDialog(

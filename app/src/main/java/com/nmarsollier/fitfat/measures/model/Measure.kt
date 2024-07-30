@@ -1,11 +1,11 @@
 package com.nmarsollier.fitfat.measures.model
 
+import com.nmarsollier.fitfat.common.converters.toPounds
 import com.nmarsollier.fitfat.measures.model.db.MeasureData
 import com.nmarsollier.fitfat.measures.model.db.MeasureMethod
 import com.nmarsollier.fitfat.measures.model.db.MeasureValue
 import com.nmarsollier.fitfat.userSettings.model.UserSettings
 import com.nmarsollier.fitfat.userSettings.model.db.UserSettingsData
-import com.nmarsollier.fitfat.common.converters.toPounds
 import java.util.Date
 import java.util.UUID
 import kotlin.math.log10

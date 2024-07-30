@@ -1,8 +1,8 @@
 package com.nmarsollier.fitfat.userSettings.model
 
-import com.nmarsollier.fitfat.userSettings.model.db.UserSettingsData
 import com.nmarsollier.fitfat.common.converters.toCm
 import com.nmarsollier.fitfat.common.converters.toKg
+import com.nmarsollier.fitfat.userSettings.model.db.UserSettingsData
 import java.util.Date
 
 data class UserSettings internal constructor(

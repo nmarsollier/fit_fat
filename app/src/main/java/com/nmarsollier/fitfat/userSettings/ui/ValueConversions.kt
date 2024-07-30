@@ -1,9 +1,9 @@
 package com.nmarsollier.fitfat.userSettings.ui
 
 import com.nmarsollier.fitfat.R
-import com.nmarsollier.fitfat.userSettings.model.db.UserSettingsData
 import com.nmarsollier.fitfat.common.converters.toInch
 import com.nmarsollier.fitfat.common.converters.toPounds
+import com.nmarsollier.fitfat.userSettings.model.db.UserSettingsData
 
 val UserSettingsData.MeasureType.heightResId: Int
     get() = when (this) {
