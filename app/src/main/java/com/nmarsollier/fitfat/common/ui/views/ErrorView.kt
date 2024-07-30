@@ -13,7 +13,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -29,7 +28,7 @@ fun ErrorView() {
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxSize()
-            .background(AppColors.background)
+            .background(AppColors.error)
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -39,12 +38,12 @@ fun ErrorView() {
             Image(
                 painterResource(android.R.drawable.stat_notify_error),
                 "",
-                colorFilter = ColorFilter.tint(colorResource(android.R.color.holo_red_dark)),
+                colorFilter = ColorFilter.tint(AppColors.onError),
                 modifier = Modifier.size(60.dp)
             )
             Text(
                 text = stringResource(R.string.google_error),
-                color = colorResource(id = R.color.colorPrimary),
+                color = AppColors.onError,
                 fontSize = 16.sp,
                 modifier = Modifier.padding(top = 16.dp)
             )

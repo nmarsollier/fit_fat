@@ -8,7 +8,7 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Build
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -17,6 +17,7 @@ import com.nmarsollier.fitfat.BuildConfig
 import com.nmarsollier.fitfat.R
 import com.nmarsollier.fitfat.common.logger.Logger
 import com.nmarsollier.fitfat.common.ui.preview.KoinPreview
+import com.nmarsollier.fitfat.common.ui.theme.AppColors
 import org.koin.compose.koinInject
 
 @Composable
@@ -30,7 +31,11 @@ fun MeasuresListMenu(
             IconButton(onClick = {
                 context?.openDbInspector(logger)
             }) {
-                Icon(Icons.Default.Search, stringResource(id = R.string.save_dialog_title))
+                Icon(
+                    Icons.Default.Build,
+                    tint = AppColors.onPrimary,
+                    contentDescription = stringResource(id = R.string.save_dialog_title)
+                )
             }
         }
     })

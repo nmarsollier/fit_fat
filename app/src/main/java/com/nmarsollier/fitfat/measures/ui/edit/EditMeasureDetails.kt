@@ -80,11 +80,7 @@ fun EditMeasureDetails(
                             reduce(EditMeasureEvent.UpdateDate(it))
                         }
                     },
-                colors = TextFieldDefaults.textFieldColors(
-                    disabledLabelColor = Color.Black,
-                    disabledTextColor = Color.Black,
-                    backgroundColor = Color.Transparent
-                ),
+                colors = TextFieldDefaults.textFieldColors(backgroundColor = Color.Transparent),
             )
             Spacer(Modifier.weight(1f))
             Row(
@@ -125,9 +121,7 @@ fun EditMeasureDetails(
 @Composable
 private fun EditMeasureDetailsPreview() {
     KoinPreview {
-        Column(
-            modifier = Modifier.background(AppColors.background)
-        ) {
+        Column {
             EditMeasureDetails(
                 UserSettings.Samples.simpleData.value,
                 Measure.Samples.simpleData[0].value,

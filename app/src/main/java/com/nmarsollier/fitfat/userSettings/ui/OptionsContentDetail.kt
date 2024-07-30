@@ -1,7 +1,6 @@
 package com.nmarsollier.fitfat.userSettings.ui
 
 import androidx.activity.ComponentActivity
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -33,6 +32,8 @@ import androidx.compose.ui.unit.dp
 import com.nmarsollier.fitfat.R
 import com.nmarsollier.fitfat.common.converters.formatDate
 import com.nmarsollier.fitfat.common.converters.formatString
+import com.nmarsollier.fitfat.common.ui.preview.KoinPreview
+import com.nmarsollier.fitfat.common.ui.theme.AppColors
 import com.nmarsollier.fitfat.userSettings.model.UserSettings
 import com.nmarsollier.fitfat.userSettings.model.db.UserSettingsData
 import com.nmarsollier.fitfat.userSettings.samples.Samples
@@ -49,7 +50,6 @@ fun OptionsContentDetail(
     Column(
         Modifier
             .padding(16.dp)
-            .background(com.nmarsollier.fitfat.common.ui.theme.AppColors.background)
             .verticalScroll(rememberScrollState(), enabled = true),
         verticalArrangement = Arrangement.spacedBy(5.dp)
     ) {
@@ -58,11 +58,7 @@ fun OptionsContentDetail(
             onValueChange = { reduce(OptionsEvent.UpdateDisplayName(it)) },
             label = { Text(stringResource(R.string.options_display_name)) },
             modifier = Modifier.fillMaxWidth(),
-            colors = TextFieldDefaults.textFieldColors(
-                disabledLabelColor = Color.Black,
-                disabledTextColor = Color.Black,
-                backgroundColor = Color.Transparent
-            )
+            colors = TextFieldDefaults.textFieldColors(backgroundColor = Color.Transparent)
         )
         TextField(
             value = userSettings.birthDate.formatDate(),
@@ -80,11 +76,7 @@ fun OptionsContentDetail(
                         reduce(OptionsEvent.UpdateBirthDate(it))
                     }
                 },
-            colors = TextFieldDefaults.textFieldColors(
-                disabledLabelColor = Color.Black,
-                disabledTextColor = Color.Black,
-                backgroundColor = Color.Transparent
-            ),
+            colors = TextFieldDefaults.textFieldColors(backgroundColor = Color.Transparent),
         )
         Column {
             Text(stringResource(R.string.options_system_of_measurement_metric))
@@ -137,7 +129,7 @@ fun OptionsContentDetail(
             Text(
                 stringResource(measureType.weightResId),
                 modifier = Modifier.padding(start = 5.dp),
-                color = com.nmarsollier.fitfat.common.ui.theme.AppColors.primary
+                color = AppColors.primary
             )
         }
 
@@ -161,7 +153,7 @@ fun OptionsContentDetail(
             Text(
                 stringResource(measureType.heightResId),
                 modifier = Modifier.padding(start = 5.dp),
-                color = com.nmarsollier.fitfat.common.ui.theme.AppColors.primary
+                color = AppColors.primary
             )
         }
         Row(
@@ -186,7 +178,7 @@ fun OptionsContentDetail(
 @Preview
 @Composable
 private fun OptionsContentDetailPreview() {
-    com.nmarsollier.fitfat.common.ui.preview.KoinPreview {
+    KoinPreview {
         OptionsContentDetail(
             OptionsState.Ready(
                 userSettings = UserSettings.Samples.simpleData.value,

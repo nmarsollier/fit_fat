@@ -13,6 +13,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.nmarsollier.fitfat.R
 import com.nmarsollier.fitfat.common.ui.preview.KoinPreview
+import com.nmarsollier.fitfat.common.ui.theme.AppColors
 import com.nmarsollier.fitfat.measures.model.Measure
 import com.nmarsollier.fitfat.measures.samples.Samples
 import com.nmarsollier.fitfat.userSettings.model.UserSettings
@@ -33,7 +34,7 @@ fun EditMeasureMenu(
             IconButton(onClick = {
                 eventHandler(EditMeasureEvent.SaveMeasure)
             }) {
-                Icon(Icons.Default.Check, "")
+                Icon(Icons.Default.Check, tint = AppColors.onPrimary, contentDescription = "")
             }
         }
     })

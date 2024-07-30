@@ -12,6 +12,7 @@ import com.nmarsollier.fitfat.common.firebase.GoogleAuthService
 import com.nmarsollier.fitfat.common.navigation.AppNavActions
 import com.nmarsollier.fitfat.common.navigation.AppNavigationHost
 import com.nmarsollier.fitfat.common.navigation.NavigationProvider
+import com.nmarsollier.fitfat.common.ui.theme.AppColors
 import com.nmarsollier.fitfat.userSettings.model.UserSettingsRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
@@ -36,7 +37,9 @@ class DashboardActivity : AppCompatActivity() {
         }
 
         setContent {
-            MaterialTheme {
+            MaterialTheme(
+                colors = AppColors
+            ) {
                 AppContent()
             }
         }

@@ -23,6 +23,8 @@ import com.nmarsollier.fitfat.userSettings.model.UserSettings
 import com.nmarsollier.fitfat.userSettings.samples.Samples
 import com.nmarsollier.fitfat.common.converters.formatShortDate
 import com.nmarsollier.fitfat.common.converters.truncateTime
+import com.nmarsollier.fitfat.common.ui.preview.KoinPreview
+import com.nmarsollier.fitfat.common.ui.theme.AppColors
 import lecho.lib.hellocharts.formatter.SimpleAxisValueFormatter
 import lecho.lib.hellocharts.model.Axis
 import lecho.lib.hellocharts.model.AxisValue
@@ -131,12 +133,12 @@ private fun updateGraph(
 
     data.axisYLeft = Axis(yAxisRange).apply {
         setHasLines(true).maxLabelChars = 4
-        textColor = ContextCompat.getColor(context, R.color.colorPrimary)
+        textColor = AppColors.primary.hashCode()
     }
 
     // X labels at the bottom
     data.axisXBottom = Axis(axisValues).apply {
-        textColor = ContextCompat.getColor(context, R.color.colorPrimary)
+        textColor = AppColors.primary.hashCode()
         maxLabelChars = 8
         formatter = SimpleAxisValueFormatter()
         setHasLines(true)
@@ -162,7 +164,7 @@ private fun updateGraph(
 @Preview(showSystemUi = true)
 @Composable
 private fun GraphItemViewPreview() {
-    com.nmarsollier.fitfat.common.ui.preview.KoinPreview {
+    KoinPreview {
         GraphItemView(
             UserSettings.Samples.simpleData.value,
             measure = MeasureValue.BODY_WEIGHT,

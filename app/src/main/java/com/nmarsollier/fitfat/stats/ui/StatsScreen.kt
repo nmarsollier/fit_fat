@@ -12,6 +12,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.viewModelScope
+import com.nmarsollier.fitfat.common.ui.preview.KoinPreview
 import com.nmarsollier.fitfat.measures.model.Measure
 import com.nmarsollier.fitfat.measures.model.db.MeasureMethod
 import com.nmarsollier.fitfat.measures.samples.Samples
@@ -79,7 +80,7 @@ fun StatsContent(state: StatsState, reduce: (StatsEvent) -> Unit) {
 @Preview
 @Composable
 private fun StatsScreenPreview() {
-    com.nmarsollier.fitfat.common.ui.preview.KoinPreview {
+    KoinPreview {
         StatsContent(
             StatsState.Ready(
                 MeasureMethod.WEIGHT_ONLY,

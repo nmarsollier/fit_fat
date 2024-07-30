@@ -22,6 +22,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.nmarsollier.fitfat.R
+import com.nmarsollier.fitfat.common.ui.preview.KoinPreview
 import com.nmarsollier.fitfat.measures.model.Measure
 import com.nmarsollier.fitfat.measures.model.db.MeasureMethod
 import com.nmarsollier.fitfat.measures.model.db.MeasureValue
@@ -78,7 +79,7 @@ fun StatsContentDetail(
 @Preview(showSystemUi = true)
 @Composable
 private fun StatsContentDetailPreview() {
-    com.nmarsollier.fitfat.common.ui.preview.KoinPreview {
+    KoinPreview {
         StatsContentDetail(
             StatsState.Ready(
                 method = MeasureMethod.WEIGHT_ONLY,

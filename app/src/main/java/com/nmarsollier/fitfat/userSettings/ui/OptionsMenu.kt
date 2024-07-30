@@ -11,6 +11,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.nmarsollier.fitfat.R
+import com.nmarsollier.fitfat.common.ui.preview.KoinPreview
+import com.nmarsollier.fitfat.common.ui.theme.AppColors
 import com.nmarsollier.fitfat.userSettings.samples.Samples
 
 @Composable
@@ -21,7 +23,11 @@ fun OptionsMenu(
         IconButton(onClick = {
             reduce(OptionsEvent.SaveSettings)
         }) {
-            Icon(Icons.Default.Check, stringResource(id = R.string.save_dialog_title))
+            Icon(
+                Icons.Default.Check,
+                tint = AppColors.onPrimary,
+                contentDescription = stringResource(id = R.string.save_dialog_title)
+            )
         }
     })
 }
@@ -29,7 +35,7 @@ fun OptionsMenu(
 @Preview
 @Composable
 private fun OptionsMenuPreview() {
-    com.nmarsollier.fitfat.common.ui.preview.KoinPreview {
+    KoinPreview {
         Column {
             OptionsMenu(OptionsViewModel.Samples::reduce)
         }

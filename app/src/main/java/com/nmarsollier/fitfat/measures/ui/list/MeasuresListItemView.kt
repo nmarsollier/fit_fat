@@ -168,9 +168,7 @@ val MeasureData.showFatPercent
 @Composable
 private fun MeasureItemViewPreview() {
     KoinPreview {
-        Column(
-            modifier = Modifier.background(AppColors.background)
-        ) {
+        Column {
             MeasureItemView(
                 UserSettings.Samples.simpleData.value,
                 Measure.Samples.simpleData[0].value,

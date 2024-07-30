@@ -3,11 +3,15 @@ package com.nmarsollier.fitfat.userSettings.ui
 import android.annotation.SuppressLint
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
@@ -16,6 +20,8 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.viewModelScope
 import com.nmarsollier.fitfat.R
+import com.nmarsollier.fitfat.common.ui.preview.KoinPreview
+import com.nmarsollier.fitfat.common.ui.views.LoadingView
 import com.nmarsollier.fitfat.userSettings.model.UserSettings
 import com.nmarsollier.fitfat.userSettings.samples.Samples
 import org.koin.androidx.compose.koinViewModel
@@ -71,7 +77,7 @@ fun OptionsContent(
                     ).show()
                 }
 
-                OptionsState.Loading -> com.nmarsollier.fitfat.common.ui.views.LoadingView()
+                OptionsState.Loading -> LoadingView()
                 is OptionsState.Ready -> OptionsContentDetail(
                     state = state, reduce
                 )
@@ -83,7 +89,7 @@ fun OptionsContent(
 @Preview
 @Composable
 private fun OptionsScreenPreview() {
-    com.nmarsollier.fitfat.common.ui.preview.KoinPreview {
+    KoinPreview {
         OptionsContent(
             OptionsState.Ready(
                 UserSettings.Samples.simpleData.value, false

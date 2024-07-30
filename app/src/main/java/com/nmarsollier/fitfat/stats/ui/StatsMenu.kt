@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.nmarsollier.fitfat.R
+import com.nmarsollier.fitfat.common.ui.preview.KoinPreview
 
 @Composable
 fun StatsMenu() {
@@ -20,7 +21,7 @@ fun StatsMenu() {
 @Preview
 @Composable
 private fun OptionsMenuPreview() {
-    com.nmarsollier.fitfat.common.ui.preview.KoinPreview {
+    KoinPreview {
         Column {
             StatsMenu()
         }

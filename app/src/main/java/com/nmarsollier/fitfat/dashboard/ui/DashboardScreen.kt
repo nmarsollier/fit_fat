@@ -52,9 +52,7 @@ fun DashboardScreen(viewModel: DashboardViewModel = koinViewModel()) {
 @Composable
 fun DashboardContent(state: DashboardState, reduce: (DashboardEvent) -> Unit) {
     Column(
-        Modifier
-            .fillMaxWidth()
-            .background(AppColors.background)
+        Modifier.fillMaxWidth()
     ) {
         Row(
             modifier = Modifier
