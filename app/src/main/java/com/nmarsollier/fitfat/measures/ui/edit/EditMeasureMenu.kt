@@ -6,7 +6,7 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
@@ -21,18 +21,18 @@ import com.nmarsollier.fitfat.userSettings.samples.Samples
 
 @Composable
 fun EditMeasureMenu(
-    state: EditMeasureState, eventHandler: (EditMeasureEvent) -> Unit
+    state: EditMeasureState, eventHandler: (EditMeasureAction) -> Unit
 ) {
     TopAppBar(title = { Text(stringResource(R.string.new_measure_title)) }, navigationIcon = {
         IconButton(onClick = {
-            eventHandler(EditMeasureEvent.Close)
+            eventHandler(EditMeasureAction.Close)
         }) {
-            Icon(Icons.Default.ArrowBack, "")
+            Icon(Icons.AutoMirrored.Filled.ArrowBack, "")
         }
     }, actions = {
         if (!state.currentReadOnly) {
             IconButton(onClick = {
-                eventHandler(EditMeasureEvent.SaveMeasure)
+                eventHandler(EditMeasureAction.SaveMeasure)
             }) {
                 Icon(Icons.Default.Check, tint = AppColors.onPrimary, contentDescription = "")
             }
@@ -50,7 +50,7 @@ private fun EditMeasureMenuPreview() {
                     userSettings = UserSettings.Samples.simpleData.value,
                     measure = Measure.Samples.simpleData[0].value,
                     showHelp = null,
-                    showMethod = false,
+                    showMeasureMethod = false,
                     readOnly = false
                 ), EditMeasureViewModel.Samples::reduce
             )

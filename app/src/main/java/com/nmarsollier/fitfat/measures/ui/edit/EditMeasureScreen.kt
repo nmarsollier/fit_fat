@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -19,15 +20,15 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.viewModelScope
 import com.nmarsollier.fitfat.R
 import com.nmarsollier.fitfat.common.navigation.NavigationProvider
-import com.nmarsollier.fitfat.measures.model.Measure
-import com.nmarsollier.fitfat.measures.model.db.MeasureData
-import com.nmarsollier.fitfat.measures.ui.dialog.MeasureMethodDialog
-import com.nmarsollier.fitfat.measures.samples.Samples
-import com.nmarsollier.fitfat.userSettings.model.UserSettings
-import com.nmarsollier.fitfat.userSettings.samples.Samples
 import com.nmarsollier.fitfat.common.ui.dialogs.HelpDialog
 import com.nmarsollier.fitfat.common.ui.preview.KoinPreview
 import com.nmarsollier.fitfat.common.ui.views.LoadingView
+import com.nmarsollier.fitfat.measures.model.Measure
+import com.nmarsollier.fitfat.measures.model.db.MeasureData
+import com.nmarsollier.fitfat.measures.samples.Samples
+import com.nmarsollier.fitfat.measures.ui.dialog.MeasureMethodDialog
+import com.nmarsollier.fitfat.userSettings.model.UserSettings
+import com.nmarsollier.fitfat.userSettings.samples.Samples
 import org.koin.androidx.compose.koinViewModel
 import org.koin.compose.koinInject
 
@@ -35,16 +36,28 @@ import org.koin.compose.koinInject
 @Composable
 fun EditMeasureScreen(
     initialMeasure: MeasureData? = null,
-    viewModel: EditMeasureViewModel = koinViewModel()
+    viewModel: EditMeasureViewModel = koinViewModel(),
+    navigationProvider: NavigationProvider = koinInject()
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
     val state by viewModel.state.collectAsState(viewModel.viewModelScope.coroutineContext)
+    val event by viewModel.event.collectAsState(null)
+
+    LaunchedEffect(event) {
+        when (event) {
+            EditMeasureEvent.Close -> {
+                navigationProvider.appNavActions?.navigateToHome()
+            }
+
+            else -> Unit
+        }
+    }
 
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
             when (event) {
-                Lifecycle.Event.ON_RESUME -> {
-                    viewModel.reduce(EditMeasureEvent.Initialize(initialMeasure))
+                Lifecycle.Event.ON_CREATE -> {
+                    viewModel.reduce(EditMeasureAction.Initialize(initialMeasure))
                 }
 
                 else -> Unit
@@ -64,8 +77,7 @@ fun EditMeasureScreen(
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun EditMeasureContent(
-    state: EditMeasureState, reduce: (EditMeasureEvent) -> Unit,
-    navigationProvider: NavigationProvider = koinInject()
+    state: EditMeasureState, reduce: (EditMeasureAction) -> Unit,
 ) {
     val context = LocalContext.current as? Activity
 
@@ -83,16 +95,16 @@ fun EditMeasureContent(
 
                     if (state.showHelp != null) {
                         HelpDialog(helpRes = state.showHelp) {
-                            reduce(EditMeasureEvent.ToggleHelp(null))
+                            reduce(EditMeasureAction.ToggleHelp(null))
                         }
                     }
 
-                    if (state.showMethod) {
+                    if (state.showMeasureMethod) {
                         MeasureMethodDialog(state.measure.measureMethod) {
                             if (it != null) {
-                                reduce(EditMeasureEvent.UpdateMeasureMethod(it))
+                                reduce(EditMeasureAction.UpdateMeasureMethod(it))
                             } else {
-                                reduce(EditMeasureEvent.ToggleShowMethod)
+                                reduce(EditMeasureAction.ToggleMeasureMethod)
                             }
                         }
                     }
@@ -104,11 +116,9 @@ fun EditMeasureContent(
                     ).show()
                 }
 
-                EditMeasureState.Close -> {
-                    navigationProvider.appNavActions?.navigateToHome()
+                is EditMeasureState.Loading -> {
+                    LoadingView()
                 }
-
-                is EditMeasureState.Loading -> LoadingView()
             }
         }
     }
@@ -123,7 +133,7 @@ private fun EditMeasureContentPreview() {
                 userSettings = UserSettings.Samples.simpleData.value,
                 measure = Measure.Samples.simpleData[0].value,
                 showHelp = null,
-                showMethod = false,
+                showMeasureMethod = false,
                 readOnly = false
             ),
             EditMeasureViewModel.Samples::reduce

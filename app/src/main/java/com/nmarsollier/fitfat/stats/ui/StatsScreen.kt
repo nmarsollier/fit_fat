@@ -33,7 +33,7 @@ fun StatsScreen(viewModel: StatsViewModel = koinViewModel()) {
         val observer = LifecycleEventObserver { _, event ->
             when (event) {
                 Lifecycle.Event.ON_RESUME -> {
-                    viewModel.reduce(StatsEvent.Initialize)
+                    viewModel.reduce(StatsAction.Initialize)
                 }
 
                 else -> Unit
@@ -52,7 +52,7 @@ fun StatsScreen(viewModel: StatsViewModel = koinViewModel()) {
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun StatsContent(state: StatsState, reduce: (StatsEvent) -> Unit) {
+fun StatsContent(state: StatsState, reduce: (StatsAction) -> Unit) {
     Scaffold(topBar = {
         StatsMenu()
     }) {
@@ -65,9 +65,9 @@ fun StatsContent(state: StatsState, reduce: (StatsEvent) -> Unit) {
                     if (state.showMethod) {
                         MeasureMethodDialog(state.selectedMethod) {
                             if (it != null) {
-                                reduce(StatsEvent.UpdateMethod(it))
+                                reduce(StatsAction.UpdateMethod(it))
                             } else {
-                                reduce(StatsEvent.ToggleShowMethod)
+                                reduce(StatsAction.ToggleShowMethod)
                             }
                         }
                     }

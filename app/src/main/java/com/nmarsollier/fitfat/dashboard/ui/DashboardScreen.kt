@@ -1,6 +1,5 @@
 package com.nmarsollier.fitfat.dashboard.ui
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,7 +15,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.viewModelScope
 import com.nmarsollier.fitfat.common.ui.preview.KoinPreview
-import com.nmarsollier.fitfat.common.ui.theme.AppColors
 import com.nmarsollier.fitfat.dashboard.samples.Samples
 import com.nmarsollier.fitfat.measures.ui.list.MeasuresListScreen
 import com.nmarsollier.fitfat.stats.ui.StatsScreen
@@ -32,7 +30,7 @@ fun DashboardScreen(viewModel: DashboardViewModel = koinViewModel()) {
         val observer = LifecycleEventObserver { _, event ->
             when (event) {
                 Lifecycle.Event.ON_RESUME -> {
-                    viewModel.reduce(DashboardEvent.Initialize)
+                    viewModel.reduce(DashboardAction.Initialize)
                 }
 
                 else -> Unit
@@ -50,7 +48,7 @@ fun DashboardScreen(viewModel: DashboardViewModel = koinViewModel()) {
 }
 
 @Composable
-fun DashboardContent(state: DashboardState, reduce: (DashboardEvent) -> Unit) {
+fun DashboardContent(state: DashboardState, reduce: (DashboardAction) -> Unit) {
     Column(
         Modifier.fillMaxWidth()
     ) {

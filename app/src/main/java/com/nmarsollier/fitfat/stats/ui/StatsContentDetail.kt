@@ -36,7 +36,7 @@ import com.nmarsollier.fitfat.userSettings.samples.Samples
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun StatsContentDetail(
-    state: StatsState.Ready, reduce: (StatsEvent) -> Unit
+    state: StatsState.Ready, reduce: (StatsAction) -> Unit
 ) {
     Column(
         Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(5.dp)
@@ -52,7 +52,7 @@ fun StatsContentDetail(
         Row(modifier = Modifier
             .padding(top = 12.dp, bottom = 12.dp)
             .clickable {
-                reduce(StatsEvent.ToggleShowMethod)
+                reduce(StatsAction.ToggleShowMethod)
             }) {
             Text(stringResource(state.selectedMethod.labelRes))
 

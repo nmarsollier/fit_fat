@@ -1,9 +1,10 @@
 package com.nmarsollier.fitfat.stats.ui
 
 import androidx.lifecycle.viewModelScope
+import com.nmarsollier.fitfat.common.ui.viewModel.StateViewModel
+import com.nmarsollier.fitfat.measures.model.MeasuresRepository
 import com.nmarsollier.fitfat.measures.model.db.MeasureData
 import com.nmarsollier.fitfat.measures.model.db.MeasureMethod
-import com.nmarsollier.fitfat.measures.model.MeasuresRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -22,16 +23,18 @@ sealed class StatsState(
     ) : StatsState(method)
 }
 
-sealed class StatsEvent {
-    data object Initialize : StatsEvent()
-    data class UpdateMethod(val selectedMethod: MeasureMethod) : StatsEvent()
-    data object ToggleShowMethod : StatsEvent()
+sealed interface StatsEvent
+
+sealed interface StatsAction {
+    data object Initialize : StatsAction
+    data class UpdateMethod(val selectedMethod: MeasureMethod) : StatsAction
+    data object ToggleShowMethod : StatsAction
 }
 
 class StatsViewModel(
     private val userSettingsRepository: com.nmarsollier.fitfat.userSettings.model.UserSettingsRepository,
     private val measuresRepository: MeasuresRepository
-) : com.nmarsollier.fitfat.common.ui.viewModel.BaseViewModel<StatsState, StatsEvent>(
+) : StateViewModel<StatsState, StatsEvent, StatsAction>(
     StatsState.Loading(
         MeasureMethod.WEIGHT_ONLY
     )
@@ -40,11 +43,10 @@ class StatsViewModel(
         get() = state.value.selectedMethod
 
 
-
-    override fun reduce(event: StatsEvent) = when (event) {
-        StatsEvent.Initialize -> init()
-        StatsEvent.ToggleShowMethod -> toggleShowMethod()
-        is StatsEvent.UpdateMethod -> updateMethod(event)
+    override fun reduce(action: StatsAction) = when (action) {
+        StatsAction.Initialize -> init()
+        StatsAction.ToggleShowMethod -> toggleShowMethod()
+        is StatsAction.UpdateMethod -> updateMethod(action)
     }
 
     private fun init() {
@@ -65,7 +67,7 @@ class StatsViewModel(
         }
     }
 
-    private fun updateMethod(event: StatsEvent.UpdateMethod) {
+    private fun updateMethod(event: StatsAction.UpdateMethod) {
         when (val value = state.value) {
             is StatsState.Loading -> value.copy(method = event.selectedMethod)
             is StatsState.Ready -> value.copy(method = event.selectedMethod, showMethod = false)

@@ -41,7 +41,7 @@ import com.nmarsollier.fitfat.userSettings.samples.Samples
 
 @Composable
 fun EditMeasureDetails(
-    userSettings: UserSettingsData, measure: MeasureData, reduce: (EditMeasureEvent) -> Unit
+    userSettings: UserSettingsData, measure: MeasureData, reduce: (EditMeasureAction) -> Unit
 ) {
     val context = LocalContext.current
 
@@ -55,7 +55,7 @@ fun EditMeasureDetails(
         Row(modifier = Modifier
             .padding(top = 12.dp, bottom = 12.dp)
             .clickable {
-                reduce(EditMeasureEvent.ToggleShowMethod)
+                reduce(EditMeasureAction.ToggleMeasureMethod)
             }) {
             Text(stringResource(measure.measureMethod.labelRes))
 
@@ -78,7 +78,7 @@ fun EditMeasureDetails(
                     .fillMaxWidth(0.5f)
                     .clickable {
                         showDatePicker(context, userSettings.birthDate) {
-                            reduce(EditMeasureEvent.UpdateDate(it))
+                            reduce(EditMeasureAction.UpdateDate(it))
                         }
                     },
                 colors = TextFieldDefaults.textFieldColors(backgroundColor = Color.Transparent),

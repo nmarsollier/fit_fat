@@ -4,7 +4,7 @@ import com.nmarsollier.fitfat.common.converters.dateOf
 import com.nmarsollier.fitfat.userSettings.model.UserSettings
 import com.nmarsollier.fitfat.userSettings.model.asUserSettings
 import com.nmarsollier.fitfat.userSettings.model.db.UserSettingsData
-import com.nmarsollier.fitfat.userSettings.ui.OptionsEvent
+import com.nmarsollier.fitfat.userSettings.ui.OptionsAction
 import com.nmarsollier.fitfat.userSettings.ui.OptionsViewModel
 
 interface UserSettingsSamples {
@@ -26,11 +26,11 @@ val UserSettings.Companion.Samples
     }
 
 interface OptionsViewModelSamples {
-    fun reduce(e: OptionsEvent)
+    fun reduce(e: OptionsAction)
 }
 
 val OptionsViewModel.Companion.Samples: OptionsViewModelSamples
     get() = object : OptionsViewModelSamples {
-        override fun reduce(e: OptionsEvent) {
+        override fun reduce(e: OptionsAction) {
         }
     }

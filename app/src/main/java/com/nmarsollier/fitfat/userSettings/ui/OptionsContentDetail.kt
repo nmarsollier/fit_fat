@@ -41,7 +41,7 @@ import com.nmarsollier.fitfat.userSettings.samples.Samples
 
 @Composable
 fun OptionsContentDetail(
-    state: OptionsState.Ready, reduce: (OptionsEvent) -> Unit
+    state: OptionsState.Ready, reduce: (OptionsAction) -> Unit
 ) {
     val activity = LocalContext.current as? ComponentActivity
     val userSettings = state.userSettings
@@ -57,7 +57,7 @@ fun OptionsContentDetail(
     ) {
         TextField(
             value = userSettings.displayName,
-            onValueChange = { reduce(OptionsEvent.UpdateDisplayName(it)) },
+            onValueChange = { reduce(OptionsAction.UpdateDisplayName(it)) },
             label = { Text(stringResource(R.string.options_display_name)) },
             modifier = Modifier.fillMaxWidth(),
             colors = TextFieldDefaults.textFieldColors(backgroundColor = Color.Transparent)
@@ -75,7 +75,7 @@ fun OptionsContentDetail(
                         context,
                         userSettings.birthDate
                     ) {
-                        reduce(OptionsEvent.UpdateBirthDate(it))
+                        reduce(OptionsAction.UpdateBirthDate(it))
                     }
                 },
             colors = TextFieldDefaults.textFieldColors(backgroundColor = Color.Transparent),
@@ -89,13 +89,13 @@ fun OptionsContentDetail(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 RadioButton(selected = userSettings.measureSystem == UserSettingsData.MeasureType.METRIC,
-                    onClick = { reduce(OptionsEvent.UpdateMeasureSystem(UserSettingsData.MeasureType.METRIC)) })
+                    onClick = { reduce(OptionsAction.UpdateMeasureSystem(UserSettingsData.MeasureType.METRIC)) })
                 Text(
                     stringResource(R.string.options_system_of_metric), color = AppColors.onSurface
                 )
                 Spacer(modifier = Modifier.width(16.dp))
                 RadioButton(selected = userSettings.measureSystem == UserSettingsData.MeasureType.IMPERIAL,
-                    onClick = { reduce(OptionsEvent.UpdateMeasureSystem(UserSettingsData.MeasureType.IMPERIAL)) })
+                    onClick = { reduce(OptionsAction.UpdateMeasureSystem(UserSettingsData.MeasureType.IMPERIAL)) })
                 Text(
                     stringResource(R.string.options_system_of_imperial), color = AppColors.onSurface
                 )
@@ -110,13 +110,13 @@ fun OptionsContentDetail(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 RadioButton(selected = userSettings.sex == UserSettingsData.SexType.MALE,
-                    onClick = { reduce(OptionsEvent.UpdateSex(UserSettingsData.SexType.MALE)) })
+                    onClick = { reduce(OptionsAction.UpdateSex(UserSettingsData.SexType.MALE)) })
                 Text(
                     stringResource(R.string.options_sex_male), color = AppColors.onSurface
                 )
                 Spacer(modifier = Modifier.width(16.dp))
                 RadioButton(selected = userSettings.sex == UserSettingsData.SexType.FEMALE,
-                    onClick = { reduce(OptionsEvent.UpdateSex(UserSettingsData.SexType.FEMALE)) })
+                    onClick = { reduce(OptionsAction.UpdateSex(UserSettingsData.SexType.FEMALE)) })
                 Text(
                     stringResource(R.string.options_sex_female), color = AppColors.onSurface
                 )
@@ -133,7 +133,7 @@ fun OptionsContentDetail(
         ) {
             TextField(
                 modifier = Modifier.onFocusChanged {
-                    reduce(OptionsEvent.UpdateWeight(weight.toDoubleOrNull() ?: 0.0))
+                    reduce(OptionsAction.UpdateWeight(weight.toDoubleOrNull() ?: 0.0))
                 },
                 value = weight,
                 onValueChange = { weight = it },
@@ -157,7 +157,7 @@ fun OptionsContentDetail(
         ) {
             TextField(
                 modifier = Modifier.onFocusChanged {
-                    reduce(OptionsEvent.UpdateHeight(height.toDoubleOrNull() ?: 0.0))
+                    reduce(OptionsAction.UpdateHeight(height.toDoubleOrNull() ?: 0.0))
                 },
                 value = height,
                 onValueChange = { height = it },
@@ -181,10 +181,10 @@ fun OptionsContentDetail(
             Switch(checked = !userSettings.firebaseToken.isNullOrEmpty(), onCheckedChange = {
                 if (it) {
                     activity?.let {
-                        reduce(OptionsEvent.LoginWithGoogle(activity))
+                        reduce(OptionsAction.LoginWithGoogle(activity))
                     }
                 } else {
-                    reduce(OptionsEvent.DisableFirebase)
+                    reduce(OptionsAction.DisableFirebase)
                 }
             })
         }

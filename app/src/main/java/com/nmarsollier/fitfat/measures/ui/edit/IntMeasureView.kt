@@ -35,7 +35,7 @@ fun IntMeasureView(
     userSettings: UserSettingsData,
     measure: MeasureData,
     measureValue: MeasureValue,
-    reduce: (EditMeasureEvent) -> Unit
+    reduce: (EditMeasureAction) -> Unit
 ) {
     Column {
         val unit = when (measureValue.unitType) {
@@ -65,7 +65,7 @@ fun IntMeasureView(
                 colorFilter = ColorFilter.tint(AppColors.primary),
                 modifier = Modifier.clickable {
                     measureValue.helpRes?.let {
-                        reduce(EditMeasureEvent.ToggleHelp(it))
+                        reduce(EditMeasureAction.ToggleHelp(it))
                     }
                 })
         }
@@ -74,7 +74,7 @@ fun IntMeasureView(
             valueRange = 0f..measureValue.maxScale.toFloat(),
             onValueChange = {
                 reduce(
-                    EditMeasureEvent.UpdateMeasureValue(
+                    EditMeasureAction.UpdateMeasureValue(
                         measureValue, it.toInt()
                     )
                 )

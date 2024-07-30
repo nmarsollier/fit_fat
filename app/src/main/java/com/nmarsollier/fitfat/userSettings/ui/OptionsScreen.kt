@@ -3,15 +3,11 @@ package com.nmarsollier.fitfat.userSettings.ui
 import android.annotation.SuppressLint
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
@@ -36,11 +32,11 @@ fun OptionsScreen(viewModel: OptionsViewModel = koinViewModel()) {
         val observer = LifecycleEventObserver { _, event ->
             when (event) {
                 Lifecycle.Event.ON_RESUME -> {
-                    viewModel.reduce(OptionsEvent.Initialize)
+                    viewModel.reduce(OptionsAction.Initialize)
                 }
 
                 Lifecycle.Event.ON_STOP -> {
-                    viewModel.reduce(OptionsEvent.SaveSettings)
+                    viewModel.reduce(OptionsAction.SaveSettings)
                 }
 
                 else -> Unit
@@ -50,7 +46,7 @@ fun OptionsScreen(viewModel: OptionsViewModel = koinViewModel()) {
         }
 
         onDispose {
-            viewModel.reduce(OptionsEvent.SaveSettings)
+            viewModel.reduce(OptionsAction.SaveSettings)
             lifecycleOwner.lifecycle.removeObserver(observer)
         }
     }
@@ -62,7 +58,7 @@ fun OptionsScreen(viewModel: OptionsViewModel = koinViewModel()) {
 @Composable
 fun OptionsContent(
     state: OptionsState,
-    reduce: (OptionsEvent) -> Unit
+    reduce: (OptionsAction) -> Unit
 ) {
     Scaffold(
         topBar = { OptionsMenu(reduce) }

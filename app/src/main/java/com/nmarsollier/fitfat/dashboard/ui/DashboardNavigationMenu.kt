@@ -21,7 +21,7 @@ import com.nmarsollier.fitfat.dashboard.samples.Samples
 
 @Composable
 fun DashboardNavigationMenu(
-    state: DashboardState, reduce: (DashboardEvent) -> Unit
+    state: DashboardState, reduce: (DashboardAction) -> Unit
 ) {
 
     BottomNavigation(
@@ -44,7 +44,7 @@ fun DashboardNavigationMenu(
             alwaysShowLabel = true,
             selected = state.selectedTab == Screen.OPTIONS,
             onClick = {
-                reduce(DashboardEvent.CurrentSelectedTab(Screen.OPTIONS))
+                reduce(DashboardAction.CurrentSelectedTab(Screen.OPTIONS))
             })
 
         BottomNavigationItem(icon = {
@@ -61,7 +61,7 @@ fun DashboardNavigationMenu(
             alwaysShowLabel = true,
             selected = state.selectedTab == Screen.MEASURES_LIST,
             onClick = {
-                reduce(DashboardEvent.CurrentSelectedTab(Screen.MEASURES_LIST))
+                reduce(DashboardAction.CurrentSelectedTab(Screen.MEASURES_LIST))
             })
 
         BottomNavigationItem(icon = {
@@ -78,7 +78,7 @@ fun DashboardNavigationMenu(
             alwaysShowLabel = true,
             selected = state.selectedTab == Screen.STATS,
             onClick = {
-                reduce(DashboardEvent.CurrentSelectedTab(Screen.STATS))
+                reduce(DashboardAction.CurrentSelectedTab(Screen.STATS))
             })
     }
 }

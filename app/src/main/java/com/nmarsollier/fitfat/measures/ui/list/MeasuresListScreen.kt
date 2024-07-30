@@ -14,6 +14,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -40,15 +41,32 @@ import org.koin.compose.koinInject
 @Composable
 fun MeasuresListScreen(
     viewModel: MeasuresListViewModel = koinViewModel(),
+    navigationProvider: NavigationProvider = koinInject(),
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
     val state by viewModel.state.collectAsState(viewModel.viewModelScope.coroutineContext)
+    val event by viewModel.event.collectAsState(null)
 
+    LaunchedEffect(event) {
+        when (val e = event) {
+            is MeasuresListEvent.Redirect -> {
+                when (val dst = e.destination) {
+                    is Destination.NewMeasure -> navigationProvider.appNavActions?.navigateNewMeasure()
+
+                    is Destination.ViewMeasure -> navigationProvider.appNavActions?.navigateEditMeasure(
+                        dst.measure
+                    )
+                }
+            }
+
+            else -> Unit
+        }
+    }
     DisposableEffect(lifecycleOwner) {
         val observer = LifecycleEventObserver { _, event ->
             when (event) {
                 Lifecycle.Event.ON_RESUME -> {
-                    viewModel.reduce(MeasuresListEvent.Initialize)
+                    viewModel.reduce(MeasuresListAction.Initialize)
                 }
 
                 else -> Unit
@@ -69,15 +87,14 @@ fun MeasuresListScreen(
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun MeasuresListContent(
-    state: MeasuresListState, reduce: (MeasuresListEvent) -> Unit,
-    navigationProvider: NavigationProvider = koinInject(),
+    state: MeasuresListState, reduce: (MeasuresListAction) -> Unit,
 ) {
     Scaffold(topBar = {
         MeasuresListMenu()
     }, floatingActionButton = {
         FloatingActionButton(
             onClick = {
-                reduce(MeasuresListEvent.OpenNewMeasure)
+                reduce(MeasuresListAction.OpenNewMeasure)
             },
             shape = CircleShape,
         ) {
@@ -98,14 +115,6 @@ fun MeasuresListContent(
                         Divider(color = Color.LightGray, thickness = 1.dp)
                     }
                 }
-
-                is MeasuresListState.Redirect -> when (val dst = state.destination) {
-                    is Destination.NewMeasure -> navigationProvider.appNavActions?.navigateNewMeasure()
-
-                    is Destination.ViewMeasure -> navigationProvider.appNavActions?.navigateEditMeasure(
-                        dst.measure
-                    )
-                }
             }
         }
     }
@@ -115,11 +124,8 @@ fun MeasuresListContent(
 @Composable
 private fun MeasuresListScreenPreview() {
     KoinPreview {
-        MeasuresListContent(
-            MeasuresListState.Ready(
-                UserSettings.Samples.simpleData.value,
-                Measure.Samples.simpleData.map { it.value }
-            ), MeasuresListViewModel.Samples::reduce
-        )
+        MeasuresListContent(MeasuresListState.Ready(UserSettings.Samples.simpleData.value,
+            Measure.Samples.simpleData.map { it.value }),
+            MeasuresListViewModel.Samples::reduce)
     }
 }

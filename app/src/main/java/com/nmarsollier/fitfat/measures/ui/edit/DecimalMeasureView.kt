@@ -37,10 +37,9 @@ fun DecimalMeasureView(
     userSettings: UserSettingsData,
     measure: MeasureData,
     measureValue: MeasureValue,
-    reduce: (EditMeasureEvent) -> Unit
+    reduce: (EditMeasureAction) -> Unit
 ) {
-    Column(
-    ) {
+    Column {
         val unit = when (measureValue.unitType) {
             MeasureValue.UnitType.PERCENT -> stringResource(
                 R.string.unit_percent
@@ -67,7 +66,7 @@ fun DecimalMeasureView(
                 colorFilter = ColorFilter.tint(AppColors.primary),
                 modifier = Modifier.clickable {
                     measureValue.helpRes?.let {
-                        reduce(EditMeasureEvent.ToggleHelp(it))
+                        reduce(EditMeasureAction.ToggleHelp(it))
                     }
                 })
         }
@@ -77,7 +76,7 @@ fun DecimalMeasureView(
             valueRange = 0f..measureValue.maxScale.toFloat(),
             onValueChange = {
                 reduce(
-                    EditMeasureEvent.UpdateMeasureValue(
+                    EditMeasureAction.UpdateMeasureValue(
                         measureValue,
                         measure.calculateIntPart(it.toInt(), measureValue, userSettings)
                     )
@@ -88,7 +87,7 @@ fun DecimalMeasureView(
             valueRange = 0f..10f,
             onValueChange = {
                 reduce(
-                    EditMeasureEvent.UpdateMeasureValue(
+                    EditMeasureAction.UpdateMeasureValue(
                         measureValue,
                         measure.calculateDecimalPart(it.toInt(), measureValue, userSettings)
                     )

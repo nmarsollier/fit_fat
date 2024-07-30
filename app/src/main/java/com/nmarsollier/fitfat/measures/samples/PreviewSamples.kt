@@ -5,9 +5,9 @@ import com.nmarsollier.fitfat.measures.model.Measure
 import com.nmarsollier.fitfat.measures.model.asMeasure
 import com.nmarsollier.fitfat.measures.model.db.MeasureData
 import com.nmarsollier.fitfat.measures.model.db.MeasureMethod
-import com.nmarsollier.fitfat.measures.ui.edit.EditMeasureEvent
+import com.nmarsollier.fitfat.measures.ui.edit.EditMeasureAction
 import com.nmarsollier.fitfat.measures.ui.edit.EditMeasureViewModel
-import com.nmarsollier.fitfat.measures.ui.list.MeasuresListEvent
+import com.nmarsollier.fitfat.measures.ui.list.MeasuresListAction
 import com.nmarsollier.fitfat.measures.ui.list.MeasuresListViewModel
 import com.nmarsollier.fitfat.userSettings.model.db.UserSettingsData
 
@@ -88,23 +88,23 @@ val Measure.Companion.Samples
 
 
 interface MeasuresListViewModelSamples {
-    fun reduce(e: MeasuresListEvent)
+    fun reduce(e: MeasuresListAction)
 }
 
 val MeasuresListViewModel.Companion.Samples: MeasuresListViewModelSamples
     get() = object : MeasuresListViewModelSamples {
-        override fun reduce(e: MeasuresListEvent) {
+        override fun reduce(e: MeasuresListAction) {
 
         }
     }
 
 
 interface EditMeasureViewModelSamples {
-    fun reduce(e: EditMeasureEvent)
+    fun reduce(e: EditMeasureAction)
 }
 
 val EditMeasureViewModel.Companion.Samples: EditMeasureViewModelSamples
     get() = object : EditMeasureViewModelSamples {
-        override fun reduce(e: EditMeasureEvent) {
+        override fun reduce(e: EditMeasureAction) {
         }
     }

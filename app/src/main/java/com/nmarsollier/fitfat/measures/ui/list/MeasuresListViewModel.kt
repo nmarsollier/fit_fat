@@ -1,7 +1,7 @@
 package com.nmarsollier.fitfat.measures.ui.list
 
 import androidx.lifecycle.viewModelScope
-import com.nmarsollier.fitfat.common.ui.viewModel.BaseViewModel
+import com.nmarsollier.fitfat.common.ui.viewModel.StateViewModel
 import com.nmarsollier.fitfat.measures.model.MeasuresRepository
 import com.nmarsollier.fitfat.measures.model.db.MeasureData
 import com.nmarsollier.fitfat.userSettings.model.UserSettingsRepository
@@ -16,37 +16,39 @@ sealed class Destination {
     data object NewMeasure : Destination()
 }
 
-sealed class MeasuresListState {
-    data object Loading : MeasuresListState()
-
+sealed interface MeasuresListEvent {
     data class Redirect(
         val destination: Destination
-    ) : MeasuresListState()
+    ) : MeasuresListEvent
+}
+
+sealed interface MeasuresListState {
+    data object Loading : MeasuresListState
 
     data class Ready(
         val userSettings: UserSettingsData,
         val measures: List<MeasureData>
-    ) : MeasuresListState()
+    ) : MeasuresListState
 }
 
-sealed class MeasuresListEvent {
-    data object Initialize : MeasuresListEvent()
+sealed interface MeasuresListAction {
+    data object Initialize : MeasuresListAction
 
-    data class DeleteMeasure(val measure: MeasureData) : MeasuresListEvent()
-    data object OpenNewMeasure : MeasuresListEvent()
-    data class OpenViewMeasure(val measure: MeasureData) : MeasuresListEvent()
+    data class DeleteMeasure(val measure: MeasureData) : MeasuresListAction
+    data object OpenNewMeasure : MeasuresListAction
+    data class OpenViewMeasure(val measure: MeasureData) : MeasuresListAction
 }
 
 class MeasuresListViewModel(
     private val measuresRepository: MeasuresRepository,
     private val userSettingsRepository: UserSettingsRepository
-) : BaseViewModel<MeasuresListState, MeasuresListEvent>(MeasuresListState.Loading) {
+) : StateViewModel<MeasuresListState, MeasuresListEvent, MeasuresListAction>(MeasuresListState.Loading) {
 
-    override fun reduce(event: MeasuresListEvent) = when (event) {
-        is MeasuresListEvent.DeleteMeasure -> deleteMeasure(event)
-        MeasuresListEvent.Initialize -> load()
-        MeasuresListEvent.OpenNewMeasure -> openNewMeasure()
-        is MeasuresListEvent.OpenViewMeasure -> openViewMeasure(event)
+    override fun reduce(action: MeasuresListAction) = when (action) {
+        is MeasuresListAction.DeleteMeasure -> deleteMeasure(action)
+        MeasuresListAction.Initialize -> load()
+        MeasuresListAction.OpenNewMeasure -> openNewMeasure()
+        is MeasuresListAction.OpenViewMeasure -> openViewMeasure(action)
     }
 
     private fun load() {
@@ -62,7 +64,7 @@ class MeasuresListViewModel(
         }
     }
 
-    private fun deleteMeasure(event: MeasuresListEvent.DeleteMeasure) {
+    private fun deleteMeasure(event: MeasuresListAction.DeleteMeasure) {
         viewModelScope.launch(Dispatchers.IO) {
             MeasuresListState.Loading.sendToState()
             measuresRepository.findById(event.measure.uid)?.also {
@@ -73,12 +75,12 @@ class MeasuresListViewModel(
     }
 
     private fun openNewMeasure() {
-        MeasuresListState.Redirect(Destination.NewMeasure).sendToState()
+        MeasuresListEvent.Redirect(Destination.NewMeasure).sendToEvent()
     }
 
-    private fun openViewMeasure(event: MeasuresListEvent.OpenViewMeasure) {
+    private fun openViewMeasure(event: MeasuresListAction.OpenViewMeasure) {
         viewModelScope.launch(Dispatchers.IO) {
-            MeasuresListState.Redirect(Destination.ViewMeasure(event.measure)).sendToState()
+            MeasuresListEvent.Redirect(Destination.ViewMeasure(event.measure)).sendToEvent()
         }
     }
 

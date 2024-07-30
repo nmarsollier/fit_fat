@@ -17,11 +17,11 @@ import com.nmarsollier.fitfat.userSettings.samples.Samples
 
 @Composable
 fun OptionsMenu(
-    reduce: (OptionsEvent) -> Unit
+    reduce: (OptionsAction) -> Unit
 ) {
     TopAppBar(title = { Text(stringResource(R.string.home_options_title)) }, actions = {
         IconButton(onClick = {
-            reduce(OptionsEvent.SaveSettings)
+            reduce(OptionsAction.SaveSettings)
         }) {
             Icon(
                 Icons.Default.Check,

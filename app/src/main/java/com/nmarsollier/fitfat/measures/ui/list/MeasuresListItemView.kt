@@ -1,7 +1,6 @@
 package com.nmarsollier.fitfat.measures.ui.list
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -16,29 +15,29 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.nmarsollier.fitfat.R
+import com.nmarsollier.fitfat.common.converters.formatDateTime
+import com.nmarsollier.fitfat.common.converters.formatString
+import com.nmarsollier.fitfat.common.ui.preview.KoinPreview
+import com.nmarsollier.fitfat.common.ui.theme.AppColors
 import com.nmarsollier.fitfat.measures.model.Measure
 import com.nmarsollier.fitfat.measures.model.bodyFatMass
 import com.nmarsollier.fitfat.measures.model.db.MeasureData
 import com.nmarsollier.fitfat.measures.model.freeFatMassIndex
 import com.nmarsollier.fitfat.measures.model.leanWeight
-import com.nmarsollier.fitfat.measures.ui.labelRes
 import com.nmarsollier.fitfat.measures.samples.Samples
+import com.nmarsollier.fitfat.measures.ui.labelRes
 import com.nmarsollier.fitfat.userSettings.model.UserSettings
 import com.nmarsollier.fitfat.userSettings.model.db.UserSettingsData
-import com.nmarsollier.fitfat.userSettings.ui.displayWeight
 import com.nmarsollier.fitfat.userSettings.samples.Samples
+import com.nmarsollier.fitfat.userSettings.ui.displayWeight
 import com.nmarsollier.fitfat.userSettings.ui.weightResId
-import com.nmarsollier.fitfat.common.converters.formatDateTime
-import com.nmarsollier.fitfat.common.converters.formatString
-import com.nmarsollier.fitfat.common.ui.preview.KoinPreview
-import com.nmarsollier.fitfat.common.ui.theme.AppColors
 
 @Composable
 @ExperimentalFoundationApi
 fun MeasureItemView(
     userSettings: UserSettingsData,
     measure: MeasureData,
-    reduce: (MeasuresListEvent) -> Unit
+    reduce: (MeasuresListAction) -> Unit
 ) {
     val fontSize = 14.sp
 
@@ -47,9 +46,9 @@ fun MeasureItemView(
             .padding(top = 16.dp, bottom = 16.dp)
             .fillMaxWidth()
             .combinedClickable(onClick = {
-                reduce(MeasuresListEvent.OpenViewMeasure(measure))
+                reduce(MeasuresListAction.OpenViewMeasure(measure))
             }, onLongClick = {
-                reduce(MeasuresListEvent.DeleteMeasure(measure))
+                reduce(MeasuresListAction.DeleteMeasure(measure))
             }),
         verticalArrangement = Arrangement.spacedBy(5.dp),
     ) {
