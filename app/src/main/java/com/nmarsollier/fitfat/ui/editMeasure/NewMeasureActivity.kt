@@ -41,10 +41,13 @@ class NewMeasureActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         setContentView(binding.root)
+
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
+
         title = getString(R.string.new_measure_title)
 
+        viewModel.reduce(EditMeasureAction.Initialize(null))
         lifecycleScope.launch {
             viewModel.event.collect { event ->
                 when (event) {
@@ -61,23 +64,7 @@ class NewMeasureActivity : AppCompatActivity() {
             viewModel.state.collect { state ->
                 when (state) {
                     is EditMeasureState.Ready -> {
-                        adapter = MeasuresAdapter(
-                            baseContext, state.measure, state.userSettings, false
-                        ) { measureValue, value ->
-                            viewModel.reduce(
-                                EditMeasureAction.UpdateMeasureValue(
-                                    measureValue, value
-                                )
-                            )
-                        }
-                        refreshUI(state.measure)
-
-                        binding.measureMethod.setOnClickListener {
-                            showMeasureTypeSelectionDialog(
-                                state.measure
-                            )
-                        }
-                        binding.measureDate.setOnClickListener { changeDateTime(state.measure) }
+                        refreshUI(state)
                     }
 
                     else -> Unit
@@ -114,13 +101,30 @@ class NewMeasureActivity : AppCompatActivity() {
         ).show()
     }
 
-    private fun refreshUI(measure: Measure) {
+    private fun refreshUI(state: EditMeasureState.Ready) {
+        adapter = MeasuresAdapter(
+            baseContext, state.measure, state.userSettings, false
+        ) { measureValue, value ->
+            viewModel.reduce(
+                EditMeasureAction.UpdateMeasureValue(
+                    measureValue, value
+                )
+            )
+        }
+
+        binding.measureMethod.setOnClickListener {
+            showMeasureTypeSelectionDialog(
+                state.measure
+            )
+        }
+        binding.measureDate.setOnClickListener { changeDateTime(state.measure) }
+
         binding.recyclerView.adapter = adapter
 
-        binding.measureMethod.setText(measure.measureMethod.labelRes)
-        adapter.setData(measure)
-        binding.measureDate.setText(measure.date.formatDateTime)
-        binding.fat.text = measure.fatPercent.formatString()
+        binding.measureMethod.setText(state.measure.measureMethod.labelRes)
+        adapter.setData(state.measure)
+        binding.measureDate.setText(state.measure.date.formatDateTime)
+        binding.fat.text = state.measure.fatPercent.formatString()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

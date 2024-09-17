@@ -1,16 +1,16 @@
 package com.nmarsollier.fitfat.ui.dashboard
 
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentStatePagerAdapter
+import androidx.fragment.app.FragmentActivity
+import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.nmarsollier.fitfat.ui.measuresList.MeasuresListFragment
 import com.nmarsollier.fitfat.ui.options.OptionsFragment
 import com.nmarsollier.fitfat.ui.stats.StatsFragment
 
-class DashboardPageAdapter(fm: FragmentManager) : FragmentStatePagerAdapter(fm) {
-    override fun getCount() = Screen.entries.size
+class DashboardPageAdapter(fm: FragmentActivity) : FragmentStateAdapter(fm) {
+    override fun getItemCount() = Screen.entries.size
 
-    override fun getItem(position: Int): Fragment {
+    override fun createFragment(position: Int): Fragment {
         return when (Screen.entries[position]) {
             Screen.STATS -> StatsFragment()
             Screen.OPTIONS -> OptionsFragment()

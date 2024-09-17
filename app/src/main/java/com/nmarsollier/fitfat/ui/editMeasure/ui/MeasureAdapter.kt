@@ -5,6 +5,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SeekBar
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.nmarsollier.fitfat.R
@@ -62,9 +63,7 @@ class MeasuresAdapter internal constructor(
     private fun newMeasureIntHolder(parent: ViewGroup, context: Context): MeasureHolder {
         return MeasureValueHolder(
             NewMeasureIntHolderBinding.inflate(
-                LayoutInflater.from(context),
-                parent,
-                false
+                LayoutInflater.from(context), parent, false
             )
         )
     }
@@ -72,16 +71,13 @@ class MeasuresAdapter internal constructor(
     private fun newMeasureDoubleHolder(parent: ViewGroup, context: Context): MeasureHolder {
         return DoubleHolder(
             NewMeasureDoubleHolderBinding.inflate(
-                LayoutInflater.from(context),
-                parent,
-                false
+                LayoutInflater.from(context), parent, false
             )
         )
     }
 }
 
-abstract class MeasureHolder(itemView: View) : RecyclerView.ViewHolder(itemView),
-    LayoutContainer {
+abstract class MeasureHolder(itemView: View) : RecyclerView.ViewHolder(itemView), LayoutContainer {
     override val containerView: View?
         get() = itemView
 
@@ -115,7 +111,7 @@ class MeasureValueHolder(val binding: NewMeasureIntHolderBinding) : MeasureHolde
         binding.vValueBar.max = measureValue.maxScale
         binding.vValueUnit.setText(R.string.unit_mm)
 
-        val value = getValue()
+        var value = getValue()
         binding.vValueText.text = value.formatString()
 
         binding.vValueBar.isVisible = !readOnly
@@ -125,12 +121,22 @@ class MeasureValueHolder(val binding: NewMeasureIntHolderBinding) : MeasureHolde
         if (!readOnly) {
             binding.vValueBar.progress = value
 
-            binding.vValueBar.setOnSeekBarChangeListener(
-                onProgressChangeListener { _, progress, _ ->
-                    setValue(progress, measureValue, callback)
-                    binding.vValueText.text = getValue().formatString()
+            binding.vValueBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+                override fun onProgressChanged(
+                    seekBar: SeekBar?, progress: Int, fromUser: Boolean
+                ) {
+                    value = progress
+                    binding.vValueText.text = value.formatString()
                 }
-            )
+
+                override fun onStartTrackingTouch(seekBar: SeekBar?) {
+                    // Code to execute when the user starts dragging the SeekBar
+                }
+
+                override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                    setValue(seekBar?.progress ?: 0, measureValue, callback)
+                }
+            })
 
             measureValue.helpRes?.let { helpRes ->
                 binding.vHelpIcon.isVisible = true
@@ -177,6 +183,12 @@ class DoubleHolder(val binding: NewMeasureDoubleHolderBinding) : MeasureHolder(b
     private var measure: Measure? = null
     private lateinit var userSettings: UserSettings
 
+    var intValue: Int = 0
+    var decimalValue: Int = 0
+
+    val editingValueText: String
+        get() = (intValue.toDouble() + (decimalValue.toDouble() / 10)).formatString()
+
     override fun bind(
         measureValue: MeasureValue,
         measure: Measure,
@@ -187,6 +199,9 @@ class DoubleHolder(val binding: NewMeasureDoubleHolderBinding) : MeasureHolder(b
         this.measureValue = measureValue
         this.measure = measure
         this.userSettings = userSettings
+
+        intValue = getCurrentValue().toInt()
+        decimalValue = ((getCurrentValue() - getCurrentValue().toInt()) * 10).toInt()
 
         binding.intBar.isVisible = !readOnly
         binding.decimalBar.isVisible = !readOnly
@@ -200,85 +215,63 @@ class DoubleHolder(val binding: NewMeasureDoubleHolderBinding) : MeasureHolder(b
         if (!readOnly) {
             if (measureValue.unitType == MeasureValue.UnitType.WEIGHT) {
                 binding.intBar.max =
-                    userSettings.displayWeight(measureValue.maxScale.toDouble())
-                        .toInt()
+                    userSettings.displayWeight(measureValue.maxScale.toDouble()).toInt()
             } else {
                 binding.intBar.max = measureValue.maxScale
             }
 
-            val currentValue = getCurrentValue()
+            binding.intBar.progress = intValue
+            binding.decimalBar.progress = decimalValue
 
-            binding.intBar.progress = currentValue.toInt()
-            binding.decimalBar.progress = ((currentValue - currentValue.toInt()) * 10).toInt()
-
-            binding.intBar.setOnSeekBarChangeListener(
-                onProgressChangeListener { _, progress, _ ->
-                    setIntValue(progress, measureValue, callback)
-                    binding.fatPercentText.text = getCurrentValue().formatString()
+            binding.intBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+                override fun onProgressChanged(
+                    seekBar: SeekBar?, progress: Int, fromUser: Boolean
+                ) {
+                    intValue = progress
+                    binding.fatPercentText.text = editingValueText
                 }
-            )
 
-            binding.decimalBar.setOnSeekBarChangeListener(
-                onProgressChangeListener { _, progress, _ ->
-                    setDecimalValue(progress, measureValue, callback)
-                    binding.fatPercentText.text = getCurrentValue().formatString()
+                override fun onStartTrackingTouch(seekBar: SeekBar?) {
+                    // Code to execute when the user starts dragging the SeekBar
                 }
-            )
+
+                override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                    setValue(callback)
+                }
+            })
+
+            binding.decimalBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+                override fun onProgressChanged(
+                    seekBar: SeekBar?, progress: Int, fromUser: Boolean
+                ) {
+                    decimalValue = progress
+                    binding.fatPercentText.text = editingValueText
+                }
+
+                override fun onStartTrackingTouch(seekBar: SeekBar?) {
+                    // Code to execute when the user starts dragging the SeekBar
+                }
+
+                override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                    setValue(callback)
+                }
+            })
         }
 
-        binding.fatPercentText.text = getCurrentValue().formatString()
+        binding.fatPercentText.text = editingValueText
     }
 
-    private fun setIntValue(
-        progress: Int,
-        fromMeasureValue: MeasureValue,
+    private fun setValue(
         callback: (measureValue: MeasureValue, value: Number) -> Unit
     ) {
         val measureValue = measureValue ?: return
-        measure ?: return
-        if (fromMeasureValue != measureValue) {
-            return
-        }
-
-        val currentValue = getCurrentValue()
-        val decimal = currentValue - currentValue.toInt()
-
-        var newValue = progress.toDouble() + decimal
-        if (measureValue.unitType == MeasureValue.UnitType.WEIGHT) {
-            newValue = userSettings.displayWeight(newValue)
-        }
-
-        callback(measureValue, newValue)
-    }
-
-    private fun setDecimalValue(
-        progress: Int,
-        fromMeasureValue: MeasureValue,
-        callback: (measureValue: MeasureValue, value: Number) -> Unit
-    ) {
-        val measureValue = measureValue
-        val measure = measure ?: return
-        if (fromMeasureValue != measureValue) {
-            return
-        }
-
-        val currentValue = measure.displayValue(measureValue, userSettings)
-        var newValue = currentValue.toInt().toDouble() + (progress.toDouble() / 10)
-        if (measureValue.unitType == MeasureValue.UnitType.WEIGHT) {
-            newValue = userSettings.displayWeight(newValue)
-        }
-
-        callback(measureValue, newValue)
+        callback(measureValue, intValue.toDouble() + decimalValue.toDouble() / 10)
     }
 
     private fun getCurrentValue(): Double {
         val measureValue = measureValue ?: return 0.0
         val measure = measure ?: return 0.0
 
-        var currentValue = measure.displayValue(measureValue, userSettings)
-        if (measureValue.unitType == MeasureValue.UnitType.WEIGHT) {
-            currentValue = userSettings.displayWeight(currentValue)
-        }
-        return currentValue
+        return measure.displayValue(measureValue, userSettings)
     }
 }

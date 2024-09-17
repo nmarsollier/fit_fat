@@ -16,10 +16,10 @@
         android:layout_marginStart="@dimen/screen_margin"
         android:layout_marginTop="@dimen/screen_margin"
         android:drawablePadding="4dp"
-        app:drawableTint="@color/menuItemColorDisabled"
         android:text="@string/new_measure_method_title"
         android:textColor="@color/editPrimary"
-        app:drawableEndCompat="@drawable/ic_arrow_drop_down_black_24dp" />
+        app:drawableEndCompat="@drawable/ic_arrow_drop_down_black_24dp"
+        app:drawableTint="@color/menuItemColorDisabled" />
 
     <TextView
         android:id="@+id/vDateLabel"
@@ -85,7 +85,6 @@
         android:clipToPadding="false"
         android:paddingStart="@dimen/screen_margin"
         android:paddingEnd="@dimen/screen_margin"
-        android:paddingBottom="@dimen/screen_margin"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
 </RelativeLayout>

@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <androidx.viewpager.widget.ViewPager
+    <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/pager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -16,7 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?android:attr/colorPrimary"
-        app:itemTextColor="@color/menu_color_selector"
         app:itemIconTint="@color/menu_color_selector"
+        app:itemTextColor="@color/menu_color_selector"
         app:menu="@menu/home_menu" />
 </LinearLayout>

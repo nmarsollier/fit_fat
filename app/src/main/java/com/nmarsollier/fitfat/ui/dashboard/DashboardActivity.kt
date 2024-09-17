@@ -4,7 +4,7 @@ import android.os.Bundle
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
-import androidx.viewpager.widget.ViewPager
+import androidx.viewpager2.widget.ViewPager2
 import com.nmarsollier.fitfat.R
 import com.nmarsollier.fitfat.common.uiUtils.closeKeyboard
 import com.nmarsollier.fitfat.databinding.MainActivityBinding
@@ -43,20 +43,18 @@ class DashboardActivity : AppCompatActivity() {
                     }
                 )
             )
-
             true
         }
 
-        binding.pager.adapter = DashboardPageAdapter(supportFragmentManager)
-        binding.pager.addOnPageChangeListener(object : ViewPager.SimpleOnPageChangeListener() {
+        binding.pager.adapter = DashboardPageAdapter(this)
+        binding.pager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
-                DashboardAction.CurrentSelectedTab(
-                    when (position) {
-                        0 -> Screen.OPTIONS
-                        2 -> Screen.STATS
-                        else -> Screen.MEASURES_LIST
-                    }
-                )
+                val selectedTab = when (position) {
+                    0 -> Screen.OPTIONS
+                    2 -> Screen.STATS
+                    else -> Screen.MEASURES_LIST
+                }
+                viewModel.reduce(DashboardAction.CurrentSelectedTab(selectedTab))
                 invalidateOptionsMenu()
             }
         })
