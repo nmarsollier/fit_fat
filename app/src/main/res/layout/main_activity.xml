@@ -15,6 +15,8 @@
         android:id="@+id/navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?android:attr/windowBackground"
+        android:background="?android:attr/colorPrimary"
+        app:itemTextColor="@color/menu_color_selector"
+        app:itemIconTint="@color/menu_color_selector"
         app:menu="@menu/home_menu" />
 </LinearLayout>

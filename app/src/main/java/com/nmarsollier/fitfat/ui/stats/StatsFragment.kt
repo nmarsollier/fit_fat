@@ -6,22 +6,24 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.nmarsollier.fitfat.R
+import com.nmarsollier.fitfat.common.uiUtils.labelRes
 import com.nmarsollier.fitfat.databinding.MainStatsFragmentBinding
-import com.nmarsollier.fitfat.model.measures.MeasureMethod
-import com.nmarsollier.fitfat.model.measures.MeasureValue
-import dagger.hilt.android.AndroidEntryPoint
+import com.nmarsollier.fitfat.models.measures.db.MeasureMethod
+import com.nmarsollier.fitfat.models.measures.db.MeasureValue
+import com.nmarsollier.fitfat.models.measures.isRequiredForMethod
 import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.getViewModel
 
-@AndroidEntryPoint
 class StatsFragment : Fragment() {
     private val binding by lazy {
         MainStatsFragmentBinding.inflate(layoutInflater)
     }
 
-    private val viewModel by viewModels<StatsViewModel>()
+    private val viewModel by lazy {
+        getViewModel<StatsViewModel>()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,24 +49,19 @@ class StatsFragment : Fragment() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        viewModel.init()
-    }
-
     private fun initAdapter(state: StatsState.Ready) {
         val context = context ?: return
 
         val values = MeasureValue.values()
             .filter {
                 if (state.selectedMethod == MeasureMethod.WEIGHT_ONLY) {
-                    it.isRequired(state.selectedMethod)
+                    it.isRequiredForMethod(state.selectedMethod)
                 } else {
-                    it.isRequired(state.selectedMethod) || it == MeasureValue.BODY_FAT
+                    it.isRequiredForMethod(state.selectedMethod) || it == MeasureValue.BODY_FAT
                 }
             }
 
-        binding.recyclerView.adapter = MeasureAdapter(
+        binding.recyclerView.adapter = StatsAdapter(
             context,
             state.userSettings,
             values,
@@ -82,7 +79,7 @@ class StatsFragment : Fragment() {
         AlertDialog.Builder(context)
             .setTitle(R.string.new_measure_method_title)
             .setSingleChoiceItems(measureMethods, state.selectedMethod.ordinal) { dialog, which ->
-                viewModel.updateMethod(MeasureMethod.values()[which])
+                viewModel.reduce(StatsAction.UpdateMethod(MeasureMethod.values()[which]))
                 dialog.dismiss()
             }
             .setNegativeButton(android.R.string.cancel, null)

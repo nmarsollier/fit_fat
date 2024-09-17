@@ -23,7 +23,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
-        android:layout_toRightOf="@id/vFatTextLabel"
+        android:layout_toEndOf="@id/vFatTextLabel"
         android:gravity="end"
         tools:text="35" />
 
@@ -34,7 +34,7 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@id/fat_percent_text"
         android:layout_marginStart="2dp"
-        android:layout_toRightOf="@id/fat_percent_text"
+        android:layout_toEndOf="@id/fat_percent_text"
         android:gravity="bottom"
         android:text="@string/unit_percent" />
 

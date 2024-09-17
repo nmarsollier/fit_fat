@@ -8,7 +8,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_margin="@dimen/screen_margin"
         android:orientation="vertical"
         android:paddingBottom="100dp">
@@ -117,7 +117,7 @@
             android:labelFor="@id/user_weight"
             android:text="@string/options_weight" />
 
-        <com.nmarsollier.fitfat.ui.measures.PrefixSuffixEditText
+        <com.nmarsollier.fitfat.ui.editMeasure.ui.PrefixSuffixEditText
             android:id="@+id/user_weight"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
@@ -135,7 +135,7 @@
             android:labelFor="@id/user_height"
             android:text="@string/options_height" />
 
-        <com.nmarsollier.fitfat.ui.measures.PrefixSuffixEditText
+        <com.nmarsollier.fitfat.ui.editMeasure.ui.PrefixSuffixEditText
             android:id="@+id/user_height"
             android:layout_width="200dp"
             android:layout_height="wrap_content"
@@ -145,14 +145,13 @@
             app:suffix="cm"
             tools:text="180" />
 
-        <Switch
+        <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/save_on_cloud"
-            style="@style/TextAppearance.AppCompat.Body1"
+            style="@style/Widget.AppCompat.CompoundButton.Switch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/view_margin"
             android:text="@string/save_my_data_in_cloud" />
-
 
     </LinearLayout>
 </ScrollView>

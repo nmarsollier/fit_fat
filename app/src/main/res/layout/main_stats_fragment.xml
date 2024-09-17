@@ -14,11 +14,11 @@
         android:layout_alignParentTop="true"
         android:layout_marginStart="@dimen/screen_margin"
         android:layout_marginTop="@dimen/screen_margin"
-        android:drawableEnd="@drawable/ic_arrow_drop_down_black_24dp"
         android:drawablePadding="4dp"
-        android:drawableTint="@color/menuItemColorDisabled"
         android:text="@string/new_measure_method_title"
-        android:textColor="@color/editPrimary" />
+        android:textColor="@color/editPrimary"
+        app:drawableEndCompat="@drawable/ic_arrow_drop_down_black_24dp"
+        app:drawableTint="@color/menuItemColorDisabled" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"

@@ -7,77 +7,69 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.MenuProvider
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
-import com.google.firebase.auth.FirebaseAuth
 import com.nmarsollier.fitfat.R
+import com.nmarsollier.fitfat.common.uiUtils.closeProgressDialog
+import com.nmarsollier.fitfat.common.uiUtils.displayHeight
+import com.nmarsollier.fitfat.common.uiUtils.displayWeight
+import com.nmarsollier.fitfat.common.uiUtils.heightResId
+import com.nmarsollier.fitfat.common.uiUtils.showDatePicker
+import com.nmarsollier.fitfat.common.uiUtils.showProgressDialog
+import com.nmarsollier.fitfat.common.uiUtils.updateMenuItemColor
+import com.nmarsollier.fitfat.common.uiUtils.weightResId
+import com.nmarsollier.fitfat.common.utils.formatDate
+import com.nmarsollier.fitfat.common.utils.formatString
 import com.nmarsollier.fitfat.databinding.MainOptionsFragmentBinding
-import com.nmarsollier.fitfat.model.userSettings.MeasureType
-import com.nmarsollier.fitfat.model.userSettings.SexType
-import com.nmarsollier.fitfat.useCases.GoogleUseCase
-import com.nmarsollier.fitfat.utils.closeProgressDialog
-import com.nmarsollier.fitfat.utils.formatDate
-import com.nmarsollier.fitfat.utils.formatString
-import com.nmarsollier.fitfat.utils.parseDouble
-import com.nmarsollier.fitfat.utils.showDatePicker
-import com.nmarsollier.fitfat.utils.showProgressDialog
-import com.nmarsollier.fitfat.utils.showToast
-import com.nmarsollier.fitfat.utils.updateMenuItemColor
-import dagger.hilt.android.AndroidEntryPoint
+import com.nmarsollier.fitfat.models.userSettings.db.MeasureType
+import com.nmarsollier.fitfat.models.userSettings.db.SexType
 import kotlinx.coroutines.launch
-import javax.inject.Inject
+import org.koin.androidx.viewmodel.ext.android.getViewModel
 
-@AndroidEntryPoint
 class OptionsFragment : Fragment() {
     private val binding by lazy {
         MainOptionsFragmentBinding.inflate(layoutInflater)
     }
 
-    @Inject
-    lateinit var googleUseCase: GoogleUseCase
-
-    private val viewModel by viewModels<OptionsViewModel>()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        googleUseCase.registerForLogin(this)
+    private val viewModel by lazy {
+        getViewModel<OptionsViewModel>()
     }
+
+    var menuEnabled = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View {
-        setHasOptionsMenu(true)
-        return binding.root
-    }
+    ) = binding.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        requireActivity().addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.menu_save, menu)
+                menu.findItem(R.id.menu_save).isEnabled = menuEnabled
+                context?.updateMenuItemColor(menu)
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                return when (menuItem.itemId) {
+                    R.id.menu_save -> {
+                        viewModel.reduce(OptionsAction.SaveSettings)
+                        true
+                    }
+
+                    else -> false
+                }
+            }
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
+
         lifecycleScope.launch {
             viewModel.state.collect { state ->
                 when (state) {
-                    OptionsState.GoogleLoginError -> {
-                        showToast(R.string.google_error)
-                        closeProgressDialog()
-                    }
-
                     is OptionsState.Ready -> {
-                        binding.birthDate.setOnClickListener {
-                            showDatePicker(state.userSettings.birthDate) { date ->
-                                viewModel.updateBirthDate(date)
-                            }
-                        }
-
-                        binding.saveOnCloud.setOnClickListener {
-                            if (state.userSettings.firebaseToken != null) {
-                                disableSaveData()
-                            } else {
-                                loginWithGoogle()
-                            }
-                        }
-
                         refreshUI(state)
                         closeProgressDialog()
                     }
@@ -90,69 +82,42 @@ class OptionsFragment : Fragment() {
         }
 
         binding.displayName.doOnTextChanged { text, _, _, _ ->
-            viewModel.updateDisplayName(text.toString())
+            viewModel.reduce(OptionsAction.UpdateDisplayName(text.toString()))
         }
 
         binding.userHeight.doOnTextChanged { text, _, _, _ ->
-            viewModel.updateHeight(text.toString().parseDouble())
+            viewModel.reduce(OptionsAction.UpdateHeight(text.toString().toDoubleOrNull() ?: 0.0))
         }
 
         binding.userWeight.doOnTextChanged { text, _, _, _ ->
-            viewModel.updateWeight(text.toString().parseDouble())
+            viewModel.reduce(OptionsAction.UpdateWeight(text.toString().toDoubleOrNull() ?: 0.0))
         }
 
         binding.measureImperial.setOnClickListener {
-            viewModel.updateMeasureSystem(MeasureType.IMPERIAL)
+            viewModel.reduce(OptionsAction.UpdateMeasureSystem(MeasureType.IMPERIAL))
         }
 
         binding.measureMetric.setOnClickListener {
-            viewModel.updateMeasureSystem(MeasureType.METRIC)
+            viewModel.reduce(OptionsAction.UpdateMeasureSystem(MeasureType.METRIC))
         }
 
         binding.sexFemale.setOnClickListener {
-            viewModel.updateSex(SexType.FEMALE)
+            viewModel.reduce(OptionsAction.UpdateSex(SexType.FEMALE))
         }
 
         binding.vSexMale.setOnClickListener {
-            viewModel.updateSex(SexType.MALE)
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        viewModel.load()
-    }
-
-    private fun loginWithGoogle() {
-        viewModel.loginWithGoogle(this)
-    }
-
-    private fun disableSaveData() {
-        FirebaseAuth.getInstance().signOut()
-        viewModel.disableFirebase()
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_save, menu)
-        menu.findItem(R.id.menu_save).isEnabled = viewModel.dataChanged
-
-        context?.updateMenuItemColor(menu)
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.menu_save -> {
-                viewModel.saveSettings()
-                true
-            }
-
-            else -> super.onOptionsItemSelected(item)
+            viewModel.reduce(OptionsAction.UpdateSex(SexType.MALE))
         }
     }
 
     private fun refreshUI(state: OptionsState.Ready) {
         activity?.invalidateOptionsMenu()
+
+        binding.birthDate.setOnClickListener {
+            showDatePicker(state.userSettings.birthDate) { date ->
+                viewModel.reduce(OptionsAction.UpdateBirthDate(date))
+            }
+        }
 
         binding.measureImperial.isChecked = state.userSettings.measureSystem == MeasureType.IMPERIAL
         binding.measureMetric.isChecked = state.userSettings.measureSystem == MeasureType.METRIC
@@ -163,7 +128,7 @@ class OptionsFragment : Fragment() {
             binding.displayName.setText(state.userSettings.displayName)
         }
 
-        binding.birthDate.setText(state.userSettings.birthDate.formatDate())
+        binding.birthDate.setText(state.userSettings.birthDate.formatDate)
         binding.saveOnCloud.isChecked = state.userSettings.firebaseToken != null
 
         binding.userWeight.suffix = getString(state.userSettings.measureSystem.weightResId)
@@ -171,20 +136,23 @@ class OptionsFragment : Fragment() {
 
         if (!state.hasChanged || !binding.userWeight.hasFocus()) {
             binding.userWeight.setText(
-                state.userSettings.measureSystem.displayWeight(state.userSettings.weight)
+                state.userSettings.displayWeight(state.userSettings.weight)
                     .formatString()
             )
         }
         if (!state.hasChanged || !binding.userHeight.hasFocus()) {
             binding.userHeight.setText(
-                state.userSettings.measureSystem.displayHeight(state.userSettings.height)
+                state.userSettings.displayHeight(state.userSettings.height)
                     .formatString()
             )
         }
+
+        menuEnabled = state.hasChanged
+        requireActivity().invalidateOptionsMenu()
     }
 
     override fun onPause() {
-        viewModel.saveSettings()
+        viewModel.reduce(OptionsAction.SaveSettings)
         super.onPause()
     }
 }

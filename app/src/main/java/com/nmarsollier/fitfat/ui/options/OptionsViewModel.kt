@@ -1,173 +1,196 @@
 package com.nmarsollier.fitfat.ui.options
 
+import androidx.activity.ComponentActivity
 import androidx.lifecycle.viewModelScope
-import com.nmarsollier.fitfat.model.firebase.FirebaseRepository
-import com.nmarsollier.fitfat.model.userSettings.MeasureType
-import com.nmarsollier.fitfat.model.userSettings.SexType
-import com.nmarsollier.fitfat.model.userSettings.UserSettings
-import com.nmarsollier.fitfat.model.userSettings.UserSettingsRepository
-import com.nmarsollier.fitfat.useCases.FirebaseUseCase
-import com.nmarsollier.fitfat.useCases.GoogleLoginResult
-import com.nmarsollier.fitfat.utils.BaseViewModel
-import dagger.hilt.android.lifecycle.HiltViewModel
+import com.nmarsollier.fitfat.common.uiUtils.StateViewModel
+import com.nmarsollier.fitfat.models.firebase.FirebaseConnection
+import com.nmarsollier.fitfat.models.firebase.GoogleAuthResult
+import com.nmarsollier.fitfat.models.userSettings.UploadSyncFirebaseService
+import com.nmarsollier.fitfat.models.userSettings.UserSettings
+import com.nmarsollier.fitfat.models.userSettings.UserSettingsRepository
+import com.nmarsollier.fitfat.models.userSettings.db.MeasureType
+import com.nmarsollier.fitfat.models.userSettings.db.SexType
+import com.nmarsollier.fitfat.models.userSettings.updateBirthDate
+import com.nmarsollier.fitfat.models.userSettings.updateDisplayName
+import com.nmarsollier.fitfat.models.userSettings.updateFirebaseToken
+import com.nmarsollier.fitfat.models.userSettings.updateHeight
+import com.nmarsollier.fitfat.models.userSettings.updateMeasureSystem
+import com.nmarsollier.fitfat.models.userSettings.updateSex
+import com.nmarsollier.fitfat.models.userSettings.updateWeight
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.Date
-import javax.inject.Inject
 
-sealed class OptionsState {
-    object Loading : OptionsState()
-    object GoogleLoginError : OptionsState()
-
+sealed interface OptionsState {
+    data object Loading : OptionsState
     data class Ready(
-        val userSettings: UserSettings,
-        val hasChanged: Boolean,
-    ) : OptionsState()
+        val userSettings: UserSettings, val hasChanged: Boolean
+    ) : OptionsState
 }
 
-@HiltViewModel
-class OptionsViewModel @Inject constructor(
+sealed interface OptionsEvent {
+    data object ShowGoogleLoginError : OptionsEvent
+}
+
+sealed interface OptionsAction {
+    data class LoginWithGoogle(val activity: ComponentActivity) : OptionsAction
+    data object DisableFirebase : OptionsAction
+    data class UpdateSex(val newSex: SexType) : OptionsAction
+    data class UpdateMeasureSystem(val system: MeasureType) : OptionsAction
+    data class UpdateWeight(val newWeight: Double) : OptionsAction
+    data class UpdateHeight(val newHeight: Double) : OptionsAction
+    data class UpdateDisplayName(val newName: String) : OptionsAction
+    data class UpdateBirthDate(val newBirthDate: Date) : OptionsAction
+    data object SaveSettings : OptionsAction
+}
+
+class OptionsViewModel internal constructor(
     private val userSettingsRepository: UserSettingsRepository,
-    private val firebaseRepository: FirebaseRepository,
-    private val firebaseUseCase: FirebaseUseCase
-) : BaseViewModel<OptionsState>(OptionsState.Loading) {
-    fun load() {
+    private val uploadSyncFirebaseService: UploadSyncFirebaseService,
+    private val firebaseConnection: FirebaseConnection
+) : StateViewModel<OptionsState, OptionsEvent, OptionsAction>(
+    OptionsState.Loading
+) {
+    init {
+        load()
+
         viewModelScope.launch(Dispatchers.IO) {
-            userSettingsRepository.load().let { state ->
-                mutableState.update {
-                    OptionsState.Ready(
-                        hasChanged = false, userSettings = state
-                    )
+            userSettingsRepository.updateFlow.collect {
+                it?.run {
+                    load()
                 }
             }
         }
     }
 
-    private val currentUserSettings: UserSettings?
-        get() = (state.value as? OptionsState.Ready)?.userSettings
-
-    val dataChanged: Boolean
+    private val dataChanged: Boolean
         get() = (state.value as? OptionsState.Ready)?.hasChanged == true
 
-    fun saveSettings() {
+    override fun reduce(action: OptionsAction) = when (action) {
+        OptionsAction.DisableFirebase -> disableFirebase()
+        is OptionsAction.LoginWithGoogle -> loginWithGoogle(action)
+        OptionsAction.SaveSettings -> saveSettings()
+        is OptionsAction.UpdateBirthDate -> updateBirthDate(action)
+        is OptionsAction.UpdateDisplayName -> updateDisplayName(action)
+        is OptionsAction.UpdateHeight -> updateHeight(action)
+        is OptionsAction.UpdateMeasureSystem -> updateMeasureSystem(action)
+        is OptionsAction.UpdateSex -> updateSex(action)
+        is OptionsAction.UpdateWeight -> updateWeight(action)
+    }
+
+    fun load() {
+        if (state.value is OptionsState.Ready) return
+
+        OptionsState.Loading.sendToState()
+
+        viewModelScope.launch(Dispatchers.IO) {
+            userSettingsRepository.findCurrent().let {
+                OptionsState.Ready(
+                    userSettings = it, hasChanged = false
+                ).sendToState()
+            }
+        }
+    }
+
+    private fun saveSettings() {
         if (!dataChanged) return
-        val userSettings = currentUserSettings ?: return
+        val userSettings = (state.value as? OptionsState.Ready)?.userSettings ?: return
 
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             userSettingsRepository.update(userSettings)
-            firebaseRepository.save(userSettings).let { state ->
-                mutableState.update {
-                    OptionsState.Ready(
-                        userSettings = state, hasChanged = false
-                    )
+            uploadSyncFirebaseService.uploadUserSettings()
+            OptionsState.Ready(
+                userSettings = userSettings, hasChanged = false
+            ).sendToState()
+        }
+    }
+
+    private fun updateBirthDate(event: OptionsAction.UpdateBirthDate) {
+        val userSettings = (state.value as? OptionsState.Ready)?.userSettings ?: return
+        OptionsState.Ready(
+            hasChanged = true, userSettings = userSettings.updateBirthDate(event.newBirthDate)
+        ).sendToState()
+    }
+
+    private fun updateDisplayName(event: OptionsAction.UpdateDisplayName) {
+        val userSettings =
+            (state.value as? OptionsState.Ready)?.userSettings?.takeIf { it.displayName != event.newName }
+                ?: return
+
+        OptionsState.Ready(
+            hasChanged = true, userSettings = userSettings.updateDisplayName(event.newName)
+        ).sendToState()
+    }
+
+    private fun updateHeight(event: OptionsAction.UpdateHeight) {
+        val userSettings =
+            (state.value as? OptionsState.Ready)?.userSettings?.takeIf { it.height != event.newHeight }
+                ?: return
+
+        OptionsState.Ready(
+            hasChanged = true, userSettings = userSettings.updateHeight(event.newHeight)
+        ).sendToState()
+
+    }
+
+    private fun updateWeight(event: OptionsAction.UpdateWeight) {
+        val userSettings =
+            (state.value as? OptionsState.Ready)?.userSettings?.takeIf { it.weight != event.newWeight }
+                ?: return
+
+        OptionsState.Ready(
+            hasChanged = true, userSettings = userSettings.updateWeight(event.newWeight)
+        ).sendToState()
+
+    }
+
+    private fun updateMeasureSystem(event: OptionsAction.UpdateMeasureSystem) {
+        val userSettings =
+            (state.value as? OptionsState.Ready)?.userSettings?.takeIf { it.measureSystem != event.system }
+                ?: return
+
+        OptionsState.Ready(
+            hasChanged = true, userSettings = userSettings.updateMeasureSystem(event.system)
+        ).sendToState()
+    }
+
+    private fun updateSex(event: OptionsAction.UpdateSex) {
+        val userSettings =
+            (state.value as? OptionsState.Ready)?.userSettings?.takeIf { it.sex != event.newSex }
+                ?: return
+
+        OptionsState.Ready(
+            hasChanged = true, userSettings = userSettings.updateSex(event.newSex)
+        ).sendToState()
+    }
+
+    private fun disableFirebase() {
+        val userSettings = (state.value as? OptionsState.Ready)?.userSettings ?: return
+
+        OptionsState.Ready(
+            hasChanged = true, userSettings = userSettings.updateFirebaseToken(null)
+        ).sendToState()
+    }
+
+    private fun loginWithGoogle(event: OptionsAction.LoginWithGoogle) {
+        viewModelScope.launch(Dispatchers.IO) {
+            OptionsState.Loading.sendToState()
+            firebaseConnection.signInWithGoogle(event.activity).let {
+                when (it) {
+                    GoogleAuthResult.Error -> {
+                        OptionsEvent.ShowGoogleLoginError.sendToEvent()
+                        load()
+                    }
+
+                    is GoogleAuthResult.Success -> {
+                        userSettingsRepository.findCurrent().apply {
+                            userSettingsRepository.update(updateFirebaseToken(it.token))
+                        }
+                    }
                 }
             }
         }
     }
 
-    fun updateBirthDate(newBirthDate: Date) {
-        currentUserSettings?.let { us ->
-            mutableState.update {
-                OptionsState.Ready(
-                    hasChanged = true, userSettings = us.copy(
-                        birthDate = newBirthDate
-                    )
-                )
-            }
-        }
-    }
-
-    fun updateDisplayName(newName: String) {
-        currentUserSettings?.takeIf { it.displayName != newName }?.let { us ->
-            mutableState.update {
-                OptionsState.Ready(
-                    hasChanged = true, userSettings = us.copy(
-                        displayName = newName
-                    )
-                )
-            }
-        }
-    }
-
-    fun updateHeight(newHeight: Double) {
-        currentUserSettings?.takeIf { it.height != newHeight }?.let { us ->
-            mutableState.update {
-                OptionsState.Ready(
-                    hasChanged = true, userSettings = us.copy(
-                        height = newHeight
-                    )
-                )
-            }
-        }
-    }
-
-    fun updateWeight(newWeight: Double) {
-        currentUserSettings?.takeIf { it.weight != newWeight }?.let { us ->
-            mutableState.update {
-                OptionsState.Ready(
-                    hasChanged = true, userSettings = us.copy(
-                        weight = newWeight
-                    )
-                )
-            }
-        }
-    }
-
-    fun updateMeasureSystem(system: MeasureType) {
-        currentUserSettings?.takeIf { it.measureSystem != system }?.let { us ->
-            mutableState.update {
-                OptionsState.Ready(
-                    hasChanged = true, userSettings = us.copy(
-                        measureSystem = system
-                    )
-                )
-            }
-        }
-    }
-
-    fun updateSex(newSex: SexType) {
-        currentUserSettings?.takeIf { it.sex != newSex }?.let { us ->
-            mutableState.update {
-                OptionsState.Ready(
-                    hasChanged = true, userSettings = us.copy(
-                        sex = newSex
-                    )
-                )
-            }
-        }
-    }
-
-    fun disableFirebase() {
-        currentUserSettings?.takeIf { it.firebaseToken != null }?.let { us ->
-            mutableState.update {
-                OptionsState.Ready(
-                    hasChanged = true, userSettings = us.copy(
-                        firebaseToken = null
-                    )
-                )
-            }
-            viewModelScope.launch {
-                userSettingsRepository.updateFirebaseToken(null)
-            }
-        }
-    }
-
-    fun loginWithGoogle(fragment: OptionsFragment) = viewModelScope.launch {
-        val currentState = state.value
-
-        mutableState.update { OptionsState.Loading }
-        firebaseUseCase.googleLoginAndSync(fragment).let {
-            when (it) {
-                is GoogleLoginResult.Error -> {
-                    mutableState.update { OptionsState.GoogleLoginError }
-                    mutableState.update { currentState }
-                }
-
-                else -> {
-                    mutableState.update { currentState }
-                }
-            }
-        }
-    }
+    companion object
 }
