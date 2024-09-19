@@ -80,21 +80,17 @@ dependencies {
 
     implementation(composeBom)
     implementation("androidx.activity:activity-compose")
-    implementation("androidx.activity:activity-ktx:${LibraryVersions.activityKtx}")
-    implementation("androidx.arch.core:core-runtime:${LibraryVersions.coreRuntime}")
-    implementation("androidx.compose.material3:material3:${LibraryVersions.material}")
-    implementation("androidx.compose.material3:material3-window-size-class:${LibraryVersions.material}")
-    implementation("androidx.compose.runtime:runtime-livedata:${LibraryVersions.compose}")
-    implementation("androidx.compose.runtime:runtime-tracing:1.0.0-beta01")
+    implementation("androidx.compose.runtime:runtime-livedata")
     implementation("androidx.compose.ui:ui-tooling")
     implementation("androidx.compose.ui:ui-tooling-preview")
+
+    implementation("androidx.arch.core:core-runtime:${LibraryVersions.coreRuntime}")
+    implementation("androidx.compose.material3:material3:${LibraryVersions.material}")
     implementation("androidx.core:core-ktx:${LibraryVersions.coreKtx}")
-    implementation("androidx.customview:customview-poolingcontainer:${LibraryVersions.poolingContainer}")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:${LibraryVersions.lifecycleViewModel}")
     implementation("com.google.accompanist:accompanist-navigation-material:${LibraryVersions.accompanist}")
     implementation("com.google.code.gson:gson:${LibraryVersions.gson}")
     implementation("io.insert-koin:koin-androidx-compose:${LibraryVersions.koinCompose}")
-    implementation("androidx.compose.foundation:foundation:${LibraryVersions.compose}")
 
     // Firebase login
     implementation("com.google.android.gms:play-services-auth:${LibraryVersions.playServicesAuth}")
@@ -114,7 +110,6 @@ dependencies {
 
     // Android room
     implementation("androidx.room:room-ktx:${LibraryVersions.room}")
-    implementation("androidx.room:room-runtime:${LibraryVersions.room}")
     kapt("androidx.room:room-compiler:${LibraryVersions.room}")
 
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test-jvm:${LibraryVersions.coroutinesTest}")
