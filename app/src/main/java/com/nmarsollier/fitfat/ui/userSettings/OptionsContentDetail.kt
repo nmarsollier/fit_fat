@@ -29,6 +29,15 @@ fun OptionsContentDetail(
     val activity = LocalContext.current as? ComponentActivity
     val context = LocalContext.current
 
+    val switchColors = SwitchDefaults.colors(
+        checkedThumbColor = MaterialTheme.colorScheme.primary,
+        checkedTrackColor = MaterialTheme.colorScheme.surface,
+        checkedBorderColor = MaterialTheme.colorScheme.primary,
+        uncheckedThumbColor = MaterialTheme.colorScheme.surface,
+        uncheckedTrackColor = MaterialTheme.colorScheme.secondaryContainer,
+        uncheckedBorderColor = MaterialTheme.colorScheme.secondaryContainer,
+    )
+
     val userSettings by rememberUpdatedState(state.userSettings)
     val measureType by rememberUpdatedState(userSettings.measureSystem)
 
@@ -168,15 +177,19 @@ fun OptionsContentDetail(
                 modifier = Modifier.weight(1f),
                 color = MaterialTheme.colorScheme.onSurface
             )
-            Switch(checked = !userSettings.firebaseToken.isNullOrEmpty(), onCheckedChange = {
-                if (it) {
-                    activity?.let {
-                        reduce(OptionsAction.LoginWithGoogle(activity))
+            Switch(
+                checked = !userSettings.firebaseToken.isNullOrEmpty(),
+                onCheckedChange = {
+                    if (it) {
+                        activity?.let {
+                            reduce(OptionsAction.LoginWithGoogle(activity))
+                        }
+                    } else {
+                        reduce(OptionsAction.DisableFirebase)
                     }
-                } else {
-                    reduce(OptionsAction.DisableFirebase)
-                }
-            })
+                },
+                colors = switchColors
+            )
         }
     }
 }

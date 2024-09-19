@@ -30,5 +30,4 @@ object GlobalTextStyles {
         color = Color(0xFF5B68FF),
         fontSize = 14.sp,
     )
-
 }
