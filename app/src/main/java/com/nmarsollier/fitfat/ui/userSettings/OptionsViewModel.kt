@@ -10,7 +10,6 @@ import com.nmarsollier.fitfat.ui.common.viewModel.*
 import kotlinx.coroutines.*
 import java.util.*
 
-
 sealed interface OptionsState {
     @Stable
     data object Loading : OptionsState

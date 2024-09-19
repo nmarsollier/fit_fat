@@ -25,7 +25,7 @@ import org.koin.compose.*
 fun EditMeasureScreen(
     initialMeasure: Measure? = null,
     viewModel: EditMeasureViewModel = koinViewModel(),
-    navigationProvider: NavigationProvider = koinInject()
+    navActions: AppNavActions = koinInject()
 ) {
     val state by viewModel.state.collectAsState(viewModel.viewModelScope.coroutineContext)
     val event by viewModel.event.collectAsState(null)
@@ -37,7 +37,7 @@ fun EditMeasureScreen(
 
     when (event) {
         EditMeasureEvent.Close -> {
-            navigationProvider.appNavActions?.navigateUp()
+            navActions.navigateUp()
         }
 
         EditMeasureEvent.Invalid -> {

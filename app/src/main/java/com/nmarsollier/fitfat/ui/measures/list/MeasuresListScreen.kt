@@ -28,7 +28,7 @@ import org.koin.compose.*
 @Composable
 fun MeasuresListScreen(
     viewModel: MeasuresListViewModel = koinViewModel(),
-    navigationProvider: NavigationProvider = koinInject(),
+    navActions: AppNavActions = koinInject()
 ) {
     val state by viewModel.state.collectAsState(viewModel.viewModelScope.coroutineContext)
     val event by viewModel.event.collectAsState(null)
@@ -36,9 +36,9 @@ fun MeasuresListScreen(
     when (val e = event) {
         is MeasuresListEvent.Redirect -> {
             when (val dst = e.destination) {
-                is Destination.NewMeasure -> navigationProvider.appNavActions?.navigateNewMeasure()
+                is Destination.NewMeasure -> navActions.navigateNewMeasure()
 
-                is Destination.ViewMeasure -> navigationProvider.appNavActions?.navigateEditMeasure(
+                is Destination.ViewMeasure -> navActions.navigateEditMeasure(
                     dst.measure
                 )
             }

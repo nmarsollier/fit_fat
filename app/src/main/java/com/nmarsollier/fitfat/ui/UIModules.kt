@@ -1,18 +1,14 @@
 package com.nmarsollier.fitfat.ui
 
-import com.nmarsollier.fitfat.ui.common.navigation.NavigationProvider
-import com.nmarsollier.fitfat.ui.dashboard.DashboardViewModel
-import com.nmarsollier.fitfat.ui.measures.edit.EditMeasureViewModel
-import com.nmarsollier.fitfat.ui.measures.list.MeasuresListViewModel
-import com.nmarsollier.fitfat.ui.stats.StatsViewModel
-import com.nmarsollier.fitfat.ui.userSettings.OptionsViewModel
-import org.koin.androidx.viewmodel.dsl.viewModelOf
-import org.koin.core.module.dsl.singleOf
-import org.koin.dsl.module
+import com.nmarsollier.fitfat.ui.dashboard.*
+import com.nmarsollier.fitfat.ui.measures.edit.*
+import com.nmarsollier.fitfat.ui.measures.list.*
+import com.nmarsollier.fitfat.ui.stats.*
+import com.nmarsollier.fitfat.ui.userSettings.*
+import org.koin.androidx.viewmodel.dsl.*
+import org.koin.dsl.*
 
 val uiModule = module {
-    singleOf(::NavigationProvider)
-
     viewModelOf(::MeasuresListViewModel)
     viewModelOf(::EditMeasureViewModel)
     viewModelOf(::StatsViewModel)

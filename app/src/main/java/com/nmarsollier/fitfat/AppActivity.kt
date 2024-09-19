@@ -13,6 +13,7 @@ import com.nmarsollier.fitfat.ui.common.theme.*
 import kotlinx.coroutines.*
 import org.koin.android.ext.android.*
 import org.koin.compose.*
+import org.koin.dsl.*
 
 class AppActivity : AppCompatActivity() {
     private val googleAuthService: GoogleAuthService by inject()
@@ -37,13 +38,19 @@ class AppActivity : AppCompatActivity() {
 }
 
 @Composable
-fun AppContent(
-    appNavActionProvider: NavigationProvider = koinInject(),
-) {
+fun AppContent() {
+    val koin = getKoin()
     val navController = rememberNavController()
     remember(navController) {
-        AppNavActions(navController).also {
-            appNavActionProvider.appNavActions = it
+        AppNavActions(navController).also { mavActions ->
+            koin.loadModules(
+                listOf(
+                    module {
+                        single { mavActions }
+                    }
+                ),
+                allowOverride = true
+            )
         }
     }
 

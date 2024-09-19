@@ -14,17 +14,15 @@ import org.koin.androidx.compose.*
 fun DashboardScreen(
     viewModel: DashboardViewModel = koinViewModel(),
 ) {
-    val state by viewModel.state.collectAsState(viewModel.viewModelScope.coroutineContext)
+    val screen by viewModel.state.collectAsState(viewModel.viewModelScope.coroutineContext)
 
-    DashboardContent(state, viewModel::reduce)
-}
-
-@Composable
-fun DashboardContent(
-    screen: Screen,
-    reduce: (Screen) -> Unit,
-) {
-    Scaffold(bottomBar = { DashboardNavigationMenu(screen, reduce) } // Bottom navigation bar
+    Scaffold(
+        bottomBar = {
+            DashboardNavigationMenu(
+                screen,
+                viewModel::reduce
+            )
+        }
     ) {
         Box(
             modifier = Modifier
@@ -33,9 +31,7 @@ fun DashboardContent(
         ) {
             when (screen) {
                 Screen.OPTIONS -> OptionsScreen()
-
                 Screen.MEASURES_LIST -> MeasuresListScreen()
-
                 Screen.STATS -> StatsScreen()
             }
         }

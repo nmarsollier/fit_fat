@@ -7,8 +7,8 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.*
 import androidx.compose.ui.res.*
+import androidx.compose.ui.text.*
 import androidx.compose.ui.tooling.preview.*
-import androidx.compose.ui.unit.*
 import com.nmarsollier.fitfat.R
 import com.nmarsollier.fitfat.models.measures.*
 import com.nmarsollier.fitfat.models.measures.db.*
@@ -25,28 +25,35 @@ fun IntMeasureView(
     measureValue: MeasureValue,
     reduce: (EditMeasureAction) -> Unit
 ) {
-    Column {
-        val unit = when (measureValue.unitType) {
-            MeasureValue.UnitType.PERCENT -> stringResource(
-                R.string.unit_percent
-            )
-
-            MeasureValue.UnitType.WEIGHT -> stringResource(
-                userSettings.measureSystem.weightResId
-            )
-
-            MeasureValue.UnitType.WIDTH -> stringResource(R.string.unit_mm)
+    val unit = stringResource(
+        when (measureValue.unitType) {
+            MeasureValue.UnitType.PERCENT -> R.string.unit_percent
+            MeasureValue.UnitType.WEIGHT -> userSettings.measureSystem.weightResId
+            MeasureValue.UnitType.WIDTH -> R.string.unit_mm
         }
+    )
+
+    val primaryStyle = MaterialTheme.typography.bodyMedium.toSpanStyle()
+        .copy(color = MaterialTheme.colorScheme.primary)
+
+    val titleString = stringResource(measureValue.titleRes)
+    val currValue = measure.displayValue(measureValue, userSettings).toInt()
+    val weightString = remember(currValue) {
+        buildAnnotatedString {
+            append("$titleString : ")
+            withStyle(style = primaryStyle) {
+                append(currValue.formatString())
+            }
+            append(unit)
+        }
+    }
+
+    Column {
         Row(
-            horizontalArrangement = Arrangement.spacedBy(4.dp),
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
         ) {
-            Text(stringResource(measureValue.titleRes))
-            Text(
-                text = measure.displayValue(measureValue, userSettings).toInt()
-                    .formatString(),
-                color = MaterialTheme.colorScheme.primary
-            )
-            Text(unit)
+            Text(weightString)
             Spacer(Modifier.weight(1f))
             Icon(
                 imageVector = Icons.Default.Info,
