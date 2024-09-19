@@ -13,11 +13,9 @@ import java.util.*
 
 sealed interface OptionsState {
     @Stable
-    @Immutable
     data object Loading : OptionsState
 
     @Stable
-    @Immutable
     data class Ready(
         val userSettings: UserSettings, val hasChanged: Boolean
     ) : OptionsState
@@ -25,19 +23,35 @@ sealed interface OptionsState {
 
 sealed interface OptionsEvent {
     @Stable
-    @Immutable
     data object ShowGoogleLoginError : OptionsEvent
 }
 
 sealed interface OptionsAction {
+    @Stable
     data class LoginWithGoogle(val activity: ComponentActivity) : OptionsAction
+
+    @Stable
     data object DisableFirebase : OptionsAction
+
+    @Stable
     data class UpdateSex(val newSex: SexType) : OptionsAction
+
+    @Stable
     data class UpdateMeasureSystem(val system: MeasureType) : OptionsAction
+
+    @Stable
     data class UpdateWeight(val newWeight: Double) : OptionsAction
+
+    @Stable
     data class UpdateHeight(val newHeight: Double) : OptionsAction
+
+    @Stable
     data class UpdateDisplayName(val newName: String) : OptionsAction
+
+    @Stable
     data class UpdateBirthDate(val newBirthDate: Date) : OptionsAction
+
+    @Stable
     data object SaveSettings : OptionsAction
 }
 

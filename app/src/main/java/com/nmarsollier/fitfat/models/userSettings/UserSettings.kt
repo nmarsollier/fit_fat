@@ -6,7 +6,6 @@ import com.nmarsollier.fitfat.utils.*
 import java.util.*
 
 @Stable
-@Immutable
 data class UserSettings(
     val uid: Int,
     val displayName: String = "",

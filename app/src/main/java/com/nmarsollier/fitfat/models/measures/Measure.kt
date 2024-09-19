@@ -7,7 +7,6 @@ import com.nmarsollier.fitfat.models.userSettings.db.*
 import java.util.*
 
 @Stable
-@Immutable
 data class Measure(
     val uid: String,
     val bodyWeight: Double,

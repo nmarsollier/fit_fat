@@ -6,49 +6,36 @@ import com.nmarsollier.fitfat.models.userSettings.*
 import com.nmarsollier.fitfat.ui.common.viewModel.*
 import kotlinx.coroutines.*
 
+@Stable
 enum class Screen {
     OPTIONS, MEASURES_LIST, STATS
 }
 
-@Stable
-@Immutable
-data class DashboardState(internal val tab: Screen)
-
-sealed interface DashboardEvent
-
-sealed interface DashboardAction {
-    data class CurrentSelectedTab(val screen: Screen) : DashboardAction
-}
-
 class DashboardViewModel(
     private val userSettingsRepository: UserSettingsRepository
-) : StateViewModel<DashboardState, DashboardEvent, DashboardAction>(
-    DashboardState(
-        Screen.MEASURES_LIST
-    )
+) : StateViewModel<Screen, Void, Screen>(
+    Screen.MEASURES_LIST
 ) {
     init {
         init()
     }
 
-    override fun reduce(action: DashboardAction) {
-        when (action) {
-            is DashboardAction.CurrentSelectedTab -> setCurrentSelectedTab(action)
-        }
+    override fun reduce(action: Screen) {
+        setCurrentSelectedTab(action)
     }
 
     fun init() {
         viewModelScope.launch(Dispatchers.IO) {
             val isNew = userSettingsRepository.findCurrent().isNew()
             if (isNew) {
-                DashboardState(Screen.OPTIONS).sendToState()
+                Screen.OPTIONS.sendToState()
             }
         }
     }
 
-    fun setCurrentSelectedTab(event: DashboardAction.CurrentSelectedTab) {
-        if (event.screen != state.value.tab) {
-            DashboardState(event.screen).sendToState()
+    fun setCurrentSelectedTab(event: Screen) {
+        if (event != state.value) {
+            event.sendToState()
         }
     }
 

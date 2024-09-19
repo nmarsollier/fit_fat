@@ -1,5 +1,6 @@
 package com.nmarsollier.fitfat.ui.measures.edit
 
+import androidx.compose.runtime.*
 import androidx.lifecycle.*
 import com.nmarsollier.fitfat.models.measures.*
 import com.nmarsollier.fitfat.models.measures.db.*
@@ -9,11 +10,13 @@ import kotlinx.coroutines.*
 import java.util.*
 
 sealed interface EditMeasureState {
+    @Stable
     data class Loading(
         val measure: Measure?, val readOnly: Boolean
     ) : EditMeasureState
 
 
+    @Stable
     data class Ready(
         val isSaveEnabled: Boolean,
         val userSettings: UserSettings,
@@ -23,32 +26,48 @@ sealed interface EditMeasureState {
         val readOnly: Boolean
     ) : EditMeasureState
 
+    @Stable
     val currentReadOnly: Boolean
         get() = when (this) {
             is Loading -> readOnly
             is Ready -> readOnly
-            else -> true
         }
 }
 
 sealed interface EditMeasureEvent {
+    @Stable
     data object Close : EditMeasureEvent
+
+    @Stable
     data object Invalid : EditMeasureEvent
 }
 
 sealed interface EditMeasureAction {
+    @Stable
     data object SaveMeasure : EditMeasureAction
+
+    @Stable
     data class UpdateDate(val time: Date) : EditMeasureAction
+
+    @Stable
     data class UpdateMeasureMethod(val measureMethod: MeasureMethod) : EditMeasureAction
 
+    @Stable
     data class UpdateMeasureValue(
         val measureValue: MeasureValue,
         val value: Number
     ) : EditMeasureAction
 
+    @Stable
     data object Close : EditMeasureAction
+
+    @Stable
     data class ToggleHelp(val res: Int?) : EditMeasureAction
+
+    @Stable
     data object ToggleMeasureMethod : EditMeasureAction
+
+    @Stable
     data class Initialize(val initialMeasure: Measure?) : EditMeasureAction
 }
 

@@ -21,17 +21,17 @@ fun DashboardScreen(
 
 @Composable
 fun DashboardContent(
-    state: DashboardState,
-    reduce: (DashboardAction) -> Unit,
+    screen: Screen,
+    reduce: (Screen) -> Unit,
 ) {
-    Scaffold(bottomBar = { DashboardNavigationMenu(state, reduce) } // Bottom navigation bar
+    Scaffold(bottomBar = { DashboardNavigationMenu(screen, reduce) } // Bottom navigation bar
     ) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(it)
         ) {
-            when (state.tab) {
+            when (screen) {
                 Screen.OPTIONS -> OptionsScreen()
 
                 Screen.MEASURES_LIST -> MeasuresListScreen()

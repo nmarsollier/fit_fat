@@ -17,7 +17,7 @@ import com.nmarsollier.fitfat.ui.common.preview.*
 
 @Composable
 fun DashboardNavigationMenu(
-    state: DashboardState, reduce: (DashboardAction) -> Unit
+    screen: Screen, reduce: (Screen) -> Unit
 ) {
     val colors = NavigationBarItemDefaults.colors(
         indicatorColor = Color.Transparent,
@@ -34,79 +34,64 @@ fun DashboardNavigationMenu(
             .fillMaxWidth()
             .height(60.dp)
     ) {
-        NavigationBarItem(
-            icon = {
-                Column(
-                    modifier = Modifier.fillMaxHeight(),
-                    verticalArrangement = Arrangement.Bottom,
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Settings,
-                        contentDescription = stringResource(id = R.string.home_menu_options),
-                    )
-                    Text(
-                        text = stringResource(id = R.string.home_menu_options),
-                        fontSize = 12.sp,
-                    )
-                }
-            },
-            alwaysShowLabel = true,
-            selected = state.tab == Screen.OPTIONS,
-            onClick = {
-                reduce(DashboardAction.CurrentSelectedTab(Screen.OPTIONS))
-            },
-            colors = colors
+        NavigationBarItem(icon = {
+            Column(
+                modifier = Modifier.fillMaxHeight(),
+                verticalArrangement = Arrangement.Bottom,
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Settings,
+                    contentDescription = stringResource(id = R.string.home_menu_options),
+                )
+                Text(
+                    text = stringResource(id = R.string.home_menu_options),
+                    fontSize = 12.sp,
+                )
+            }
+        }, alwaysShowLabel = true, selected = screen == Screen.OPTIONS, onClick = {
+            reduce(Screen.OPTIONS)
+        }, colors = colors
         )
 
-        NavigationBarItem(
-            icon = {
-                Column(
-                    modifier = Modifier.fillMaxHeight(),
-                    verticalArrangement = Arrangement.Bottom,
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Home,
-                        contentDescription = stringResource(id = R.string.home_menu_main),
-                    )
-                    Text(
-                        text = stringResource(id = R.string.home_menu_main),
-                        fontSize = 12.sp,
-                    )
-                }
-            },
-            alwaysShowLabel = true,
-            selected = state.tab == Screen.MEASURES_LIST,
-            onClick = {
-                reduce(DashboardAction.CurrentSelectedTab(Screen.MEASURES_LIST))
-            },
-            colors = colors
+        NavigationBarItem(icon = {
+            Column(
+                modifier = Modifier.fillMaxHeight(),
+                verticalArrangement = Arrangement.Bottom,
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Home,
+                    contentDescription = stringResource(id = R.string.home_menu_main),
+                )
+                Text(
+                    text = stringResource(id = R.string.home_menu_main),
+                    fontSize = 12.sp,
+                )
+            }
+        }, alwaysShowLabel = true, selected = screen == Screen.MEASURES_LIST, onClick = {
+            reduce(Screen.MEASURES_LIST)
+        }, colors = colors
         )
 
-        NavigationBarItem(
-            icon = {
-                Column(
-                    modifier = Modifier.fillMaxHeight(),
-                    verticalArrangement = Arrangement.Bottom,
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    Icon(
-                        painterResource(id = R.drawable.ic_show_chart_black_24dp),
-                        contentDescription = stringResource(id = R.string.home_menu_progress),
-                    )
-                    Text(
-                        text = stringResource(id = R.string.home_menu_progress),
-                        fontSize = 12.sp,
-                    )
-                }
-            },
-            alwaysShowLabel = true,
-            selected = state.tab == Screen.STATS,
-            onClick = {
-                reduce(DashboardAction.CurrentSelectedTab(Screen.STATS))
-            },
-            colors = colors
+        NavigationBarItem(icon = {
+            Column(
+                modifier = Modifier.fillMaxHeight(),
+                verticalArrangement = Arrangement.Bottom,
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Icon(
+                    painterResource(id = R.drawable.ic_show_chart_black_24dp),
+                    contentDescription = stringResource(id = R.string.home_menu_progress),
+                )
+                Text(
+                    text = stringResource(id = R.string.home_menu_progress),
+                    fontSize = 12.sp,
+                )
+            }
+        }, alwaysShowLabel = true, selected = screen == Screen.STATS, onClick = {
+            reduce(Screen.STATS)
+        }, colors = colors
         )
     }
 }
@@ -117,9 +102,7 @@ private fun DashboardNavigationMenuPreview() {
     KoinPreview {
         Column {
             DashboardNavigationMenu(
-                DashboardState(
-                    tab = Screen.MEASURES_LIST
-                )
+                screen = Screen.MEASURES_LIST
             ) {}
         }
     }

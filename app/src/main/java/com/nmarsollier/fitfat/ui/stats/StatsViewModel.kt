@@ -1,5 +1,6 @@
 package com.nmarsollier.fitfat.ui.stats
 
+import androidx.compose.runtime.*
 import androidx.lifecycle.*
 import com.nmarsollier.fitfat.models.measures.*
 import com.nmarsollier.fitfat.models.measures.db.*
@@ -7,13 +8,16 @@ import com.nmarsollier.fitfat.models.userSettings.*
 import com.nmarsollier.fitfat.ui.common.viewModel.*
 import kotlinx.coroutines.*
 
+@Stable
 sealed class StatsState(
     val selectedMethod: MeasureMethod
 ) {
+    @Stable
     data class Loading(
         private val method: MeasureMethod
     ) : StatsState(method)
 
+    @Stable
     data class Ready(
         private val method: MeasureMethod,
         val userSettings: UserSettings,
@@ -22,17 +26,19 @@ sealed class StatsState(
     ) : StatsState(method)
 }
 
-sealed interface StatsEvent
-
+@Stable
 sealed interface StatsAction {
+    @Stable
     data class UpdateMethod(val selectedMethod: MeasureMethod) : StatsAction
+
+    @Stable
     data object ToggleShowMethod : StatsAction
 }
 
 class StatsViewModel(
     private val userSettingsRepository: UserSettingsRepository,
     private val measuresRepository: MeasuresRepository
-) : StateViewModel<StatsState, StatsEvent, StatsAction>(
+) : StateViewModel<StatsState, Void, StatsAction>(
     StatsState.Loading(
         MeasureMethod.WEIGHT_ONLY
     )

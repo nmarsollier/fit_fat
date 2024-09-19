@@ -24,7 +24,7 @@ class DashboardViewModelTest : BaseTest() {
             state.test {
                 init()
 
-                assertEquals(DashboardState(Screen.MEASURES_LIST), awaitItem())
+                assertEquals(Screen.MEASURES_LIST, awaitItem())
 
                 coVerify { userDaoMock.findCurrent() }
             }
@@ -39,7 +39,7 @@ class DashboardViewModelTest : BaseTest() {
 
         DashboardViewModel(get()).apply {
             state.test {
-                assertEquals(DashboardState(Screen.MEASURES_LIST), awaitItem())
+                assertEquals(Screen.MEASURES_LIST, awaitItem())
 
                 coVerify { userDaoMock.findCurrent() }
             }
@@ -50,16 +50,16 @@ class DashboardViewModelTest : BaseTest() {
     fun testTabSwitch(): Unit = runBlocking {
         DashboardViewModel(get()).apply {
             state.test {
-                assertEquals(DashboardState(Screen.MEASURES_LIST), awaitItem())
+                assertEquals(Screen.MEASURES_LIST, awaitItem())
 
-                setCurrentSelectedTab(DashboardAction.CurrentSelectedTab(Screen.OPTIONS))
-                assertEquals(DashboardState(Screen.OPTIONS), awaitItem())
+                setCurrentSelectedTab(Screen.OPTIONS)
+                assertEquals(Screen.OPTIONS, awaitItem())
 
-                setCurrentSelectedTab(DashboardAction.CurrentSelectedTab(Screen.STATS))
-                assertEquals(DashboardState(Screen.STATS), awaitItem())
+                setCurrentSelectedTab(Screen.STATS)
+                assertEquals(Screen.STATS, awaitItem())
 
-                setCurrentSelectedTab(DashboardAction.CurrentSelectedTab(Screen.MEASURES_LIST))
-                assertEquals(DashboardState(Screen.MEASURES_LIST), awaitItem())
+                setCurrentSelectedTab(Screen.MEASURES_LIST)
+                assertEquals(Screen.MEASURES_LIST, awaitItem())
             }
         }
     }

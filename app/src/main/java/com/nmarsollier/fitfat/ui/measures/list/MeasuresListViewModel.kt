@@ -9,17 +9,14 @@ import kotlinx.coroutines.*
 
 sealed interface Destination {
     @Stable
-    @Immutable
     data class ViewMeasure(val measure: Measure) : Destination
 
     @Stable
-    @Immutable
     data object NewMeasure : Destination
 }
 
 sealed interface MeasuresListEvent {
     @Stable
-    @Immutable
     data class Redirect(
         val destination: Destination
     ) : MeasuresListEvent
@@ -27,11 +24,9 @@ sealed interface MeasuresListEvent {
 
 sealed interface MeasuresListState {
     @Stable
-    @Immutable
     data object Loading : MeasuresListState
 
     @Stable
-    @Immutable
     data class Ready(
         val userSettings: UserSettings, val measures: List<Measure>
     ) : MeasuresListState
@@ -39,15 +34,12 @@ sealed interface MeasuresListState {
 
 sealed interface MeasuresListAction {
     @Stable
-    @Immutable
     data class DeleteMeasure(val measure: Measure) : MeasuresListAction
 
     @Stable
-    @Immutable
     data object OpenNewMeasure : MeasuresListAction
 
     @Stable
-    @Immutable
     data class OpenViewMeasure(val measure: Measure) : MeasuresListAction
 }
 
