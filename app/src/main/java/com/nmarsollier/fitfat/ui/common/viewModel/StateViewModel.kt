@@ -43,3 +43,7 @@ abstract class StateViewModel<S : Any, E : Any, A : Any>(
 
     abstract fun reduce(action: A)
 }
+
+fun <A : Any> A.reduceWith(reducer: (action: A) -> Unit) {
+    reducer(this)
+}

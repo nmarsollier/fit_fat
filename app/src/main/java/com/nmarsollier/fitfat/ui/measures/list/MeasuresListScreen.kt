@@ -19,6 +19,7 @@ import com.nmarsollier.fitfat.models.measures.*
 import com.nmarsollier.fitfat.models.userSettings.*
 import com.nmarsollier.fitfat.ui.common.navigation.*
 import com.nmarsollier.fitfat.ui.common.preview.*
+import com.nmarsollier.fitfat.ui.common.viewModel.reduceWith
 import com.nmarsollier.fitfat.ui.common.views.*
 import com.nmarsollier.fitfat.ui.measures.*
 import com.nmarsollier.fitfat.ui.userSettings.*
@@ -52,14 +53,14 @@ fun MeasuresListScreen(
 
 @Composable
 fun MeasuresListContent(
-    state: MeasuresListState, reduce: (MeasuresListAction) -> Unit,
+    state: MeasuresListState, reducer: (MeasuresListAction) -> Unit,
 ) {
     Scaffold(topBar = {
         MeasuresListMenu()
     }, floatingActionButton = {
         FloatingActionButton(
             onClick = {
-                reduce(MeasuresListAction.OpenNewMeasure)
+                MeasuresListAction.OpenNewMeasure.reduceWith(reducer)
             },
             shape = CircleShape,
             containerColor = MaterialTheme.colorScheme.primary,
@@ -83,7 +84,7 @@ fun MeasuresListContent(
 
                     LazyColumn(Modifier.fillMaxSize()) {
                         items(state.measures, key = { it.uid }) { measure ->
-                            SwipeToDelete(measure, userSettings, reduce)
+                            SwipeToDelete(measure, userSettings, reducer)
                             HorizontalDivider(thickness = 1.dp, color = Color.LightGray)
                         }
                     }

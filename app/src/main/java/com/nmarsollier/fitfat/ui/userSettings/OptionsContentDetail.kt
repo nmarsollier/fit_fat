@@ -15,6 +15,7 @@ import com.nmarsollier.fitfat.models.userSettings.*
 import com.nmarsollier.fitfat.models.userSettings.db.*
 import com.nmarsollier.fitfat.ui.common.dialogs.*
 import com.nmarsollier.fitfat.ui.common.preview.*
+import com.nmarsollier.fitfat.ui.common.viewModel.reduceWith
 import com.nmarsollier.fitfat.utils.*
 
 @Composable
@@ -24,7 +25,7 @@ fun OptionsContentDetail(
     nameState: MutableState<String>,
     heightState: MutableState<String>,
     weightState: MutableState<String>,
-    reduce: (OptionsAction) -> Unit,
+    reducer: (OptionsAction) -> Unit,
 ) {
     val activity = LocalContext.current as? ComponentActivity
     val context = LocalContext.current
@@ -76,7 +77,9 @@ fun OptionsContentDetail(
                         context,
                         userSettings.birthDate
                     ) {
-                        reduce(OptionsAction.UpdateBirthDate(it))
+                        OptionsAction
+                            .UpdateBirthDate(it)
+                            .reduceWith(reducer)
                     }
                 },
             colors = TextFieldDefaults.colors(
@@ -94,14 +97,20 @@ fun OptionsContentDetail(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 RadioButton(selected = userSettings.measureSystem == MeasureType.METRIC,
-                    onClick = { reduce(OptionsAction.UpdateMeasureSystem(MeasureType.METRIC)) })
+                    onClick = {
+                        OptionsAction.UpdateMeasureSystem(MeasureType.METRIC)
+                            .reduceWith(reducer)
+                    })
                 Text(
                     stringResource(R.string.options_system_of_metric),
                     color = MaterialTheme.colorScheme.onSurface
                 )
                 Spacer(modifier = Modifier.width(16.dp))
                 RadioButton(selected = userSettings.measureSystem == MeasureType.IMPERIAL,
-                    onClick = { reduce(OptionsAction.UpdateMeasureSystem(MeasureType.IMPERIAL)) })
+                    onClick = {
+                        OptionsAction.UpdateMeasureSystem(MeasureType.IMPERIAL)
+                            .reduceWith(reducer)
+                    })
                 Text(
                     stringResource(R.string.options_system_of_imperial),
                     color = MaterialTheme.colorScheme.onSurface
@@ -117,14 +126,14 @@ fun OptionsContentDetail(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 RadioButton(selected = userSettings.sex == SexType.MALE,
-                    onClick = { reduce(OptionsAction.UpdateSex(SexType.MALE)) })
+                    onClick = { OptionsAction.UpdateSex(SexType.MALE).reduceWith(reducer) })
                 Text(
                     stringResource(R.string.options_sex_male),
                     color = MaterialTheme.colorScheme.onSurface
                 )
                 Spacer(modifier = Modifier.width(16.dp))
                 RadioButton(selected = userSettings.sex == SexType.FEMALE,
-                    onClick = { reduce(OptionsAction.UpdateSex(SexType.FEMALE)) })
+                    onClick = { OptionsAction.UpdateSex(SexType.FEMALE).reduceWith(reducer) })
                 Text(
                     stringResource(R.string.options_sex_female),
                     color = MaterialTheme.colorScheme.onSurface
@@ -180,13 +189,12 @@ fun OptionsContentDetail(
             Switch(
                 checked = !userSettings.firebaseToken.isNullOrEmpty(),
                 onCheckedChange = {
+                    activity ?: return@Switch
                     if (it) {
-                        activity?.let {
-                            reduce(OptionsAction.LoginWithGoogle(activity))
-                        }
+                        OptionsAction.LoginWithGoogle(activity)
                     } else {
-                        reduce(OptionsAction.DisableFirebase)
-                    }
+                        OptionsAction.DisableFirebase
+                    }.reduceWith(reducer)
                 },
                 colors = switchColors
             )

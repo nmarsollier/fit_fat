@@ -78,13 +78,10 @@ class StatsViewModel(
         StatsState.Loading(measureMethod).sendToState()
 
         viewModelScope.launch(Dispatchers.IO) {
-            val userSettings = userSettingsRepository.findCurrent()
-            val measures = measuresRepository.findAll()
-
             StatsState.Ready(
                 method = measureMethod,
-                userSettings = userSettings,
-                measures = measures,
+                userSettings = userSettingsRepository.findCurrent(),
+                measures = measuresRepository.findAll(),
                 showMethod = false
             ).sendToState()
         }

@@ -10,6 +10,7 @@ import com.nmarsollier.fitfat.models.measures.*
 import com.nmarsollier.fitfat.models.measures.db.*
 import com.nmarsollier.fitfat.models.userSettings.*
 import com.nmarsollier.fitfat.ui.common.preview.*
+import com.nmarsollier.fitfat.ui.common.viewModel.reduceWith
 import com.nmarsollier.fitfat.ui.common.views.*
 import com.nmarsollier.fitfat.ui.measures.*
 import com.nmarsollier.fitfat.ui.measures.dialog.*
@@ -26,7 +27,7 @@ fun StatsScreen(
 }
 
 @Composable
-fun StatsContent(state: StatsState, reduce: (StatsAction) -> Unit) {
+fun StatsContent(state: StatsState, reducer: (StatsAction) -> Unit) {
     Scaffold(topBar = {
         StatsMenu()
     }) {
@@ -36,15 +37,15 @@ fun StatsContent(state: StatsState, reduce: (StatsAction) -> Unit) {
             when (state) {
                 is StatsState.Loading -> LoadingView()
                 is StatsState.Ready -> {
-                    StatsContentDetail(state, reduce)
+                    StatsContentDetail(state, reducer)
 
                     if (state.showMethod) {
                         MeasureMethodDialog(state.selectedMethod) {
                             if (it != null) {
-                                reduce(StatsAction.UpdateMethod(it))
+                                StatsAction.UpdateMethod(it)
                             } else {
-                                reduce(StatsAction.ToggleShowMethod)
-                            }
+                                StatsAction.ToggleShowMethod
+                            }.reduceWith(reducer)
                         }
                     }
                 }

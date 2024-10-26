@@ -14,6 +14,7 @@ import com.nmarsollier.fitfat.models.measures.*
 import com.nmarsollier.fitfat.models.userSettings.*
 import com.nmarsollier.fitfat.ui.common.preview.*
 import com.nmarsollier.fitfat.ui.common.theme.*
+import com.nmarsollier.fitfat.ui.common.viewModel.reduceWith
 import com.nmarsollier.fitfat.ui.measures.*
 import com.nmarsollier.fitfat.ui.userSettings.*
 import com.nmarsollier.fitfat.utils.*
@@ -24,7 +25,7 @@ fun MeasureItemView(
     modifier: Modifier = Modifier,
     userSettings: UserSettings,
     measure: Measure,
-    reduce: (MeasuresListAction) -> Unit
+    reducer: (MeasuresListAction) -> Unit
 ) {
     val weightUnit = stringResource(userSettings.measureSystem.weightResId)
 
@@ -94,7 +95,9 @@ fun MeasureItemView(
         modifier = modifier
             .background(MaterialTheme.colorScheme.background)
             .combinedClickable(onClick = {
-                reduce(MeasuresListAction.OpenViewMeasure(measure))
+                MeasuresListAction
+                    .OpenViewMeasure(measure)
+                    .reduceWith(reducer)
             })
             .padding(vertical = 16.dp),
         verticalArrangement = Arrangement.spacedBy(5.dp),

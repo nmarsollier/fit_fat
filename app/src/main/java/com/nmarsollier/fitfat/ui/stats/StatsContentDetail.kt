@@ -18,13 +18,14 @@ import com.nmarsollier.fitfat.models.measures.*
 import com.nmarsollier.fitfat.models.measures.db.*
 import com.nmarsollier.fitfat.models.userSettings.*
 import com.nmarsollier.fitfat.ui.common.preview.*
+import com.nmarsollier.fitfat.ui.common.viewModel.reduceWith
 import com.nmarsollier.fitfat.ui.measures.*
 import com.nmarsollier.fitfat.ui.userSettings.*
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun StatsContentDetail(
-    state: StatsState.Ready, reduce: (StatsAction) -> Unit
+    state: StatsState.Ready, reducer: (StatsAction) -> Unit
 ) {
     Column(
         Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(5.dp)
@@ -40,7 +41,7 @@ fun StatsContentDetail(
         Row(modifier = Modifier
             .padding(top = 12.dp, bottom = 12.dp)
             .clickable {
-                reduce(StatsAction.ToggleShowMethod)
+                StatsAction.ToggleShowMethod.reduceWith(reducer)
             }) {
             Text(stringResource(state.selectedMethod.labelRes))
 

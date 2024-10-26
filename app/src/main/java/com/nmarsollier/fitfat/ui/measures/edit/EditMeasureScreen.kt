@@ -14,6 +14,7 @@ import com.nmarsollier.fitfat.models.userSettings.*
 import com.nmarsollier.fitfat.ui.common.dialogs.*
 import com.nmarsollier.fitfat.ui.common.navigation.*
 import com.nmarsollier.fitfat.ui.common.preview.*
+import com.nmarsollier.fitfat.ui.common.viewModel.reduceWith
 import com.nmarsollier.fitfat.ui.common.views.*
 import com.nmarsollier.fitfat.ui.measures.*
 import com.nmarsollier.fitfat.ui.measures.dialog.*
@@ -31,7 +32,7 @@ fun EditMeasureScreen(
     val event by viewModel.event.collectAsState(null)
 
     DisposableEffect(initialMeasure) {
-        viewModel.reduce(EditMeasureAction.Initialize(initialMeasure))
+        EditMeasureAction.Initialize(initialMeasure).reduceWith(viewModel::reduce)
         onDispose { }
     }
 
@@ -54,30 +55,30 @@ fun EditMeasureScreen(
 
 @Composable
 fun EditMeasureContent(
-    state: EditMeasureState, reduce: (EditMeasureAction) -> Unit,
+    state: EditMeasureState, reducer: (EditMeasureAction) -> Unit,
 ) {
     Scaffold(topBar = {
-        EditMeasureMenu(state, reduce)
+        EditMeasureMenu(state, reducer)
     }) {
         Surface(modifier = Modifier.padding(it)) {
             when (state) {
                 is EditMeasureState.Ready -> {
                     EditMeasureDetails(
-                        state.userSettings, state.measure, reduce
+                        state.userSettings, state.measure, reducer
                     )
 
                     if (state.showHelp != null) {
                         HelpDialog(helpRes = state.showHelp) {
-                            reduce(EditMeasureAction.ToggleHelp(null))
+                            EditMeasureAction.ToggleHelp(null).reduceWith(reducer)
                         }
                     }
 
                     if (state.showMeasureMethod) {
                         MeasureMethodDialog(state.measure.measureMethod) {
                             if (it != null) {
-                                reduce(EditMeasureAction.UpdateMeasureMethod(it))
+                                EditMeasureAction.UpdateMeasureMethod(it).reduceWith(reducer)
                             } else {
-                                reduce(EditMeasureAction.ToggleMeasureMethod)
+                                EditMeasureAction.ToggleMeasureMethod.reduceWith(reducer)
                             }
                         }
                     }

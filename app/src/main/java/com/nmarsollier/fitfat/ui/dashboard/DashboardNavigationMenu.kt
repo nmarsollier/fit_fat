@@ -14,10 +14,11 @@ import androidx.compose.ui.tooling.preview.*
 import androidx.compose.ui.unit.*
 import com.nmarsollier.fitfat.R
 import com.nmarsollier.fitfat.ui.common.preview.*
+import com.nmarsollier.fitfat.ui.common.viewModel.reduceWith
 
 @Composable
 fun DashboardNavigationMenu(
-    screen: Screen, reduce: (Screen) -> Unit
+    screen: Screen, reducer: (Screen) -> Unit
 ) {
     val colors = NavigationBarItemDefaults.colors(
         indicatorColor = Color.Transparent,
@@ -50,7 +51,7 @@ fun DashboardNavigationMenu(
                 )
             }
         }, alwaysShowLabel = true, selected = screen == Screen.OPTIONS, onClick = {
-            reduce(Screen.OPTIONS)
+            Screen.OPTIONS.reduceWith(reducer)
         }, colors = colors
         )
 
@@ -70,7 +71,7 @@ fun DashboardNavigationMenu(
                 )
             }
         }, alwaysShowLabel = true, selected = screen == Screen.MEASURES_LIST, onClick = {
-            reduce(Screen.MEASURES_LIST)
+            Screen.MEASURES_LIST.reduceWith(reducer)
         }, colors = colors
         )
 
@@ -90,7 +91,7 @@ fun DashboardNavigationMenu(
                 )
             }
         }, alwaysShowLabel = true, selected = screen == Screen.STATS, onClick = {
-            reduce(Screen.STATS)
+            Screen.STATS.reduceWith(reducer)
         }, colors = colors
         )
     }

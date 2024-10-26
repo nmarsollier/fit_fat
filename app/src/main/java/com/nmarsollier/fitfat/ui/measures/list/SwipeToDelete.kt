@@ -16,7 +16,7 @@ import com.nmarsollier.fitfat.models.userSettings.*
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun SwipeToDelete(
-    measure: Measure, userSettings: UserSettings, reduce: (MeasuresListAction) -> Unit
+    measure: Measure, userSettings: UserSettings, reducer: (MeasuresListAction) -> Unit
 ) {
     var offset by remember { mutableFloatStateOf(0f) }
 
@@ -35,7 +35,7 @@ fun SwipeToDelete(
             modifier = Modifier.align(Alignment.CenterEnd)
         ) {
             IconButton(modifier = Modifier.padding(horizontal = 16.dp), onClick = {
-                reduce(MeasuresListAction.DeleteMeasure(measure = measure))
+                reducer(MeasuresListAction.DeleteMeasure(measure = measure))
             }) {
                 Icon(
                     imageVector = Icons.Default.Delete,
@@ -46,7 +46,7 @@ fun SwipeToDelete(
         }
 
         MeasureItemView(
-            Modifier.offset { IntOffset(offset.toInt(), 0) }, userSettings, measure, reduce
+            Modifier.offset { IntOffset(offset.toInt(), 0) }, userSettings, measure, reducer
         )
     }
 }

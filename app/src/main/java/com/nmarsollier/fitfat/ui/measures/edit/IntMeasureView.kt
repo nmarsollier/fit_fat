@@ -14,6 +14,7 @@ import com.nmarsollier.fitfat.models.measures.*
 import com.nmarsollier.fitfat.models.measures.db.*
 import com.nmarsollier.fitfat.models.userSettings.*
 import com.nmarsollier.fitfat.ui.common.preview.*
+import com.nmarsollier.fitfat.ui.common.viewModel.reduceWith
 import com.nmarsollier.fitfat.ui.measures.*
 import com.nmarsollier.fitfat.ui.userSettings.*
 import com.nmarsollier.fitfat.utils.*
@@ -23,7 +24,7 @@ fun IntMeasureView(
     userSettings: UserSettings,
     measure: Measure,
     measureValue: MeasureValue,
-    reduce: (EditMeasureAction) -> Unit
+    reducer: (EditMeasureAction) -> Unit
 ) {
     val unit = stringResource(
         when (measureValue.unitType) {
@@ -66,11 +67,9 @@ fun IntMeasureView(
             value = measure.displayValue(measureValue, userSettings).toFloat(),
             valueRange = 0f..measureValue.maxScale.toFloat(),
             onValueChange = {
-                reduce(
-                    EditMeasureAction.UpdateMeasureValue(
-                        measureValue, it.toInt()
-                    )
-                )
+                EditMeasureAction.UpdateMeasureValue(
+                    measureValue, it.toInt()
+                ).reduceWith(reducer)
             })
     }
 }

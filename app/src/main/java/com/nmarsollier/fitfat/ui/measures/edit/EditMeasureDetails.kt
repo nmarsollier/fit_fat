@@ -18,13 +18,14 @@ import com.nmarsollier.fitfat.models.measures.db.*
 import com.nmarsollier.fitfat.models.userSettings.*
 import com.nmarsollier.fitfat.ui.common.dialogs.*
 import com.nmarsollier.fitfat.ui.common.preview.*
+import com.nmarsollier.fitfat.ui.common.viewModel.reduceWith
 import com.nmarsollier.fitfat.ui.measures.*
 import com.nmarsollier.fitfat.ui.userSettings.*
 import com.nmarsollier.fitfat.utils.*
 
 @Composable
 fun EditMeasureDetails(
-    userSettings: UserSettings, measure: Measure, reduce: (EditMeasureAction) -> Unit
+    userSettings: UserSettings, measure: Measure, reducer: (EditMeasureAction) -> Unit
 ) {
     val context = LocalContext.current
 
@@ -38,7 +39,7 @@ fun EditMeasureDetails(
         Row(modifier = Modifier
             .padding(top = 12.dp, bottom = 12.dp)
             .clickable {
-                reduce(EditMeasureAction.ToggleMeasureMethod)
+                EditMeasureAction.ToggleMeasureMethod.reduceWith(reducer)
             }) {
             Text(stringResource(measure.measureMethod.labelRes))
 
@@ -63,7 +64,7 @@ fun EditMeasureDetails(
                     .fillMaxWidth(0.5f)
                     .clickable {
                         showDatePicker(context, measure.date) {
-                            reduce(EditMeasureAction.UpdateDate(it))
+                            EditMeasureAction.UpdateDate(it).reduceWith(reducer)
                         }
                     },
                 colors = TextFieldDefaults.colors(
@@ -94,12 +95,12 @@ fun EditMeasureDetails(
         measures.forEach {
             Row {
                 when (it.inputType) {
-                    MeasureValue.InputType.INT -> IntMeasureView(userSettings, measure, it, reduce)
+                    MeasureValue.InputType.INT -> IntMeasureView(userSettings, measure, it, reducer)
                     MeasureValue.InputType.DOUBLE -> DecimalMeasureView(
                         userSettings,
                         measure,
                         it,
-                        reduce
+                        reducer
                     )
                 }
             }

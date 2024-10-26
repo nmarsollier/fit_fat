@@ -14,6 +14,7 @@ import com.nmarsollier.fitfat.models.measures.*
 import com.nmarsollier.fitfat.models.measures.db.*
 import com.nmarsollier.fitfat.models.userSettings.*
 import com.nmarsollier.fitfat.ui.common.preview.*
+import com.nmarsollier.fitfat.ui.common.viewModel.reduceWith
 import com.nmarsollier.fitfat.ui.measures.*
 import com.nmarsollier.fitfat.ui.userSettings.*
 import com.nmarsollier.fitfat.utils.*
@@ -23,7 +24,7 @@ fun DecimalMeasureView(
     userSettings: UserSettings,
     measure: Measure,
     measureValue: MeasureValue,
-    reduce: (EditMeasureAction) -> Unit
+    reducer: (EditMeasureAction) -> Unit
 ) {
     val unit = stringResource(
         when (measureValue.unitType) {
@@ -65,23 +66,19 @@ fun DecimalMeasureView(
         Slider(value = currentValue.toInt().toFloat(),
             valueRange = 0f..measureValue.maxScale.toFloat(),
             onValueChange = {
-                reduce(
-                    EditMeasureAction.UpdateMeasureValue(
-                        measureValue,
-                        measure.calculateIntPart(it.toInt(), measureValue, userSettings)
-                    )
-                )
+                EditMeasureAction.UpdateMeasureValue(
+                    measureValue,
+                    measure.calculateIntPart(it.toInt(), measureValue, userSettings)
+                ).reduceWith(reducer)
             })
 
         Slider(value = ((currentValue - currentValue.toInt()) * 10).toFloat(),
             valueRange = 0f..10f,
             onValueChange = {
-                reduce(
-                    EditMeasureAction.UpdateMeasureValue(
-                        measureValue,
-                        measure.calculateDecimalPart(it.toInt(), measureValue, userSettings)
-                    )
-                )
+                EditMeasureAction.UpdateMeasureValue(
+                    measureValue,
+                    measure.calculateDecimalPart(it.toInt(), measureValue, userSettings)
+                ).reduceWith(reducer)
             })
     }
 }
