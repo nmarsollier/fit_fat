@@ -47,7 +47,7 @@ object LibraryVersions {
     const val accompanist = "0.34.0"
 
     const val playServicesAuth = "21.2.0"
-    const val firebaseBom = "33.3.0"
+    const val firebaseBom = "33.5.1"
 
     const val stdLib = "1.9.23"
     const val coroutines = "1.7.3"
