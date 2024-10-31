@@ -8,7 +8,7 @@ import androidx.compose.ui.*
 import androidx.compose.ui.platform.*
 import androidx.compose.ui.res.*
 import com.nmarsollier.fitfat.R
-import com.nmarsollier.fitfat.ui.common.viewModel.reduceWith
+import com.nmarsollier.fitfat.ui.common.viewModel.*
 import com.nmarsollier.fitfat.ui.common.views.*
 import com.nmarsollier.fitfat.utils.*
 import org.koin.androidx.compose.*
@@ -41,8 +41,8 @@ fun OptionsScreen(
     fun save() {
         val reducer = viewModel::reduce
         OptionsAction.UpdateDisplayName(name.value).reduceWith(reducer)
-        OptionsAction.UpdateWeight(weight.value.toDoubleOrNull() ?: 0.0).reduceWith(reducer)
-        OptionsAction.UpdateHeight(height.value.toDoubleOrNull() ?: 0.0).reduceWith(reducer)
+        OptionsAction.UpdateWeight(weight.value.toDoubleOr(0.0)).reduceWith(reducer)
+        OptionsAction.UpdateHeight(height.value.toDoubleOr(0.0)).reduceWith(reducer)
         OptionsAction.SaveSettings.reduceWith(reducer)
     }
 
