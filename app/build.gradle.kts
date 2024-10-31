@@ -6,6 +6,7 @@ plugins {
     id("com.google.firebase.crashlytics")
     id("com.google.gms.google-services")
     id("org.jetbrains.kotlin.plugin.compose") version ProjectVersions.kotlin
+    id("org.jetbrains.kotlin.plugin.serialization") version LibraryVersions.serialization
 }
 
 android {
@@ -89,7 +90,6 @@ dependencies {
     implementation("androidx.core:core-ktx:${LibraryVersions.coreKtx}")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:${LibraryVersions.lifecycleViewModel}")
     implementation("com.google.accompanist:accompanist-navigation-material:${LibraryVersions.accompanist}")
-    implementation("com.google.code.gson:gson:${LibraryVersions.gson}")
     implementation("io.insert-koin:koin-androidx-compose:${LibraryVersions.koinCompose}")
 
     // Firebase login
@@ -104,6 +104,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:${LibraryVersions.stdLib}")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${LibraryVersions.coroutines}")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${LibraryVersions.coroutines}")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:${LibraryVersions.serialization}")
 
     // Hello Charts
     implementation("com.github.lecho:hellocharts-library:${LibraryVersions.helloCharts}")

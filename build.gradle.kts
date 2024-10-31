@@ -4,7 +4,7 @@ plugins {
     id("org.jetbrains.kotlin.android") version ProjectVersions.kotlin apply false
     id("com.google.gms.google-services") version ProjectVersions.googleServices apply false
     id("com.google.firebase.crashlytics") version ProjectVersions.firebaseCrashlytics apply false
-
+    id("org.jetbrains.kotlin.plugin.serialization") version LibraryVersions.serialization
 }
 
 tasks.register("clean", Delete::class) {

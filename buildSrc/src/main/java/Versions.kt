@@ -51,6 +51,7 @@ object LibraryVersions {
 
     const val stdLib = "1.9.23"
     const val coroutines = "1.7.3"
+    const val serialization = "1.6.0"
 
     const val dbInspector = "3.4.1@aar"
 

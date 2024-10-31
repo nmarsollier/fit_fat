@@ -1,6 +1,6 @@
 package com.nmarsollier.fitfat.utils
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.*
 
 /**
  * Convert enum string constant into Typed Enum,
@@ -26,6 +26,6 @@ inline fun <reified T : Enum<T>> String?.deserialize(): T? {
 val Enum<*>?.serializedName: String?
     get() {
         return this?.javaClass?.getField(this.name)
-            ?.getAnnotation(SerializedName::class.java)?.value
+            ?.getAnnotation(SerialName::class.java)?.value
             ?: this?.toString()
     }

@@ -1,23 +1,24 @@
 package com.nmarsollier.fitfat.utils
 
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
-import com.google.gson.JsonSyntaxException
-import com.google.gson.reflect.TypeToken
+import kotlinx.serialization.*
+import kotlinx.serialization.json.*
+
+val json = Json {
+    ignoreUnknownKeys = true
+}
 
 inline fun <reified T> String?.jsonToObject(): T? {
     if (this == null) {
         return null
     }
     return try {
-        val gson = GsonBuilder()
-            .create()
-        gson.fromJson(this, object : TypeToken<T>() {}.type)
-    } catch (e: JsonSyntaxException) {
+        json.decodeFromString<T>(this)
+    } catch (e: Exception) {
         null
     }
 }
 
-fun Any.toJson(): String {
-    return Gson().toJson(this)
+inline fun <reified T> T?.toJson(): String? {
+    this ?: return null
+    return json.encodeToString(this)
 }
